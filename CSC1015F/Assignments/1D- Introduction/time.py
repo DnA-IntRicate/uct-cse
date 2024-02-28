@@ -1,4 +1,4 @@
-# Program to convert an amount of minutes into an equivalent amount 
+# Program to convert an amount of minutes into an equivalent amount
 # of days, hours and minutes.
 #
 # Name: Stephan Jamieson

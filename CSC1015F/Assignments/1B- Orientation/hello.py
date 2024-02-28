@@ -3,5 +3,4 @@
 # Student Number: FFLADA001
 # Date: 14 February 2024
 
-
 print ("Hello World")
