@@ -30,10 +30,11 @@ static void SortAlphabetical(std::vector<std::string>& words)
     {
         for (size_t j = 0; j < words.size() - 1; j++)
         {
-            if (words[j] > words[j + 1])
-                words[j].swap(words[j + 1]);
-
-                //std::swap(words[j], words[j + 1]);
+            for (size_t k = 0; k < words[j].length(); k++)
+            {
+                if (words[j][k] > words[j + 1][k])
+                    words[j].swap(words[j + 1]);
+            }
         }
     }
 }
@@ -71,36 +72,8 @@ inline static int BinarySearch(const std::vector<std::string>& words, const std:
         {
             left = mid + 1;
         }
-
-
-    //    // Check if the token is equal to the middle element
-    //    int comparison = token.compare(words[mid]);
-    //    if (comparison == 0)
-    //        res++;  // Target found, return the index
-    //    // If the target is less than the middle element, search the left half
-    //    else if (comparison < 0)
-    //        right = mid - 1;
-    //    // If the target is greater than the middle element, search the right half
-    //    else
-    //        left = mid + 1;
-
-    //    if (words[mid] == token)
-    //    {
-    //        res++;
-    //
-    //    }
-    //
-    //    left += mid;
     }
 
-//    for (size_t i = 0; i < words.size(); i++)
-//    {
-//        const auto& word = words[(words.size() - i) / 2];
-//
-//        if (word == token)
-//            matches++;
-//    }
-//
     return res;
 }
 
@@ -131,7 +104,8 @@ int main(int argc, char** argv)
     for (const auto& word : words)
         std::cout << word << std::endl;
 
-    int matches = BinarySearch(words, token);
+    //int matches = BinarySearch(words, token);
+    int matches = LinearSearch(words, token);
 
     std::cout << "Found " << matches << " occurrences of the word " << token << std::endl;
 
