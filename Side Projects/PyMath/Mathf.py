@@ -36,7 +36,7 @@ class Mathf:
         elif (value > max):
             return max
 
-        return value;
+        return value
 
     @staticmethod
     def Clamp01(value: float) -> float:
@@ -45,7 +45,7 @@ class Mathf:
         elif (value > 1.0):
             return 1.0
 
-        return value;
+        return value
 
     @staticmethod
     def Lerp(a: float, b: float, interpolant: float) -> float:
