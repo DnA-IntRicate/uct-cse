@@ -6,11 +6,11 @@ def surface_area(diameter: float, height: float) -> float:
 def main():
     height = float(input("Enter the height of the cylinder:\n"))
     diameter = float(input("Enter the diameter of the base:\n"))
-    
+
     if (height <= 0) or (diameter <= 0):
         print("The height and diameter must be greater than zero.")
         exit()
-    
+
     surfaceArea = surface_area(diameter, height)
     print("The surface area is {:.2f}.".format(surfaceArea))
 
