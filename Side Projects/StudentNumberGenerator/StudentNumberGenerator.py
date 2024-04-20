@@ -60,10 +60,7 @@
 g_StudentNumberAlphaMap: dict[str, int] = {}
 
 def IsVowel(c: str) -> bool:
-    if c in "aeiou":
-        return True
-
-    return False
+    return c in "aeiou"
 
 def IsConsonant(c: str) -> bool:
     return not IsVowel(c)
