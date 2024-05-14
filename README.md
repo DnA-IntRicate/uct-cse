@@ -27,6 +27,7 @@ This repository contains all the projects and code I've written thus far for com
 ---
 
 ## Side Projects
+- [Rock Paper Scissors](Side%20Projects/RockPaperScissors)
 - [Student Number Generator](Side%20Projects/StudentNumberGenerator)
 
 ## License
