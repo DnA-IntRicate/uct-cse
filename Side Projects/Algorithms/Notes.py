@@ -33,7 +33,7 @@
 # Divide-and-conquer. Picks an element as pivot (usually first or last) and partitions list around the pivot.
 
 # Selection sort:
-    # Best-case: O(n log n)     - Chosen pivot divides the input into equal halves
-    # Worst-case: O(n^2)        - Input is already sorted and chosen pivot is smallest or largest element
-    # Average-case: O(n log n)
+    # Best-case: O(n^2)     - Input is already sorted
+    # Worst-case: O(n^2)    - Input is in reverse order
+    # Average-case: O(n^2)
 # Repeatedly selects smallest/largest element from unsorted part and moves it to the sorted part by swapping it with first unsorted.
