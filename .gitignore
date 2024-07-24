@@ -395,3 +395,15 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Maven build output
+target/
+
+# Java files
+*.class
+*.jar
+
+# Java Temporary files
+*.bak
+*.swp
+*.orig
