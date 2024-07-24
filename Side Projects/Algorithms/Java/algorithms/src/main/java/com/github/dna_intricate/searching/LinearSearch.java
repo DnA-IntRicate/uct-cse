@@ -1,6 +1,8 @@
 package com.github.dna_intricate.searching;
+
 import java.util.Arrays;
 import java.util.Scanner;
+
 
 public class LinearSearch
 {
