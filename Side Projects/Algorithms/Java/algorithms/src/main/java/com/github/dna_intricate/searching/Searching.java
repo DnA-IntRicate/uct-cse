@@ -4,6 +4,6 @@ public class Searching
 {
     public static void main(String[] args)
     {
-        System.out.println(LinearSearch.Search());
+        // Do nothing at the moment
     }
 }
