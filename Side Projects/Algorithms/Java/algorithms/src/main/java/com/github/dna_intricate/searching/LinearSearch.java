@@ -20,6 +20,10 @@ public class LinearSearch
 
     public static void main(String[] args)
     {
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("Linear Search");
+        System.out.println("--------------------------------------------------------------");
+
         int[] arr = { 2, 4, 5, 8, 99, 34, 5, 42, 56, 0, 88, 12, 45 };
         System.out.println("List: " + Arrays.toString(arr));
 
