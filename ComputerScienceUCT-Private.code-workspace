@@ -1,10 +1,10 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"java.configuration.updateBuildConfiguration": "interactive"
-	}
+    "folders": [
+        {
+            "path": "."
+        },
+        {
+            "path": "./Main Courses/CSC1016S/Assignments/1C- Basic Syntax"
+        }
+    ]
 }
