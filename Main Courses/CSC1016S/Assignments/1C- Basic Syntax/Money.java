@@ -1,6 +1,3 @@
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 /**
  * <p>An object of this class represents an amount of money in a particular currency. Amounts can be added, subtracted, multiplied and subdivided.</p>
  *

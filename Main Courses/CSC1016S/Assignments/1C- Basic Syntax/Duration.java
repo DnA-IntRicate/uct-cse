@@ -1,4 +1,3 @@
-import java.util.Scanner;
 /**
  * A Duration object represents a length of time (with millisecond accuracy).
  *

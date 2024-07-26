@@ -1,5 +1,4 @@
 import java.util.Scanner;
-import java.util.Scanner;
 /**
  * A Time object represents a twenty four hour clock reading composed of hours, minutes and seconds.
  *
@@ -58,6 +57,7 @@ public class Time implements Comparable<Time> {
         if (scanner.hasNextInt()) { seconds = scanner.nextInt(); }
         time = new Duration("hour", hours).add(new Duration("minute", minutes))
                 .add(new Duration("second", seconds));
+        scanner.close();
     }
 
     /**
