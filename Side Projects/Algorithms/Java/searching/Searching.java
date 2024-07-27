@@ -1,4 +1,4 @@
-package com.github.dna_intricate.searching;
+package searching;
 
 
 public class Searching

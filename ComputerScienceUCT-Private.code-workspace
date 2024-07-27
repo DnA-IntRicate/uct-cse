@@ -4,7 +4,20 @@
             "path": "."
         },
         {
-            "path": "./Main Courses/CSC1016S/Assignments/1C- Basic Syntax"
+            "path": "./Main Courses/CSC1016S/Assignments/1B- Orientation",
+            "name": "CSC1016S: Assignment 1B- Orientation"
+        },
+        {
+            "path": "./Main Courses/CSC1016S/Assignments/1C- Basic Syntax",
+            "name": "CSC1016S: Assignment 1C- Basic Syntax"
+        },
+        {
+            "path": "./Side Projects/Algorithms",
+            "name": "Side Projects: Algorithms"
+        },
+        {
+            "path": "./Side Projects/RockPaperScissors",
+            "name": "Side Projects: RockPaperScissors"
         }
     ]
 }

@@ -1,6 +1,6 @@
-package com.github.dna_intricate.searching;
+package searching;
 
-import com.github.dna_intricate.sorting.BubbleSort;
+import sorting.BubbleSort;
 import java.util.Arrays;
 import java.util.Scanner;
 

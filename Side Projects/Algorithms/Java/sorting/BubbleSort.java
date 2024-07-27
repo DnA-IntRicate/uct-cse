@@ -1,4 +1,4 @@
-package com.github.dna_intricate.sorting;
+package sorting;
 
 import java.util.Arrays;
 
