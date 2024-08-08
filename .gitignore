@@ -401,7 +401,6 @@ target/
 
 # Java files
 *.class
-*.jar
 
 # Java Temporary files
 *.bak
