@@ -30,6 +30,10 @@
         {
             "path": "./Side Projects/RockPaperScissors",
             "name": "Side Projects: RockPaperScissors"
+        },
+        {
+            "path": "./Side Projects/Strings",
+            "name": "Side Projects: Strings"
         }
     ]
 }
