@@ -16,4 +16,10 @@ public class CashDispenser
     {
         // TODO: Implement me
     }
+
+    private int m_AvailCash;
+    private int m_DispensedCash;
+
+    // private int ... // Account Number?
+    // private int ...
 }

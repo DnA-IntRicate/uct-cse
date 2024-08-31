@@ -1,4 +1,4 @@
-/* The Keypad class gets input from the user. Synonymous with the ATM keypad. 
+/* The Keypad class gets input from the user. Synonymous with the ATM keypad.
  * @author: Lebeko Poulo
  * @ Date: 26/08/2024
  */
