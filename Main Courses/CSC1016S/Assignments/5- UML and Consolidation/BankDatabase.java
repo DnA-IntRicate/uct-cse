@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 /**
- * Container class for storing and interacting with {@link Account} objects in the ATM system.
+ * Container class for storing and interacting with {@link Account} objects in the {@link ATM} class.
  *
  * @author Adam Foflonker (FFLADA001)
  * @version 31/08/24
@@ -15,7 +15,7 @@ public class BankDatabase
     public BankDatabase()
     {
         m_Accounts = new ArrayList<Account>();
-        m_Accounts.add(new Account(123456, 1234, 1000.0, 1200.00));
+        m_Accounts.add(new Account(123456, 1234, 1000.0, 1200.00)); // The only account currently stored
     }
 
     /**
@@ -25,7 +25,7 @@ public class BankDatabase
      * @param pin the pin associated with this {@code accountNumber}
      * @return {@code true} if the account number exists and matches the given pin, otherwise {@code false}
      */
-    public boolean authenticateUser(final int accountNumber, final int pin)
+    public boolean authenticateUser(int accountNumber, int pin)
     {
         for (final Account account : m_Accounts)
         {
@@ -42,7 +42,7 @@ public class BankDatabase
      * @param accountNumber the number of the account to debit
      * @param amount the amount to debit the account by
      */
-    public void debit(final int accountNumber, final double amount)
+    public void debit(int accountNumber, double amount)
     {
         for (Account account : m_Accounts)
         {
@@ -60,7 +60,7 @@ public class BankDatabase
      * @param accountNumber the number of the account to credit
      * @param amount the amount to credit the account by
      */
-    public void credit(final int accountNumber, final double amount)
+    public void credit(int accountNumber, double amount)
     {
         for (Account account : m_Accounts)
         {
@@ -73,12 +73,12 @@ public class BankDatabase
     }
 
     /**
-     * Retrieve the available balance of a specific account.
+     * Retrieves the available balance of a specific account.
      *
      * @param accountNumber the number of the account to retrieve the available balance of
      * @return the available balance of the account, or {@code 0.0} if the account doesn't exist
      */
-    public double getAvailableBalance(final int accountNumber)
+    public double getAvailableBalance(int accountNumber)
     {
         for (final Account account : m_Accounts)
         {
@@ -90,12 +90,12 @@ public class BankDatabase
     }
 
     /**
-     * Retrieve the total balance of a specific account.
+     * Retrieves the total balance of a specific account.
      *
      * @param accountNumber the number of the account to retrieve the total balance of
      * @return the total balance of the account, or {@code 0.0} if the account doesn't exist
      */
-    public double getTotalBalance(final int accountNumber)
+    public double getTotalBalance(int accountNumber)
     {
         for (final Account account : m_Accounts)
         {

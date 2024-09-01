@@ -1,25 +1,44 @@
 /**
- * TODO: Implement me!
+ * Represents the cash dispensing system of the {@link ATM} class.
  *
  * @author Adam Foflonker (FFLADA001)
- * @version TODO: Add version
+ * @version 01/09/24
  */
 public class CashDispenser
 {
-    public boolean isSufficientCashAvailable(final double amount)
+    /**
+     * Default constructor initializes this instance with 200 available notes of denomination 100 (20000 total cash).
+     */
+    public CashDispenser()
     {
-        // TODO: Implement me
-        return false;
+        m_Denomination = 100;
+        m_AvailNotes = 200;
     }
 
-    public void dispenseCash(final double amount)
+    /**
+     * Checks if the cash stored in this instance is greater than or equal to {@code amount}.
+     *
+     * @param amount the amount to check for
+     * @return {@code true} if the stored cash is greater than or equal to {@code amount}, otherwise {@code false}
+     */
+    public boolean isSufficientCashAvailable(double amount)
     {
-        // TODO: Implement me
+        return (double)(m_Denomination * m_AvailNotes) >= amount;
     }
 
-    private int m_AvailCash;
-    private int m_DispensedCash;
+    /**
+     * Dispenses cash from this instance decreasing the amount of available notes stored.
+     *
+     * @param amount the amount to dispense
+     */
+    public void dispenseCash(double amount)
+    {
+        m_AvailNotes -= (int)amount / m_Denomination;
+    }
 
-    // private int ... // Account Number?
-    // private int ...
+    /** The denomination of the notes stored in this cash dispenser */
+    private int m_Denomination;
+
+    /** The number of notes stored in this cash dispenser */
+    private int m_AvailNotes;
 }

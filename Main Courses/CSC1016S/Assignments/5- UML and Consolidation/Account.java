@@ -1,5 +1,5 @@
 /**
- * Represents an account stored in a {@link BankDatabase} object in the ATM system.
+ * Represents an account stored in a {@link BankDatabase} object in the {@link ATM} class.
  *
  * @author Adam Foflonker (FFLADA001)
  * @version 31/08/24
@@ -14,7 +14,7 @@ public class Account
      * @param availBalance the available balance of the new account
      * @param totalBalance the total balance of the new account
      */
-    public Account(final int accountNumber, final int pin, final double availBalance, final double totalBalance)
+    public Account(int accountNumber, int pin, double availBalance, double totalBalance)
     {
         m_AccountNumber = accountNumber;
         m_Pin = pin;
@@ -23,14 +23,14 @@ public class Account
     }
 
     /**
-     * Debits this account by subtracting {@code amount} from the available balance.
+     * Debits this account by subtracting {@code amount} from the available and total balance.
      *
      * @param amount the amount to debit this account by
      */
-    public void debit(final double amount)
+    public void debit(double amount)
     {
-        // TODO: Only if amount <= m_AvailBalance
         m_AvailBalance -= amount;
+        m_TotalBalance -= amount;
     }
 
     /**
@@ -38,7 +38,7 @@ public class Account
      *
      * @param amount the amount to credit this account by
      */
-    public void credit(final double amount)
+    public void credit(double amount)
     {
         m_AvailBalance += amount;
         m_TotalBalance += amount;
@@ -48,17 +48,17 @@ public class Account
      *
      * @return {@code true} if {@code pin} equals this account's pin, otherwise {@code false}
      */
-    public boolean validatePin(final int pin) { return m_Pin == pin; }
+    public boolean validatePin(int pin) { return m_Pin == pin; }
 
     /**
-     * Retrives this account's number.
+     * Retrieves this account's number.
      *
      * @return the account number
      */
     public int getAccountNumber() { return m_AccountNumber; }
 
     /**
-     * Retrives this account's available balance.
+     * Retrieves this account's available balance.
      *
      * @return the available balance
      */
@@ -71,8 +71,15 @@ public class Account
      */
     public double getTotalBalance() { return m_TotalBalance; }
 
+    /** The account number of this account */
     private int m_AccountNumber;
+
+    /** The personal identification number of this account */
     private int m_Pin;
+
+    /** The available balance of this account */
     private double m_AvailBalance;
+
+    /** The total balance of this account. This is the available balance plus the not-yet available balance for this account */
     private double m_TotalBalance;
 }
