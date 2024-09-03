@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class BankDatabase
 {
     /**
-     * Default constructor initializes this instance with 1 {@link Account} using the constructor call:
+     * Default constructor initializes this instance with one {@link Account} using the constructor call:
      * <pre>{@code new Account(123456, 1234, 1000.0, 1200.00)}</pre>
      */
     public BankDatabase()

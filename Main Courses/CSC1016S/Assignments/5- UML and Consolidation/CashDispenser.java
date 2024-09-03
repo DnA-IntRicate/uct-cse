@@ -7,12 +7,12 @@
 public class CashDispenser
 {
     /**
-     * Default constructor initializes this instance with 200 available notes of denomination 100 (20000 total cash).
+     * Default constructor initializes this instance with 30 available notes of denomination 100 (3000 total cash).
      */
     public CashDispenser()
     {
         m_Denomination = 100;
-        m_AvailNotes = 200;
+        m_AvailNotes = 30;
     }
 
     /**
