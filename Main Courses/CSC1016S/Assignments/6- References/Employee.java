@@ -4,9 +4,16 @@ import java.util.ArrayList;
 /**
  * Represents a basic employee that contains their name, uid and their worked shifts.
  *
+ * <p><strong>Note:</strong> Question 1 of this assignment requires the {@link Shift} class to be implemented
+ * statically which will cause it to work incorrectly with this class in this environment.
+ * However, for question 2 of this assignment, the automarker uses its own {@link Shift} class which is
+ * implemented non-statically as required by this class.
+ * Therefore any warnings emitting from this class may be ignored or supressed.</p>
+ *
  * @author Adam Foflonker (FFLADA001)
  * @version 11/09/24
  */
+@SuppressWarnings("static-access")
 public class Employee
 {
     /**
@@ -55,23 +62,10 @@ public class Employee
     public Duration hours(Week w)
     {
         Duration res = Duration.ZERO;
-        for (final Shift s : m_Shifts)
-        {
-            if (s.inWeek(w))
-                res.add(s.length());
-        }
+        for (Shift s : get(w))
+            res = res.add(s.length());
 
         return res;
-    }
-
-    /**
-     * Checks whether this employee is present (has signed-in and not yet signed-out).
-     *
-     * @return {@code true} if present, otherwise {@code false}
-     */
-    public boolean present()
-    {
-        return m_CurrentShiftStart != null;
     }
 
     /**
@@ -86,6 +80,16 @@ public class Employee
     }
 
     /**
+     * Checks whether this employee is present (has signed-in and not yet signed-out).
+     *
+     * @return {@code true} if present, otherwise {@code false}
+     */
+    public boolean present()
+    {
+        return m_CurrentShiftStart != null;
+    }
+
+    /**
      * Checks if this employee worked on the given {@link Date}.
      *
      * @param d the {@link Date} to check
@@ -93,13 +97,7 @@ public class Employee
      */
     public boolean worked(Date d)
     {
-        for (final Shift s : m_Shifts)
-        {
-            if (s.includesDate(d))
-                return true;
-        }
-
-        return false;
+        return get(d).size() > 0;
     }
 
     /**
@@ -110,13 +108,7 @@ public class Employee
      */
     public boolean worked(Week w)
     {
-        for (final Shift s : m_Shifts)
-        {
-            if (s.inWeek(w))
-                return true;
-        }
-
-        return false;
+        return get(w).size() > 0;
     }
 
     /**
@@ -141,7 +133,7 @@ public class Employee
     public List<Shift> get(Week w)
     {
         List<Shift> res = new ArrayList<Shift>();
-        for (final Shift s : m_Shifts)
+        for (Shift s : m_Shifts)
         {
             if (s.inWeek(w))
                 res.add(s);
@@ -158,7 +150,7 @@ public class Employee
     public List<Shift> get(Date d)
     {
         List<Shift> res = new ArrayList<Shift>();
-        for (final Shift s : m_Shifts)
+        for (Shift s : m_Shifts)
         {
             if (s.includesDate(d))
                 res.add(s);
@@ -167,17 +159,18 @@ public class Employee
         return res;
     }
 
-    /** Stores the start-time of this employee's current shift.
-     * If this employee is not currently working a shift then this object will be {@code null}.
+    /**
+     * Stores the start-time of this employee's current shift. If this employee is not currently
+     * working a shift then this object will be {@code null}.
      */
     private CalendarTime m_CurrentShiftStart;
 
-    /** The name of this employee */
+    /** The name of this employee. */
     private String m_Name;
 
-    /** The unique identifier of this employee */
+    /** The unique identifier of this employee. */
     private String m_Uid;
 
-    /** The shifts that this employee has worked */
+    /** The shifts that this employee has worked. */
     private List<Shift> m_Shifts;
 }

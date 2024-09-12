@@ -1,6 +1,11 @@
 /**
  * Stores the start and finish times of work shifts for use in the {@link Employee} class.
  *
+ * <p><strong>Note:</strong> Question 1 of this assignment requires this class to be implemented
+ * statically which will cause it to work incorrectly with the {@link Employee} class in this environment.
+ * However, for question 2 of this assignment, the automarker uses its own {@link Shift} class which is
+ * implemented non-statically as required by {@link Employee}.</p>
+ *
  * @author Adam Foflonker (FFLADA001)
  * @version 11/09/24
  */
@@ -75,14 +80,9 @@ public class Shift
         s_Finish.date().toString(), s_Finish.time().toString());
     }
 
-    /** The start date-time of this shift.
-     * FIXME: Why is this static?
-    */
+    /** The start date-time of this shift. */
     private static CalendarTime s_Start;
 
-    /**
-     * The end date-time of this shift.
-     * FIXME: Why is this static?
-     */
+    /** The end date-time of this shift. */
     private static CalendarTime s_Finish;
 }

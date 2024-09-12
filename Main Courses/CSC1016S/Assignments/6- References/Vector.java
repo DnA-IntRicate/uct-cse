@@ -1,5 +1,3 @@
-import java.lang.Math;
-
 /**
  * A 2-dimensional vector with {@code x} and {@code y} components.
  *
@@ -73,9 +71,9 @@ public class Vector
         return String.format("v = (%.2f, %.2f)", m_X, m_Y);
     }
 
-    /** The x-component of this vector */
+    /** The x-component of this vector. */
     private double m_X;
 
-    /** The y-component of this vector */
+    /** The y-component of this vector. */
     private double m_Y;
 }
