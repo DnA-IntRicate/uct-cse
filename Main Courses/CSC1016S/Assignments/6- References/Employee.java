@@ -4,16 +4,9 @@ import java.util.ArrayList;
 /**
  * Represents a basic employee that contains their name, uid and their worked shifts.
  *
- * <p><strong>Note:</strong> Question 1 of this assignment requires the {@link Shift} class to be implemented
- * statically which will cause it to work incorrectly with this class in this environment.
- * However, for question 2 of this assignment, the automarker uses its own {@link Shift} class which is
- * implemented non-statically as required by this class.
- * Therefore any warnings emitting from this class may be ignored or supressed.</p>
- *
  * @author Adam Foflonker (FFLADA001)
  * @version 11/09/24
  */
-@SuppressWarnings("static-access")
 public class Employee
 {
     /**
