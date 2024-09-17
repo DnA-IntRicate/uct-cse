@@ -67,7 +67,7 @@ public class Shift
     /**
      * Returns a string representation of this shift.
      *
-     * @return a string in the format: of the form {@code "<date>%<time> - <date>%<time>"}
+     * @return a string in the format {@code '<date>%<time> - <date>%<time>'}
      */
     public String toString()
     {

@@ -64,7 +64,7 @@ public class Vector
     /**
      * Returns a string representation of this vector.
      *
-     * @return a string in the format: {@code "v = (<x>, <y>)"}
+     * @return a string in the format {@code 'v = (<x>, <y>)'}
      */
     public String toString()
     {
