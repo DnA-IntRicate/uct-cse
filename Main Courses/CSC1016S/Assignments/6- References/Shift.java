@@ -14,8 +14,8 @@ public class Shift
      */
     public Shift(CalendarTime start, CalendarTime finish)
     {
-        s_Start = start;
-        s_Finish = finish;
+        m_Start = start;
+        m_Finish = finish;
     }
 
     /**
@@ -26,7 +26,7 @@ public class Shift
      */
     public boolean inWeek(Week w)
     {
-        return w.includes(s_Start.date()) && w.includes(s_Finish.date());
+        return w.includes(m_Start.date()) && w.includes(m_Finish.date());
     }
 
     /**
@@ -37,7 +37,7 @@ public class Shift
      */
     public boolean includesDate(Date d)
     {
-        return (s_Start.date().compareTo(d) <= 0) && (s_Finish.date().compareTo(d) >= 0);
+        return (m_Start.date().compareTo(d) <= 0) && (m_Finish.date().compareTo(d) >= 0);
     }
 
     /**
@@ -47,7 +47,7 @@ public class Shift
      */
     public Duration length()
     {
-        return s_Finish.subtract(s_Start);
+        return m_Finish.subtract(m_Start);
     }
 
     /**
@@ -55,14 +55,14 @@ public class Shift
      *
      * @return the start of this shift
      */
-    public CalendarTime start() { return s_Start; }
+    public CalendarTime start() { return m_Start; }
 
     /**
      * Get the end {@link CalendarTime} for this shift.
      *
      * @return the end of this shift
      */
-    public CalendarTime finish() { return s_Finish; }
+    public CalendarTime finish() { return m_Finish; }
 
     /**
      * Returns a string representation of this shift.
@@ -71,13 +71,13 @@ public class Shift
      */
     public String toString()
     {
-        return String.format("%s%%%s - %s%%%s", s_Start.date().toString(), s_Start.time().toString(),
-        s_Finish.date().toString(), s_Finish.time().toString());
+        return String.format("%s%%%s - %s%%%s", m_Start.date().toString(), m_Start.time().toString(),
+        m_Finish.date().toString(), m_Finish.time().toString());
     }
 
     /** The start date-time of this shift. */
-    private CalendarTime s_Start;
+    private CalendarTime m_Start;
 
     /** The end date-time of this shift. */
-    private CalendarTime s_Finish;
+    private CalendarTime m_Finish;
 }
