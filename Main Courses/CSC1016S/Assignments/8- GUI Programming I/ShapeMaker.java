@@ -79,18 +79,21 @@ public class ShapeMaker extends JFrame
 
         m_FilledCheckBox = new JCheckBox("Filled", false);
 
-        m_InterfacePanel = new JPanel(new FlowLayout());
-        m_InterfacePanel.add(m_ShapesComboBox);
-        m_InterfacePanel.add(m_DrawShapeButton);
-        m_InterfacePanel.add(m_ColorsComboBox);
-        m_InterfacePanel.add(m_RectWidthInput);
-        m_InterfacePanel.add(m_RectHeightInput);
-        m_InterfacePanel.add(m_FilledCheckBox);
+        m_InterfaceLayout = new CardLayout();
+        m_InterfacePanel = new JPanel(m_InterfaceLayout);
+        //m_InterfacePanel.add(m_ShapesComboBox);
 
-        m_InterfacePanel.add(new JLabel("X: "));
-        m_InterfacePanel.add(m_XInput);
-        m_InterfacePanel.add(new JLabel("Y: "));
-        m_InterfacePanel.add(m_YInput);
+        m_RectangleInterfacePanel = new JPanel(new FlowLayout());
+        // m_RectangleInterfacePanel.add(m_ShapesComboBox);
+        m_RectangleInterfacePanel.add(m_DrawShapeButton);
+        m_RectangleInterfacePanel.add(m_ColorsComboBox);
+        m_RectangleInterfacePanel.add(m_RectWidthInput);
+        m_RectangleInterfacePanel.add(m_RectHeightInput);
+        m_RectangleInterfacePanel.add(m_FilledCheckBox);
+        m_RectangleInterfacePanel.add(new JLabel("X:"));
+        m_RectangleInterfacePanel.add(m_XInput);
+        m_RectangleInterfacePanel.add(new JLabel("Y:"));
+        m_RectangleInterfacePanel.add(m_YInput);
 
         m_CircleInterfacePanel = new JPanel(new FlowLayout());
         m_CircleInterfacePanel.add(new JLabel("NEW LABEL"));
@@ -100,30 +103,28 @@ public class ShapeMaker extends JFrame
         m_ViewportPanel.setBackground(COLOR_MISSING);
         // m_ViewportPanel.paintComponents(getGraphics());
 
-        m_InterfacePanel.setPreferredSize(new Dimension(800, 300)); // Top half
-        m_ViewportPanel.setPreferredSize(new Dimension(800, 300));  // Bottom half
+        m_InterfacePanel.setPreferredSize(new Dimension(500, 300)); // Top half
+        m_ViewportPanel.setPreferredSize(new Dimension(500, 300));  // Bottom half
 
-        m_InterfaceCards = new CardLayout(0, 0);
-        m_InterfaceCards.addLayoutComponent(m_InterfacePanel, null);
-        m_InterfaceCards.addLayoutComponent(m_CircleInterfacePanel, null);
+        m_InterfacePanel.add(m_CircleInterfacePanel, "CircleInterfacePanel");
+        m_InterfacePanel.add(m_RectangleInterfacePanel, "RectangleInterfacePanel");
     }
 
     public void Initialize()
     {
-        setSize(800, 600);
-        setLayout(new GridLayout());    // FlowLayout
+        setSize(500, 700);
+        setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Huh?
-        // add(m_InterfaceCards);
-
-
-       // add(m_InterfacePanel);
-       // add(m_ViewportPanel);
+        add(m_ShapesComboBox);
+        // add(new JPanel());
+        add(m_InterfacePanel);
+        add(m_ViewportPanel);
 
         setVisible(true);
     }
 
+    // TODO: make these functions private?
     public void Clear(Graphics g, final Color clearCol)
     {
         m_ViewportPanel.paintComponents(g);
@@ -176,8 +177,8 @@ public class ShapeMaker extends JFrame
         double sideC = tri.getSide3();
 
         // Calculate angles using the Law of Cosines
-        double angleA = Math.acos((sideB * sideB + sideC * sideC - sideA * sideA) / (2 * sideB * sideC));
-        double angleB = Math.acos((sideA * sideA + sideC * sideC - sideB * sideB) / (2 * sideA * sideC));
+        double angleA = Math.acos(((sideB * sideB) + (sideC * sideC) - (sideA * sideA)) / (2 * sideB * sideC));
+        double angleB = Math.acos(((sideA * sideA) + (sideC * sideC) - (sideB * sideB)) / (2 * sideA * sideC));
         double angleC = Math.PI - angleA - angleB; // Triangle sum theorem
         // TODO: Remove this
 
@@ -201,13 +202,13 @@ public class ShapeMaker extends JFrame
             g.drawPolygon(xPoints, yPoints, 3);
     }
 
-    public void onDrawShape(ActionEvent e)
+    private void onDrawShape(ActionEvent e)
     {
         switch ((String)m_ShapesComboBox.getSelectedItem())
         {
             case SHAPE_STR_CIRCLE:
                 Circle circle = new Circle();
-                //
+                // Radius, color, filled
                 DrawCircle(circle, (int)m_XInput.getValue(), (int)m_YInput.getValue());
 
                 break;
@@ -223,34 +224,36 @@ public class ShapeMaker extends JFrame
 
             case SHAPE_STR_TRIANGLE:
                 Triangle tri = new Triangle();
-                //
+                // Side1..3, color, filled
                 DrawTriangle(tri, (int)m_XInput.getValue(), (int)m_YInput.getValue());
-
-                break;
-
-            default:
                 break;
         }
     }
 
-    // TODO: Remove
-    public void onShapeSelected(ActionEvent e)
+    private void onShapeSelected(ActionEvent e)
     {
-        String selectedItem = (String)m_ShapesComboBox.getSelectedItem();
-        System.out.println("Selected: " + selectedItem);
+        String selectedShape = (String)m_ShapesComboBox.getSelectedItem();
+        Log("Selected %s.", selectedShape);
 
-        if (selectedItem.equals(SHAPE_STR_CIRCLE))
+        switch (selectedShape)
         {
-            m_InterfacePanel.setVisible(false);
-            remove(m_InterfacePanel);
+            case SHAPE_STR_CIRCLE:
+                m_InterfaceLayout.show(m_InterfacePanel, "CircleInterfacePanel");
+                break;
 
-            add(m_CircleInterfacePanel);
+            case SHAPE_STR_RECTANGLE:
+                m_InterfaceLayout.show(m_InterfacePanel, "RectangleInterfacePanel");
+                break;
+
+            case SHAPE_STR_TRIANGLE:
+                m_InterfaceLayout.show(m_InterfacePanel, "TriangleInterfacePanel");
+                break;
         }
     }
 
-    private static void Log(String msg)
+    private static void Log(String fmt, Object... args)
     {
-        System.out.println(msg);
+        System.out.println(String.format(fmt, args));
     }
 
     public static void main(String[] args)
@@ -270,8 +273,13 @@ public class ShapeMaker extends JFrame
     private JSpinner m_XInput;
     private JSpinner m_YInput;
 
-    private CardLayout m_InterfaceCards;
-    private JPanel m_InterfacePanel; // Rename to rectangle interface and change decl order
+
+
+    private CardLayout m_InterfaceLayout;
+    private JPanel m_InterfacePanel;
+
+
+    private JPanel m_RectangleInterfacePanel;
     private JPanel m_CircleInterfacePanel;
     private JPanel m_TriangleInterfacePanel;
 
