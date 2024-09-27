@@ -20,6 +20,9 @@ public class ShapeMaker extends JFrame
     private static final String SHAPE_STR_RECTANGLE = "Rectangle";
     private static final String SHAPE_STR_TRIANGLE = "Triangle";
 
+    private static final Color COLOR_CLEAR = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    private static final Color COLOR_MISSING = new Color(1.0f, 0.0f, 1.0f, 1.0f);
+
     private class Utils
     {
         public static <_Ty> void RegisterComponentCallback(JComboBox<_Ty> component, Consumer<ActionEvent> callback)
@@ -71,55 +74,61 @@ public class ShapeMaker extends JFrame
 
         m_RectWidthInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
         m_RectHeightInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+
+        m_FilledCheckBox = new JCheckBox("Filled", false);
+
+        // We like double-buffering
+       // m_Viewport = new Viewport(0, 50, 300, 400, true);
+       // m_Viewport.SetClearColor(new Color(1.0f, 0.0f, 1.0f, 1.0f));
+
+        m_InterfacePanel = new JPanel(new FlowLayout());
+        m_InterfacePanel.add(m_ShapesComboBox);
+        m_InterfacePanel.add(m_DrawShapeButton);
+        m_InterfacePanel.add(m_ColorsComboBox);
+        m_InterfacePanel.add(m_RectWidthInput);
+        m_InterfacePanel.add(m_RectHeightInput);
+        m_InterfacePanel.add(m_FilledCheckBox);
+
+        m_ViewportPanel = new JPanel(null);
+        m_ViewportPanel.setBackground(COLOR_MISSING);
+        // m_ViewportPanel.paintComponents(getGraphics());
+
+        m_InterfacePanel.setPreferredSize(new Dimension(800, 300)); // Top half
+        m_ViewportPanel.setPreferredSize(new Dimension(800, 300));  // Bottom half
     }
 
     public void Initialize()
     {
         setSize(800, 600);
-        setLayout(new FlowLayout());
+        setLayout(new GridLayout());    // FlowLayout
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        add(m_ShapesComboBox);
-        add(m_DrawShapeButton);
-        add(m_ColorsComboBox);
-
-        add(m_RectWidthInput);
-        add(m_RectHeightInput);
+        add(m_InterfacePanel);
+        add(m_ViewportPanel);
 
         setVisible(true);
     }
 
-    // TODO: Draw this on a separate panel (JPanel)
+    public void Clear(Graphics g, final Color clearCol)
+    {
+        m_ViewportPanel.paintComponents(g);
+        g.setColor(clearCol);
+        g.fillRect(0, 0, m_ViewportPanel.getWidth(), m_ViewportPanel.getHeight());
+    }
+
     public void DrawRectangle(final Rectangle rect, int x, int y)
     {
         Log("Drawing Rectangle: " + rect.toString());
 
-        Graphics2D g = (Graphics2D)getGraphics();
+        Graphics2D g = (Graphics2D)m_ViewportPanel.getGraphics();
+        Clear(g, COLOR_MISSING);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(Utils.StrColorToColor(rect.getColor()));
 
         if (rect.isFilled())
             g.fillRect(x, y, (int)rect.getWidth(), (int)rect.getHeight());
         else
             g.drawRect(x, y, (int)rect.getWidth(), (int)rect.getHeight());
-
-        // Enable anti-aliasing for smoother shapes
-      //  g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-      //  // Set color and draw a filled circle (oval)
-      //  g2d.setColor(Color.RED);
-      //  g2d.fillOval(50, 50, 100, 100); // (x, y, width, height)
-//
-      //  // Set color and draw a filled rectangle
-      //  g2d.setColor(Color.BLUE);
-      //  g2d.fillRect(200, 50, 150, 100); // (x, y, width, height)
-//
-      //  // Set color and draw a triangle (polygon with 3 points)
-      //  g2d.setColor(Color.GREEN);
-      //  int[] xPoints = {400, 450, 500}; // X coordinates of the triangle vertices
-      //  int[] yPoints = {150, 50, 150};  // Y coordinates of the triangle vertices
-      //  g2d.fillPolygon(xPoints, yPoints, 3); // Number of points = 3 for a triangle
-
-     //   paintComponents(g2d);
     }
 
     public void onDrawShape(ActionEvent e)
@@ -134,6 +143,7 @@ public class ShapeMaker extends JFrame
                 rect.setWidth((double)(int)m_RectWidthInput.getValue());
                 rect.setHeight((double)(int)m_RectHeightInput.getValue());
                 rect.setColor((String)m_ColorsComboBox.getSelectedItem());
+                rect.setFilled(m_FilledCheckBox.isSelected());
                 DrawRectangle(rect, 0, 0);
                 break;
 
@@ -168,8 +178,14 @@ public class ShapeMaker extends JFrame
     private JComboBox<String> m_ShapesComboBox;
     private JComboBox<String> m_ColorsComboBox;
 
+    private JCheckBox m_FilledCheckBox;
+
     private JSpinner m_RectWidthInput;
     private JSpinner m_RectHeightInput;
+
+    private JPanel m_InterfacePanel;
+    private JPanel m_ViewportPanel;
+    // private Viewport m_Viewport;
 
     // TODO: Create a label with the text "Dimensions" and under it put all shape dimension stuff
 }
