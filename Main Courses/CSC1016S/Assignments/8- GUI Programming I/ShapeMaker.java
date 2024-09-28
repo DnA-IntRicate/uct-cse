@@ -7,6 +7,8 @@ import java.util.function.Consumer;
  * TODO: Desc
  * TODO: Do we need to apply a scaling factor?
  *
+ * We keepin' it DRY in here
+ *
  * @author Adam Foflonker (FFLADA001)
  * @version 25/09/24
  */
@@ -21,8 +23,17 @@ public class ShapeMaker extends JFrame
     private static final String SHAPE_STR_RECTANGLE = "Rectangle";
     private static final String SHAPE_STR_TRIANGLE = "Triangle";
 
-    private static final Color COLOR_CLEAR = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+    private static final Color COLOR_VIEWPORT = new Color(0.9f, 0.85f, 0.9f, 1.0f);
     private static final Color COLOR_MISSING = new Color(1.0f, 0.0f, 1.0f, 1.0f); // Magenta
+
+    private static final int FRAME_WIDTH = 450;
+    private static final int FRAME_HEIGHT = 700;
+
+    private static final int PANEL_INTERFACE_WIDTH = FRAME_WIDTH;
+    private static final int PANEL_INTERFACE_HEIGHT = 130;
+
+    private static final int PANEL_VIEWPORT_WIDTH = FRAME_WIDTH;
+    private static final int PANEL_VIEWPORT_HEIGHT = FRAME_HEIGHT - PANEL_INTERFACE_HEIGHT;
 
     /**
      * TODO: Comment, Since this is private it probably doesn't need javadoc comments
@@ -72,22 +83,12 @@ public class ShapeMaker extends JFrame
 
         final String[] SHAPES_STRINGS = { SHAPE_STR_CIRCLE, SHAPE_STR_RECTANGLE, SHAPE_STR_TRIANGLE };
         m_ShapesComboBox = new JComboBox<String>(SHAPES_STRINGS);
-        Utils.SetComponentWidth(m_ShapesComboBox, 400);
+        Utils.SetComponentWidth(m_ShapesComboBox, 350);
         Utils.RegisterComponentCallback(m_ShapesComboBox, e -> { onShapeSelected(e); });
-
-        final String[] COLORS_STRINGS = { COLOR_STR_BLACK, COLOR_STR_RED, COLOR_STR_GREEN, COLOR_STR_BLUE };
-        m_ColorsComboBox = new JComboBox<String>(COLORS_STRINGS);
 
         m_DrawShapeButton = new JButton("Draw");
         Utils.RegisterComponentCallback(m_DrawShapeButton, e -> { onDrawShape(e); });
-
-        m_RectWidthInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        m_RectHeightInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-
-        m_XInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-        m_YInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-
-        m_FilledCheckBox = new JCheckBox("Filled", false);
+        Utils.SetComponentWidth(m_DrawShapeButton, 400);
 
         m_InterfaceLayout = new CardLayout();
         m_InterfacePanel = new JPanel(m_InterfaceLayout);
@@ -96,86 +97,40 @@ public class ShapeMaker extends JFrame
         m_RectangleControls = new RectangleInterfaceControls();
         m_TriangleControls = new TriangleInterfaceControls();
 
-    //    m_RectangleInterfacePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
-//
-    //    m_RectangleInterfacePanel.add(new JLabel("Width:"));
-    //    m_RectangleInterfacePanel.add(m_RectWidthInput);
-//
-    //    m_RectangleInterfacePanel.add(new JLabel("Height:"));
-    //    m_RectangleInterfacePanel.add(m_RectHeightInput);
-//
-    //    m_RectangleInterfacePanel.add(m_FilledCheckBox);
-//
-    //    m_RectangleInterfacePanel.add(new JLabel("Color:"));
-    //    m_RectangleInterfacePanel.add(m_ColorsComboBox);
-//
-    //    m_RectangleInterfacePanel.add(new JLabel("X:"));
-    //    m_RectangleInterfacePanel.add(m_XInput);
-//
-    //    m_RectangleInterfacePanel.add(new JLabel("Y:"));
-    //    m_RectangleInterfacePanel.add(m_YInput);
-//
-    //    m_RectangleInterfacePanel.add(m_DrawShapeButton);
-    //    Utils.SetComponentWidth(m_DrawShapeButton, 500 - 50);    // TODO: Get width properly (minus padding)
-
-    //    m_CircleInterfacePanel = new JPanel(new FlowLayout());
-    //    m_CircleInterfacePanel.add(new JLabel("NEW LABEL"));
-
         m_ViewportPanel = new JPanel(null);
         m_ViewportPanel.setDoubleBuffered(true);
-        m_ViewportPanel.setBackground(COLOR_MISSING);
-        // m_ViewportPanel.paintComponents(getGraphics());
+        m_ViewportPanel.setBackground(COLOR_VIEWPORT);
 
-        // TODO: Do this better, use setcomponent width maybe????
-        m_InterfacePanel.setPreferredSize(new Dimension(500, 300)); // Top half
-        m_ViewportPanel.setPreferredSize(new Dimension(500, 300));  // Bottom half
+        m_InterfacePanel.setPreferredSize(new Dimension(PANEL_INTERFACE_WIDTH, PANEL_INTERFACE_HEIGHT)); // Top half
+        m_ViewportPanel.setPreferredSize(new Dimension(PANEL_VIEWPORT_WIDTH, PANEL_VIEWPORT_HEIGHT));  // Bottom half
 
-        m_InterfacePanel.add(m_CircleControls.Panel, "CircleInterfacePanel"); // TODO: Change these string names
+        // TODO: Change these string names
+        m_InterfacePanel.add(m_CircleControls.Panel, "CircleInterfacePanel");
         m_InterfacePanel.add(m_RectangleControls.Panel, "RectangleInterfacePanel");
         m_InterfacePanel.add(m_TriangleControls.Panel, "TriangleInterfacePanel");
     }
 
-    public void Initialize()
+    public void Run()
     {
-        setSize(500, 700);
+        setSize(FRAME_WIDTH, FRAME_HEIGHT);
+        setResizable(false);
         setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        add(new JLabel("Shape:"));
         add(m_ShapesComboBox);
         add(m_InterfacePanel);
+        add(m_DrawShapeButton);
         add(m_ViewportPanel);
 
         setVisible(true);
-    }
-
-    // TODO: make these functions private?
-    public void Clear(Graphics g, final Color clearCol)
-    {
-        m_ViewportPanel.paintComponents(g);
-        g.setColor(clearCol);
-        g.fillRect(0, 0, m_ViewportPanel.getWidth(), m_ViewportPanel.getHeight());
-    }
-
-    private Graphics2D PrepareViewportGraphicsContextForDraw(final Color clearCol)
-    {
-        Graphics2D res = (Graphics2D)m_ViewportPanel.getGraphics();
-        res.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        m_ViewportPanel.paintComponents(res); // Why?
-        res.setColor(clearCol);
-        res.fillRect(0, 0, m_ViewportPanel.getWidth(), m_ViewportPanel.getHeight());
-
-        return res;
     }
 
     public void DrawCircle(final Circle circle, int x, int y)
     {
         Log("Drawing Circle: " + circle.toString());
 
-        // TODO: abstract this away into a new get graphics function or whatever intuitive name.
-        Graphics2D g = (Graphics2D)m_ViewportPanel.getGraphics();
-        Clear(g, COLOR_MISSING);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(circle.getColor()));
 
         int diameter = (int)circle.getRadius() * 2;
@@ -189,7 +144,7 @@ public class ShapeMaker extends JFrame
     {
         Log("Drawing Rectangle: " + rect.toString());
 
-        Graphics2D g = PrepareViewportGraphicsContextForDraw(COLOR_MISSING);
+        Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(rect.getColor()));
 
         if (rect.isFilled())
@@ -198,13 +153,12 @@ public class ShapeMaker extends JFrame
             g.drawRect(x, y, (int)rect.getWidth(), (int)rect.getHeight());
     }
 
+    // TODO: This ain't working...
     public void DrawTriangle(final Triangle tri, int x, int y)
     {
         Log("Drawing Triangle: " + tri.toString());
 
-        Graphics2D g = (Graphics2D)m_ViewportPanel.getGraphics();
-        Clear(g, COLOR_MISSING);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(tri.getColor()));
 
         double sideA = tri.getSide1();
@@ -237,30 +191,46 @@ public class ShapeMaker extends JFrame
             g.drawPolygon(xPoints, yPoints, 3);
     }
 
+    // This must be called before every draw
+    private Graphics2D PrepareViewportGraphicsContextForDraw()
+    {
+        Graphics2D res = (Graphics2D)m_ViewportPanel.getGraphics();
+        res.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        res.setColor(COLOR_VIEWPORT);
+        res.fillRect(0, 0, m_ViewportPanel.getWidth(), m_ViewportPanel.getHeight());
+
+        return res;
+    }
+
     private void onDrawShape(ActionEvent e)
     {
         switch ((String)m_ShapesComboBox.getSelectedItem())
         {
             case SHAPE_STR_CIRCLE:
                 Circle circle = new Circle();
-                // Radius, color, filled
-                DrawCircle(circle, (int)m_RectangleControls.XInput.getValue(), (int)m_RectangleControls.YInput.getValue());
-
+                circle.setRadius((double)(int)m_CircleControls.RadiusInput.getValue());
+                circle.setColor(m_CircleControls.GetColor());
+                circle.setFilled(m_CircleControls.GetFilled());
+                DrawCircle(circle, m_CircleControls.GetX(), m_CircleControls.GetY());
                 break;
 
             case SHAPE_STR_RECTANGLE:
                 Rectangle rect = new Rectangle();
                 rect.setWidth((double)(int)m_RectangleControls.WidthInput.getValue());
                 rect.setHeight((double)(int)m_RectangleControls.HeightInput.getValue());
-                rect.setColor((String)m_RectangleControls.ColorsComboBox.getSelectedItem());
-                rect.setFilled(m_RectangleControls.FilledCheckBox.isSelected());
-                DrawRectangle(rect, (int)m_RectangleControls.XInput.getValue(), (int)m_RectangleControls.YInput.getValue());
+                rect.setColor(m_RectangleControls.GetColor());
+                rect.setFilled(m_RectangleControls.GetFilled());
+                DrawRectangle(rect, m_RectangleControls.GetX(), m_RectangleControls.GetY());
                 break;
 
             case SHAPE_STR_TRIANGLE:
                 Triangle tri = new Triangle();
-                // Side1..3, color, filled
-                DrawTriangle(tri, (int)m_XInput.getValue(), (int)m_YInput.getValue());
+                tri.setSide1((double)(int)m_TriangleControls.S1Input.getValue());
+                tri.setSide2((double)(int)m_TriangleControls.S2Input.getValue());
+                tri.setSide3((double)(int)m_TriangleControls.S3Input.getValue());
+                tri.setColor(m_TriangleControls.GetColor());
+                tri.setFilled(m_TriangleControls.GetFilled());
+                DrawTriangle(tri, m_TriangleControls.GetX(), m_TriangleControls.GetY());
                 break;
         }
     }
@@ -291,15 +261,12 @@ public class ShapeMaker extends JFrame
         System.out.println(String.format(fmt, args));
     }
 
-    public static void main(String[] args)
-    {
-        ShapeMaker maker = new ShapeMaker();
-        maker.Initialize(); // Rename this function to run?
-    }
+    private CardLayout m_InterfaceLayout;
+    private JPanel m_InterfacePanel;
+    private JPanel m_ViewportPanel;
 
-    private JButton m_DrawShapeButton;
     private JComboBox<String> m_ShapesComboBox;
-    private JComboBox<String> m_ColorsComboBox;
+    private JButton m_DrawShapeButton;
 
     /** Marked as abstract since this class should never be instantiated directly. */
     private abstract class ShapeInterfaceControls
@@ -312,30 +279,81 @@ public class ShapeMaker extends JFrame
 
         public ShapeInterfaceControls()
         {
-            Panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+            Panel = new JPanel(new GridBagLayout());
+            m_Gbc = new GridBagConstraints();
+            m_Gbc.insets = new Insets(5, 5, 5, 5);
+            m_Gbc.gridx = 0;
+            m_Gbc.gridy = 0;
+            m_Gbc.anchor = GridBagConstraints.LINE_START;
 
             XInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
             YInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-            FilledCheckBox = new JCheckBox("Filled", false);
+            FilledCheckBox = new JCheckBox("", false); // Using a left-justified label later.
 
             final String[] COLORS_STRINGS = { COLOR_STR_BLACK, COLOR_STR_RED, COLOR_STR_GREEN, COLOR_STR_BLUE };
             ColorsComboBox = new JComboBox<String>(COLORS_STRINGS);
 
-            Panel.add(new JLabel("X:"));
-            Panel.add(XInput);
-            Panel.add(new JLabel("Y:"));
-            Panel.add(YInput);
-            Panel.add(FilledCheckBox);
-            Panel.add(new JLabel("Color:"));
-            Panel.add(ColorsComboBox);
+            Panel.add(new JLabel("X:"), m_Gbc);
+            SameLine();
+            Panel.add(XInput, m_Gbc);
+            SameLine();
+            Panel.add(new JLabel("Y:"), m_Gbc);
+            SameLine();
+            Panel.add(YInput, m_Gbc);
+            NewLine();
+            Panel.add(new JLabel("Filled:"), m_Gbc);
+            SameLine();
+            Panel.add(FilledCheckBox, m_Gbc);
+            SameLine();
+            Panel.add(new JLabel("Color:"), m_Gbc);
+            SameLine();
+            SpanAvailWidth();
+            Panel.add(ColorsComboBox, m_Gbc);
+
+            // This puts all controls rendered by derived classes below the ones rendered here.
+            NewLine();
         }
+
+        public int GetX() { return (int)XInput.getValue(); }
+        public int GetY() { return (int)YInput.getValue(); }
+        public boolean GetFilled() { return FilledCheckBox.isSelected(); }
+        public String GetColor() { return (String)ColorsComboBox.getSelectedItem(); }
+
+        protected void SameLine()
+        {
+            m_Gbc.gridx += 1;
+            m_Gbc.anchor = GridBagConstraints.LINE_START;
+        }
+
+        protected void NewLine()
+        {
+            m_Gbc.gridx = 0;
+            m_Gbc.gridy += 1;
+            m_Gbc.anchor = GridBagConstraints.LINE_START;
+        }
+
+        protected void SpanAvailWidth()
+        {
+            m_Gbc.gridwidth = 4 - m_Gbc.gridx;
+            m_Gbc.fill = GridBagConstraints.HORIZONTAL;
+        }
+
+        // To ensure everything stays at the top, add a dummy component with weight
+        protected void AlignTop()
+        {
+            m_Gbc.gridx = 0;
+            m_Gbc.gridy++;
+            m_Gbc.gridwidth = 4;
+            m_Gbc.weighty = 1.0;
+            m_Gbc.fill = GridBagConstraints.BOTH;
+            Panel.add(new JLabel(), m_Gbc);  // Dummy component
+        }
+
+        protected GridBagConstraints m_Gbc;
     }
 
     private class CircleInterfaceControls extends ShapeInterfaceControls
     {
-        // This button should not be here. Keep it here for now though
-        public JButton DrawShapeButton;
-
         // TODO: Maybe don't use JSpinner here?
         public JSpinner RadiusInput;
 
@@ -344,24 +362,16 @@ public class ShapeMaker extends JFrame
             super();
 
             RadiusInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-
-            Panel.add(new JLabel("Radius:"));
-            Panel.add(RadiusInput);
-
-            DrawShapeButton = new JButton("Draw");
-            Utils.RegisterComponentCallback(DrawShapeButton, e -> { onDrawShape(e); });
-
-            Panel.add(DrawShapeButton);
-            Utils.SetComponentWidth(DrawShapeButton, 500 - 50);    // TODO: Get width properly (minus padding)
+            Panel.add(new JLabel("Radius:"), m_Gbc);
+            SameLine();
+            SpanAvailWidth();
+            Panel.add(RadiusInput, m_Gbc);
+            AlignTop();
         }
-    }
-    private CircleInterfaceControls m_CircleControls;
+    } private CircleInterfaceControls m_CircleControls;
 
     private class RectangleInterfaceControls extends ShapeInterfaceControls
     {
-        // This button should not be here. Keep it here for now though
-        public JButton DrawShapeButton;
-
         public JSpinner WidthInput;
         public JSpinner HeightInput;
 
@@ -372,26 +382,19 @@ public class ShapeMaker extends JFrame
             WidthInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
             HeightInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 
-            Panel.add(new JLabel("Width:"));
-            Panel.add(WidthInput);
-
-            Panel.add(new JLabel("Height:"));
-            Panel.add(HeightInput);
-
-            DrawShapeButton = new JButton("Draw");
-            Utils.RegisterComponentCallback(DrawShapeButton, e -> { onDrawShape(e); });
-
-            Panel.add(DrawShapeButton);
-            Utils.SetComponentWidth(DrawShapeButton, 500 - 50);    // TODO: Get width properly (minus padding)
+            Panel.add(new JLabel("Width:"), m_Gbc);
+            SameLine();
+            Panel.add(WidthInput, m_Gbc);
+            SameLine();
+            Panel.add(new JLabel("Height:"), m_Gbc);
+            SameLine();
+            Panel.add(HeightInput, m_Gbc);
+            AlignTop();
         }
-    }
-    private RectangleInterfaceControls m_RectangleControls;
+    } private RectangleInterfaceControls m_RectangleControls;
 
     private class TriangleInterfaceControls extends ShapeInterfaceControls
     {
-        // This button should not be here. Keep it here for now though
-        public JButton DrawShapeButton;
-
         public JSpinner S1Input;
         public JSpinner S2Input;
         public JSpinner S3Input;
@@ -404,38 +407,25 @@ public class ShapeMaker extends JFrame
             S2Input = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
             S3Input = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 
-            Panel.add(new JLabel("S1:"));
-            Panel.add(S1Input);
-            Panel.add(new JLabel("S2:"));
-            Panel.add(S2Input);
-            Panel.add(new JLabel("S3:"));
-            Panel.add(S3Input);
-
-            DrawShapeButton = new JButton("Draw");
-            Utils.RegisterComponentCallback(DrawShapeButton, e -> { onDrawShape(e); });
-
-            Panel.add(DrawShapeButton);
-            Utils.SetComponentWidth(DrawShapeButton, 500 - 50);    // TODO: Get width properly (minus padding)
+            Panel.add(new JLabel("S1:"), m_Gbc);
+            SameLine();
+            Panel.add(S1Input, m_Gbc);
+            SameLine();
+            Panel.add(new JLabel("S2:"), m_Gbc);
+            SameLine();
+            Panel.add(S2Input, m_Gbc);
+            NewLine();
+            Panel.add(new JLabel("S3:"), m_Gbc);
+            SameLine();
+            SpanAvailWidth();
+            Panel.add(S3Input, m_Gbc);
+            AlignTop();
         }
+    } private TriangleInterfaceControls m_TriangleControls;
+
+    public static void main(String[] args)
+    {
+        ShapeMaker maker = new ShapeMaker();
+        maker.Run();
     }
-    private TriangleInterfaceControls m_TriangleControls;
-
-    private JCheckBox m_FilledCheckBox;
-
-    private JSpinner m_RectWidthInput;
-    private JSpinner m_RectHeightInput;
-    private JSpinner m_XInput; // TODO: Remove all of these
-    private JSpinner m_YInput;
-
-    private CardLayout m_InterfaceLayout;
-    private JPanel m_InterfacePanel;
-
-    private JPanel m_CircleInterfacePanel;
-    private JPanel m_RectangleInterfacePanel; // TODO: Remove
-    private JPanel m_TriangleInterfacePanel;
-
-    private JPanel m_ViewportPanel;
-    // private Viewport m_Viewport;
-
-    // TODO: Create a label with the text "Dimensions" and under it put all shape dimension stuff
 }
