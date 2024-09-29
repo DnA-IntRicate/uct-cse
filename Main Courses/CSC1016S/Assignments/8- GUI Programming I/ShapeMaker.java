@@ -98,11 +98,15 @@ public class ShapeMaker extends JFrame
         final String[] SHAPES_STRINGS = { SHAPE_STR_CIRCLE, SHAPE_STR_RECTANGLE, SHAPE_STR_TRIANGLE };
         m_ShapesComboBox = new JComboBox<String>(SHAPES_STRINGS);
         Utils.SetComponentWidth(m_ShapesComboBox, FRAME_WIDTH - 100);
-        Utils.RegisterComponentCallback(m_ShapesComboBox, e -> { onShapeSelected(e); });
+        Utils.RegisterComponentCallback(m_ShapesComboBox, e -> { OnShapeSelected(e); });
 
         m_DrawShapeButton = new JButton("Draw");
-        Utils.RegisterComponentCallback(m_DrawShapeButton, e -> { onDrawShape(e); });
-        Utils.SetComponentWidth(m_DrawShapeButton, FRAME_WIDTH - 50);
+        Utils.RegisterComponentCallback(m_DrawShapeButton, e -> { OnDrawShape(e); });
+        Utils.SetComponentWidth(m_DrawShapeButton, FRAME_WIDTH - 150);
+
+        m_ClearViewportButton = new JButton("Clear");
+        Utils.RegisterComponentCallback(m_ClearViewportButton, e -> { OnClearViewport(e); });
+        Utils.SetComponentWidth(m_ClearViewportButton, FRAME_WIDTH - 350);
 
         m_InterfaceLayout = new CardLayout();
         m_InterfacePanel = new JPanel(m_InterfaceLayout);
@@ -134,7 +138,8 @@ public class ShapeMaker extends JFrame
         add(new JLabel("Shape:"));
         add(m_ShapesComboBox);
         add(m_InterfacePanel);
-        add(m_DrawShapeButton);
+        add(m_DrawShapeButton, FlowLayout.LEADING);
+        add(m_ClearViewportButton, FlowLayout.TRAILING);
         add(m_ViewportPanel);
 
         setVisible(true);
@@ -226,18 +231,45 @@ public class ShapeMaker extends JFrame
         g.drawString(String.format("Area: %.2f", tri.getArea()), textX, textY);
     }
 
+    private void ClearViewport(Graphics2D g)
+    {
+        Log("Clearing Viewport.");
+
+        g.setColor(COLOR_VIEWPORT);
+        g.fillRect(0, 0, m_ViewportPanel.getWidth(), m_ViewportPanel.getHeight());
+    }
+
     // This must be called before every draw
     private Graphics2D PrepareViewportGraphicsContextForDraw()
     {
         Graphics2D res = (Graphics2D)m_ViewportPanel.getGraphics();
         res.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        res.setColor(COLOR_VIEWPORT);
-        res.fillRect(0, 0, m_ViewportPanel.getWidth(), m_ViewportPanel.getHeight());
 
         return res;
     }
 
-    private void onDrawShape(ActionEvent e)
+    private void OnShapeSelected(ActionEvent e)
+    {
+        String selectedShape = (String)m_ShapesComboBox.getSelectedItem();
+        Log("Selected %s.", selectedShape);
+
+        switch (selectedShape)
+        {
+            case SHAPE_STR_CIRCLE:
+                m_InterfaceLayout.show(m_InterfacePanel, "CircleInterfacePanel");
+                break;
+
+            case SHAPE_STR_RECTANGLE:
+                m_InterfaceLayout.show(m_InterfacePanel, "RectangleInterfacePanel");
+                break;
+
+            case SHAPE_STR_TRIANGLE:
+                m_InterfaceLayout.show(m_InterfacePanel, "TriangleInterfacePanel");
+                break;
+        }
+    }
+
+    private void OnDrawShape(ActionEvent e)
     {
         switch ((String)m_ShapesComboBox.getSelectedItem())
         {
@@ -278,25 +310,9 @@ public class ShapeMaker extends JFrame
         }
     }
 
-    private void onShapeSelected(ActionEvent e)
+    private void OnClearViewport(ActionEvent e)
     {
-        String selectedShape = (String)m_ShapesComboBox.getSelectedItem();
-        Log("Selected %s.", selectedShape);
-
-        switch (selectedShape)
-        {
-            case SHAPE_STR_CIRCLE:
-                m_InterfaceLayout.show(m_InterfacePanel, "CircleInterfacePanel");
-                break;
-
-            case SHAPE_STR_RECTANGLE:
-                m_InterfaceLayout.show(m_InterfacePanel, "RectangleInterfacePanel");
-                break;
-
-            case SHAPE_STR_TRIANGLE:
-                m_InterfaceLayout.show(m_InterfacePanel, "TriangleInterfacePanel");
-                break;
-        }
+        ClearViewport((Graphics2D)m_ViewportPanel.getGraphics());
     }
 
     private static void Log(String fmt, Object... args)
@@ -310,6 +326,7 @@ public class ShapeMaker extends JFrame
 
     private JComboBox<String> m_ShapesComboBox;
     private JButton m_DrawShapeButton;
+    private JButton m_ClearViewportButton;
 
     /** Marked as abstract since this class should never be instantiated directly. */
     private abstract class ShapeInterfaceControls
@@ -331,6 +348,7 @@ public class ShapeMaker extends JFrame
 
             XInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
             YInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+
             FilledCheckBox = new JCheckBox("", false); // Using a left-justified label later.
 
             final String[] COLORS_STRINGS = { COLOR_STR_BLACK, COLOR_STR_RED, COLOR_STR_GREEN, COLOR_STR_BLUE };
@@ -409,8 +427,8 @@ public class ShapeMaker extends JFrame
         {
             super();
 
-            RadiusInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            RadiusInput = new JSpinner(new SpinnerNumberModel(1, 1, 2 * PANEL_VIEWPORT_WIDTH, 1));
+            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_WIDTH * PANEL_VIEWPORT_HEIGHT, 1));
 
             Add(new JLabel("Radius:"));
             SameLine();
@@ -436,9 +454,9 @@ public class ShapeMaker extends JFrame
         {
             super();
 
-            WidthInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            HeightInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            WidthInput = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_WIDTH, 1));
+            HeightInput = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_HEIGHT, 1));
+            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_WIDTH * PANEL_VIEWPORT_HEIGHT, 1));
 
             Add(new JLabel("Width:"));
             SameLine();
@@ -471,10 +489,10 @@ public class ShapeMaker extends JFrame
         {
             super();
 
-            S1Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            S2Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            S3Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            S1Input = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_WIDTH, 1));
+            S2Input = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_HEIGHT, 1));
+            S3Input = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_HEIGHT, 1));
+            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, PANEL_VIEWPORT_WIDTH * PANEL_VIEWPORT_HEIGHT, 1));
 
             Add(new JLabel("S1:"));
             SameLine();
