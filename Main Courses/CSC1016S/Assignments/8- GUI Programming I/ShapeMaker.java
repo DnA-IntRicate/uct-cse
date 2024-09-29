@@ -62,6 +62,9 @@ public class ShapeMaker extends JFrame
     /** The offset applied when rendering shape details in the viewport relative to the shape. */
     private static final int SHAPE_TEXT_OFFSET = 5;
 
+    /** The offset applied to the coordinates of shapes to prevent viewport border clipping at the origin. */
+    private static final int SHAPE_POSITION_OFFSET = 10;
+
     /** Black string. */
     private static final String COLOR_STR_BLACK = "Black";
 
@@ -238,6 +241,10 @@ public class ShapeMaker extends JFrame
         Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(circle.getColor()));
 
+        // Apply position offsets if the x or y coordinates are less than SHAPE_POSITION_OFFSET.
+        x += (x < SHAPE_POSITION_OFFSET) ? SHAPE_POSITION_OFFSET : 0;
+        y += (y < SHAPE_POSITION_OFFSET) ? SHAPE_POSITION_OFFSET : 0;
+
         int diameter = (int)circle.getRadius() * 2;
         if (circle.isFilled())
             g.fillOval(x, y, diameter, diameter);
@@ -265,6 +272,10 @@ public class ShapeMaker extends JFrame
         Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(rect.getColor()));
 
+        // Apply position offsets if the x or y coordinates are less than SHAPE_POSITION_OFFSET.
+        x += (x < SHAPE_POSITION_OFFSET) ? SHAPE_POSITION_OFFSET : 0;
+        y += (y < SHAPE_POSITION_OFFSET) ? SHAPE_POSITION_OFFSET : 0;
+
         int width = (int)rect.getWidth(), height = (int)rect.getHeight();
         if (rect.isFilled())
             g.fillRect(x, y, width, height);
@@ -278,7 +289,7 @@ public class ShapeMaker extends JFrame
 
     /**
      * Draw the given {@code tri} onto the viewport at the given {@code x} and {@code y} coordinates. This {@link Triangle}
-     * is anchored at its bottom-left corner and its area and perimeter are displayed at its top-right corner.
+     * is anchored at its top-left corner and its area and perimeter are displayed at its bottom-right corner.
      *
      * @param tri the {@link Triangle} to draw
      * @param x the x-coordinate to draw at
@@ -307,17 +318,24 @@ public class ShapeMaker extends JFrame
         int x3 = (int)(b * Math.cos(thetaRadians));
         int y3 = -(int)(b * Math.sin(thetaRadians)); // Invert y-coord since down is positive in Swing's coord system.
 
+        // Determine the perpendicular height of the triangle to be used to offset the y-coordinates.
+        int height = (2 * (int)tri.getArea()) / a; // Assuming 'a' is the length of the base.
+
+        // Apply position offsets if the x or y coordinates are less than SHAPE_POSITION_OFFSET.
+        x += (x < SHAPE_POSITION_OFFSET) ? SHAPE_POSITION_OFFSET : 0;
+        y += (y < SHAPE_POSITION_OFFSET) ? SHAPE_POSITION_OFFSET : 0;
+
         // Apply x and y offsets and transform the local-space vertices to world-space.
         int[] xPoints = { x1 + x, x2 + x, x3 + x };
-        int[] yPoints = { y1 + y, y2 + y, y3 + y };
+        int[] yPoints = { height + y1 + y, height + y2 + y, height + y3 + y };
 
         if (tri.isFilled())
             g.fillPolygon(xPoints, yPoints, 3);
         else
             g.drawPolygon(xPoints, yPoints, 3);
 
-        int textX = x + x3 + (2 * SHAPE_TEXT_OFFSET);
-        int textY = y + y3 - (2 * SHAPE_TEXT_OFFSET);
+        int textX = x + a + (2 * SHAPE_TEXT_OFFSET); // Assuming 'a' is the length of the base.
+        int textY = y + height - (2 * SHAPE_TEXT_OFFSET);
         DrawShapeText(tri, g, textX, textY);
     }
 
