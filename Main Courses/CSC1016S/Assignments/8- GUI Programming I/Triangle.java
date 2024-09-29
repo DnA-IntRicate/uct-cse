@@ -94,7 +94,7 @@ public class Triangle extends Shape
     public void setSide3(double s3) { m_S3 = s3; }
 
     /**
-     * Calculate the area of this triangle. Implements Heron's formula for the area of a triangle.
+     * Calculate the area of this triangle. Implements Heron's formula for calculating the area of a triangle.
      *
      * @return the area of this triangle
      *
