@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 
 /**
  * TODO: Desc
- * TODO: Do we need to apply a scaling factor?
  *
  * We keepin' it DRY in here
  *
@@ -94,16 +93,16 @@ public class ShapeMaker extends JFrame
     public ShapeMaker()
     {
         super(FRAME_NAME);
-        Log("Initializing frame: %s.", FRAME_NAME);
+        Log("Initializing JFrame: %s.", FRAME_NAME);
 
         final String[] SHAPES_STRINGS = { SHAPE_STR_CIRCLE, SHAPE_STR_RECTANGLE, SHAPE_STR_TRIANGLE };
         m_ShapesComboBox = new JComboBox<String>(SHAPES_STRINGS);
-        Utils.SetComponentWidth(m_ShapesComboBox, 350);
+        Utils.SetComponentWidth(m_ShapesComboBox, FRAME_WIDTH - 100);
         Utils.RegisterComponentCallback(m_ShapesComboBox, e -> { onShapeSelected(e); });
 
         m_DrawShapeButton = new JButton("Draw");
         Utils.RegisterComponentCallback(m_DrawShapeButton, e -> { onDrawShape(e); });
-        Utils.SetComponentWidth(m_DrawShapeButton, 400);
+        Utils.SetComponentWidth(m_DrawShapeButton, FRAME_WIDTH - 50);
 
         m_InterfaceLayout = new CardLayout();
         m_InterfacePanel = new JPanel(m_InterfaceLayout);
@@ -244,7 +243,7 @@ public class ShapeMaker extends JFrame
         {
             case SHAPE_STR_CIRCLE:
                 Circle circle = new Circle();
-                circle.setRadius((double)(int)m_CircleControls.RadiusInput.getValue());
+                circle.setRadius((double)m_CircleControls.GetRadius() * (double)m_CircleControls.GetScale());
                 circle.setColor(m_CircleControls.GetColor());
                 circle.setFilled(m_CircleControls.GetFilled());
                 DrawCircle(circle, m_CircleControls.GetX(), m_CircleControls.GetY());
@@ -252,8 +251,8 @@ public class ShapeMaker extends JFrame
 
             case SHAPE_STR_RECTANGLE:
                 Rectangle rect = new Rectangle();
-                rect.setWidth((double)(int)m_RectangleControls.WidthInput.getValue());
-                rect.setHeight((double)(int)m_RectangleControls.HeightInput.getValue());
+                rect.setWidth((double)m_RectangleControls.GetWidth() * (double)m_RectangleControls.GetScale());
+                rect.setHeight((double)m_RectangleControls.GetHeight() * (double)m_RectangleControls.GetScale());
                 rect.setColor(m_RectangleControls.GetColor());
                 rect.setFilled(m_RectangleControls.GetFilled());
                 DrawRectangle(rect, m_RectangleControls.GetX(), m_RectangleControls.GetY());
@@ -261,9 +260,9 @@ public class ShapeMaker extends JFrame
 
             case SHAPE_STR_TRIANGLE:
                 Triangle tri = new Triangle();
-                tri.setSide1((double)(int)m_TriangleControls.S1Input.getValue());
-                tri.setSide2((double)(int)m_TriangleControls.S2Input.getValue());
-                tri.setSide3((double)(int)m_TriangleControls.S3Input.getValue());
+                tri.setSide1((double)m_TriangleControls.GetS1() * (double)m_TriangleControls.GetScale());
+                tri.setSide2((double)m_TriangleControls.GetS2() * (double)m_TriangleControls.GetScale());
+                tri.setSide3((double)m_TriangleControls.GetS3() * (double)m_TriangleControls.GetScale());
                 tri.setColor(m_TriangleControls.GetColor());
                 tri.setFilled(m_TriangleControls.GetFilled());
 
@@ -337,22 +336,22 @@ public class ShapeMaker extends JFrame
             final String[] COLORS_STRINGS = { COLOR_STR_BLACK, COLOR_STR_RED, COLOR_STR_GREEN, COLOR_STR_BLUE };
             ColorsComboBox = new JComboBox<String>(COLORS_STRINGS);
 
-            Panel.add(new JLabel("X:"), m_Gbc);
+            Add(new JLabel("X:"));
             SameLine();
-            Panel.add(XInput, m_Gbc);
+            Add(XInput);
             SameLine();
-            Panel.add(new JLabel("Y:"), m_Gbc);
+            Add(new JLabel("Y:"));
             SameLine();
-            Panel.add(YInput, m_Gbc);
+            Add(YInput);
             NewLine();
-            Panel.add(new JLabel("Filled:"), m_Gbc);
+            Add(new JLabel("Filled:"));
             SameLine();
-            Panel.add(FilledCheckBox, m_Gbc);
+            Add(FilledCheckBox);
             SameLine();
-            Panel.add(new JLabel("Color:"), m_Gbc);
+            Add(new JLabel("Color:"));
             SameLine();
             SpanAvailWidth();
-            Panel.add(ColorsComboBox, m_Gbc);
+            Add(ColorsComboBox);
 
             // This puts all controls rendered by derived classes below the ones rendered here.
             NewLine();
@@ -362,6 +361,11 @@ public class ShapeMaker extends JFrame
         public int GetY() { return (int)YInput.getValue(); }
         public boolean GetFilled() { return FilledCheckBox.isSelected(); }
         public String GetColor() { return (String)ColorsComboBox.getSelectedItem(); }
+
+        protected void Add(JComponent component)
+        {
+            Panel.add(component, m_Gbc);
+        }
 
         protected void SameLine()
         {
@@ -398,26 +402,35 @@ public class ShapeMaker extends JFrame
 
     private class CircleInterfaceControls extends ShapeInterfaceControls
     {
-        // TODO: Maybe don't use JSpinner here?
         public JSpinner RadiusInput;
+        public JSpinner ScaleInput;
 
         public CircleInterfaceControls()
         {
             super();
 
             RadiusInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
-            Panel.add(new JLabel("Radius:"), m_Gbc);
+            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+
+            Add(new JLabel("Radius:"));
             SameLine();
-            SpanAvailWidth();
-            Panel.add(RadiusInput, m_Gbc);
+            Add(RadiusInput);
+            SameLine();
+            Add(new JLabel("Scale:"));
+            SameLine();
+            Add(ScaleInput);
             AlignTop();
         }
+
+        public int GetRadius() { return (int)RadiusInput.getValue(); }
+        public int GetScale() { return (int)ScaleInput.getValue(); }
     } private CircleInterfaceControls m_CircleControls;
 
     private class RectangleInterfaceControls extends ShapeInterfaceControls
     {
         public JSpinner WidthInput;
         public JSpinner HeightInput;
+        public JSpinner ScaleInput;
 
         public RectangleInterfaceControls()
         {
@@ -425,16 +438,26 @@ public class ShapeMaker extends JFrame
 
             WidthInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
             HeightInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
-            Panel.add(new JLabel("Width:"), m_Gbc);
+            Add(new JLabel("Width:"));
             SameLine();
-            Panel.add(WidthInput, m_Gbc);
+            Add(WidthInput);
             SameLine();
-            Panel.add(new JLabel("Height:"), m_Gbc);
+            Add(new JLabel("Height:"));
             SameLine();
-            Panel.add(HeightInput, m_Gbc);
+            Add(HeightInput);
+            NewLine();
+            Add(new JLabel("Scale:"));
+            SameLine();
+            SpanAvailWidth();
+            Add(ScaleInput);
             AlignTop();
         }
+
+        public int GetWidth() { return (int)WidthInput.getValue(); }
+        public int GetHeight() { return (int)HeightInput.getValue(); }
+        public int GetScale() { return (int)ScaleInput.getValue(); }
     } private RectangleInterfaceControls m_RectangleControls;
 
     private class TriangleInterfaceControls extends ShapeInterfaceControls
@@ -442,6 +465,7 @@ public class ShapeMaker extends JFrame
         public JSpinner S1Input;
         public JSpinner S2Input;
         public JSpinner S3Input;
+        public JSpinner ScaleInput;
 
         public TriangleInterfaceControls()
         {
@@ -450,21 +474,30 @@ public class ShapeMaker extends JFrame
             S1Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
             S2Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
             S3Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            ScaleInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
-            Panel.add(new JLabel("S1:"), m_Gbc);
+            Add(new JLabel("S1:"));
             SameLine();
-            Panel.add(S1Input, m_Gbc);
+            Add(S1Input);
             SameLine();
-            Panel.add(new JLabel("S2:"), m_Gbc);
+            Add(new JLabel("S2:"));
             SameLine();
-            Panel.add(S2Input, m_Gbc);
+            Add(S2Input);
             NewLine();
-            Panel.add(new JLabel("S3:"), m_Gbc);
+            Add(new JLabel("S3:"));
             SameLine();
-            SpanAvailWidth();
-            Panel.add(S3Input, m_Gbc);
+            Add(S3Input);
+            SameLine();
+            Add(new JLabel("Scale:"));
+            SameLine();
+            Add(ScaleInput);
             AlignTop();
         }
+
+        public int GetS1() { return (int)S1Input.getValue(); }
+        public int GetS2() { return (int)S2Input.getValue(); }
+        public int GetS3() { return (int)S3Input.getValue(); }
+        public int GetScale() { return (int)ScaleInput.getValue(); }
     } private TriangleInterfaceControls m_TriangleControls;
 
     public static void main(String[] args)
