@@ -25,6 +25,12 @@ public class ShapeMaker extends JFrame
 
     private static final Color COLOR_VIEWPORT = new Color(0.9f, 0.85f, 0.9f, 1.0f);
     private static final Color COLOR_MISSING = new Color(1.0f, 0.0f, 1.0f, 1.0f); // Magenta
+    private static final Color COLOR_BLACK = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+    private static final Color COLOR_RED = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+    private static final Color COLOR_GREEN = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+    private static final Color COLOR_BLUE = new Color(0.0f, 0.0f, 1.0f, 1.0f);
+
+    private static final String FRAME_NAME = "Shape Maker ~ Adam Foflonker (FFLADA001)";
 
     private static final int FRAME_WIDTH = 450;
     private static final int FRAME_HEIGHT = 700;
@@ -34,6 +40,8 @@ public class ShapeMaker extends JFrame
 
     private static final int PANEL_VIEWPORT_WIDTH = FRAME_WIDTH;
     private static final int PANEL_VIEWPORT_HEIGHT = FRAME_HEIGHT - PANEL_INTERFACE_HEIGHT;
+
+    private static final int SHAPE_TEXT_OFFSET = 5;
 
     /**
      * TODO: Comment, Since this is private it probably doesn't need javadoc comments
@@ -67,10 +75,10 @@ public class ShapeMaker extends JFrame
         {
             switch (colorStr)
             {
-                case COLOR_STR_BLACK:   return new Color(0.0f, 0.0f, 0.0f, 1.0f);
-                case COLOR_STR_RED:     return new Color(1.0f, 0.0f, 0.0f, 1.0f);
-                case COLOR_STR_GREEN:   return new Color(0.0f, 1.0f, 0.0f, 1.0f);
-                case COLOR_STR_BLUE:    return new Color(0.0f, 0.0f, 1.0f, 1.0f);
+                case COLOR_STR_BLACK:   return COLOR_BLACK;
+                case COLOR_STR_RED:     return COLOR_RED;
+                case COLOR_STR_GREEN:   return COLOR_GREEN;
+                case COLOR_STR_BLUE:    return COLOR_BLUE;
             }
 
             return COLOR_MISSING;
@@ -85,7 +93,8 @@ public class ShapeMaker extends JFrame
 
     public ShapeMaker()
     {
-        super("Shape Maker");
+        super(FRAME_NAME);
+        Log("Initializing frame: %s.", FRAME_NAME);
 
         final String[] SHAPES_STRINGS = { SHAPE_STR_CIRCLE, SHAPE_STR_RECTANGLE, SHAPE_STR_TRIANGLE };
         m_ShapesComboBox = new JComboBox<String>(SHAPES_STRINGS);
@@ -145,8 +154,13 @@ public class ShapeMaker extends JFrame
         else
             g.drawOval(x, y, diameter, diameter);
 
-        // TODO: Use this
-        g.drawString("fishy fish fish, fish fish", x + diameter, y + diameter);
+        int textX = x + diameter + SHAPE_TEXT_OFFSET;
+        int textY = y + diameter + SHAPE_TEXT_OFFSET;
+
+        g.setColor(COLOR_BLACK);
+        g.drawString(String.format("Perimeter: %.2f", circle.getPerimeter()), textX, textY);
+        textY += g.getFontMetrics().getHeight();
+        g.drawString(String.format("Area: %.2f", circle.getArea()), textX, textY);
     }
 
     public void DrawRectangle(final Rectangle rect, int x, int y)
@@ -156,10 +170,19 @@ public class ShapeMaker extends JFrame
         Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(rect.getColor()));
 
+        int width = (int)rect.getWidth(), height = (int)rect.getHeight();
         if (rect.isFilled())
-            g.fillRect(x, y, (int)rect.getWidth(), (int)rect.getHeight());
+            g.fillRect(x, y, width, height);
         else
-            g.drawRect(x, y, (int)rect.getWidth(), (int)rect.getHeight());
+            g.drawRect(x, y, width, height);
+
+        int textX = x + width + SHAPE_TEXT_OFFSET;
+        int textY = y + height + SHAPE_TEXT_OFFSET;
+
+        g.setColor(COLOR_BLACK);
+        g.drawString(String.format("Perimeter: %.2f", rect.getPerimeter()), textX, textY);
+        textY += g.getFontMetrics().getHeight();
+        g.drawString(String.format("Area: %.2f", rect.getArea()), textX, textY);
     }
 
     public void DrawTriangle(final Triangle tri, int x, int y)
@@ -169,21 +192,23 @@ public class ShapeMaker extends JFrame
         Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(tri.getColor()));
 
-        int a = (int)tri.getSide1();
-        int b = (int)tri.getSide2();
-        int c = (int)tri.getSide3();
+        int a = (int)tri.getSide1(), b = (int)tri.getSide2(), c = (int)tri.getSide3();
 
-        int x1 = 0, y1 = 0;           // First vertex at (0, 0)
-        int x2 = a, y2 = 0;           // Second vertex at (a, 0)
+        // Vertex 1 at (0, 0) in local-space.
+        int x1 = 0, y1 = 0;
 
+        // Vertex 2 at (a, 0) in local-space.
+        int x2 = a, y2 = 0;
+
+        // Cosine law.
         double cosTheta = ((a * a) + (b * b) - (c * c)) / (2.0 * a * b);
-        double theta = Math.acos(cosTheta);  // Angle in radians
+        double thetaRadians = Math.acos(cosTheta);
 
-        // Coordinates of the third vertex
-        int x3 = (int)(b * Math.cos(theta));
-        int y3 = -(int)(b * Math.sin(theta));
+        // Vertex 3 in local-space.
+        int x3 = (int)(b * Math.cos(thetaRadians));
+        int y3 = -(int)(b * Math.sin(thetaRadians)); // Invert y-coord since down is positive in Swing's coord system.
 
-        // Draw the triangle
+        // Apply x and y offsets and transform the local-space vertices to world-space.
         int[] xPoints = { x1 + x, x2 + x, x3 + x };
         int[] yPoints = { y1 + y, y2 + y, y3 + y };
 
@@ -191,6 +216,15 @@ public class ShapeMaker extends JFrame
             g.fillPolygon(xPoints, yPoints, 3);
         else
             g.drawPolygon(xPoints, yPoints, 3);
+
+        // TODO: FIXME
+        int textX = x + x3 + SHAPE_TEXT_OFFSET;
+        int textY = y + y3 + SHAPE_TEXT_OFFSET;
+
+        g.setColor(COLOR_BLACK);
+        g.drawString(String.format("Perimeter: %.2f", tri.getPerimeter()), textX, textY);
+        textY += g.getFontMetrics().getHeight();
+        g.drawString(String.format("Area: %.2f", tri.getArea()), textX, textY);
     }
 
     // This must be called before every draw
@@ -371,7 +405,7 @@ public class ShapeMaker extends JFrame
         {
             super();
 
-            RadiusInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+            RadiusInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
             Panel.add(new JLabel("Radius:"), m_Gbc);
             SameLine();
             SpanAvailWidth();
@@ -389,8 +423,8 @@ public class ShapeMaker extends JFrame
         {
             super();
 
-            WidthInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-            HeightInput = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+            WidthInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            HeightInput = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
             Panel.add(new JLabel("Width:"), m_Gbc);
             SameLine();
@@ -413,9 +447,9 @@ public class ShapeMaker extends JFrame
         {
             super();
 
-            S1Input = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-            S2Input = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-            S3Input = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+            S1Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            S2Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+            S3Input = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
             Panel.add(new JLabel("S1:"), m_Gbc);
             SameLine();
