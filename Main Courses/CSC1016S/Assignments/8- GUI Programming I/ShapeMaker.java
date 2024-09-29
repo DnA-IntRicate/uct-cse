@@ -221,9 +221,8 @@ public class ShapeMaker extends JFrame
         else
             g.drawPolygon(xPoints, yPoints, 3);
 
-        // TODO: FIXME
-        int textX = x + x3 + SHAPE_TEXT_OFFSET;
-        int textY = y + y3 + SHAPE_TEXT_OFFSET;
+        int textX = x + x3 + (2 * SHAPE_TEXT_OFFSET);
+        int textY = y + y3 - (2 * SHAPE_TEXT_OFFSET);
 
         g.setColor(COLOR_BLACK);
         g.drawString(String.format("Perimeter: %.2f", tri.getPerimeter()), textX, textY);
