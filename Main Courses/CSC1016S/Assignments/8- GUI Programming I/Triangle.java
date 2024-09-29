@@ -94,7 +94,7 @@ public class Triangle extends Shape
     public void setSide3(double s3) { m_S3 = s3; }
 
     /**
-     * Calculate the area of this triangle.
+     * Calculate the area of this triangle. Implements Heron's formula for the area of a triangle.
      *
      * @return the area of this triangle
      *
@@ -103,7 +103,8 @@ public class Triangle extends Shape
     @Override
     public double getArea()
     {
-        return 0.5 * m_S1 * m_S2;
+        double s = (m_S1 + m_S2 + m_S3) * 0.5;
+        return Math.sqrt(s * (s - m_S1) * (s - m_S2) * (s - m_S3));
     }
 
     /**
