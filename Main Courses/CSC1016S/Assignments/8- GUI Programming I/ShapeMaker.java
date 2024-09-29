@@ -75,6 +75,12 @@ public class ShapeMaker extends JFrame
 
             return COLOR_MISSING;
         }
+
+        public static boolean IsValidTriangle(final Triangle tri)
+        {
+            double a = tri.getSide1(), b = tri.getSide2(), c = tri.getSide3();
+            return ((a + b) > c) && ((a + c) > b) && ((b + c) > a);
+        }
     }
 
     public ShapeMaker()
@@ -138,6 +144,9 @@ public class ShapeMaker extends JFrame
             g.fillOval(x, y, diameter, diameter);
         else
             g.drawOval(x, y, diameter, diameter);
+
+        // TODO: Use this
+        g.drawString("fishy fish fish, fish fish", x + diameter, y + diameter);
     }
 
     public void DrawRectangle(final Rectangle rect, int x, int y)
@@ -153,7 +162,6 @@ public class ShapeMaker extends JFrame
             g.drawRect(x, y, (int)rect.getWidth(), (int)rect.getHeight());
     }
 
-    // TODO: This ain't working...
     public void DrawTriangle(final Triangle tri, int x, int y)
     {
         Log("Drawing Triangle: " + tri.toString());
@@ -161,29 +169,23 @@ public class ShapeMaker extends JFrame
         Graphics2D g = PrepareViewportGraphicsContextForDraw();
         g.setColor(Utils.StrColorToColor(tri.getColor()));
 
-        double sideA = tri.getSide1();
-        double sideB = tri.getSide2();
-        double sideC = tri.getSide3();
+        int a = (int)tri.getSide1();
+        int b = (int)tri.getSide2();
+        int c = (int)tri.getSide3();
 
-        // Calculate angles using the Law of Cosines
-        double angleA = Math.acos(((sideB * sideB) + (sideC * sideC) - (sideA * sideA)) / (2 * sideB * sideC));
-        double angleB = Math.acos(((sideA * sideA) + (sideC * sideC) - (sideB * sideB)) / (2 * sideA * sideC));
-        double angleC = Math.PI - angleA - angleB; // Triangle sum theorem
-        // TODO: Remove this
+        int x1 = 0, y1 = 0;           // First vertex at (0, 0)
+        int x2 = a, y2 = 0;           // Second vertex at (a, 0)
 
-        // Assuming one vertex is at (x, y) (the starting point)
-        int ax = x;
-        int ay = y;
+        double cosTheta = ((a * a) + (b * b) - (c * c)) / (2.0 * a * b);
+        double theta = Math.acos(cosTheta);  // Angle in radians
 
-        int bx = (int) (ax + sideC * Math.cos(angleB)); // Using angleB at vertex A
-        int by = (int) (ay + sideC * Math.sin(angleB));
+        // Coordinates of the third vertex
+        int x3 = (int)(b * Math.cos(theta));
+        int y3 = -(int)(b * Math.sin(theta));
 
-        int cx = (int) (ax + sideB * Math.cos(angleA)); // Using angleA at vertex A
-        int cy = (int) (ay + sideB * Math.sin(angleA));
-
-        // Create arrays for the points
-        int[] xPoints = { ax, bx, cx };
-        int[] yPoints = { ay, by, cy };
+        // Draw the triangle
+        int[] xPoints = { x1 + x, x2 + x, x3 + x };
+        int[] yPoints = { y1 + y, y2 + y, y3 + y };
 
         if (tri.isFilled())
             g.fillPolygon(xPoints, yPoints, 3);
@@ -230,6 +232,14 @@ public class ShapeMaker extends JFrame
                 tri.setSide3((double)(int)m_TriangleControls.S3Input.getValue());
                 tri.setColor(m_TriangleControls.GetColor());
                 tri.setFilled(m_TriangleControls.GetFilled());
+
+                if (!Utils.IsValidTriangle(tri))
+                {
+                    JOptionPane.showMessageDialog(this, "The triangle sides you inputted are invalid.",
+                        "Invalid Triangle!", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 DrawTriangle(tri, m_TriangleControls.GetX(), m_TriangleControls.GetY());
                 break;
         }
