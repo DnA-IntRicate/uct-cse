@@ -34,40 +34,43 @@ public class PtLine extends VectorObject
     @Override
     public void draw(char[][] matrix)
     {
-        boolean steep = Math.abs(m_Y1 - this.y) > Math.abs(m_X1 - this.x);
+        int x0 = this.x, x1 = m_X1;
+        int y0 = this.y, y1 = m_Y1;
+
+        boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
         if (steep)
         {
-            int tmp = this.x;
-            this.x = this.y;
-            this.y = tmp;
+            int tmp = x0;
+            x0 = y0;
+            y0 = tmp;
 
-            tmp = m_X1;
-            m_X1 = m_Y1;
-            m_Y1 = tmp;
+            tmp = x1;
+            x1 = y1;
+            y1 = tmp;
         }
 
-        if (this.x > m_X1)
+        if (x0 > x1)
         {
-            int tmp = this.x;
-            this.x = m_X1;
-            m_X1 = tmp;
+            int tmp = x0;
+            x0 = x1;
+            x1 = tmp;
 
-            tmp = this.y;
-            this.y = m_Y1;
-            m_Y1 = tmp;
+            tmp = y0;
+            y0 = y1;
+            y1 = tmp;
         }
 
-        int ys = (this.y < m_Y1) ? 1 : -1;
-        double m = (double)Math.abs(m_Y1 - this.y) / (double)(m_X1 - this.x);
-        int y = this.y;
-        double error = 0;
+        int ys = (y0 <y1) ? 1 : -1;
+        double m = (double)Math.abs(y1 - y0) / (double)(x1 - x0);
+        int y = y0;
+        double error = 0.0;
 
-        for (int i = this.x; i <= m_X1; ++i)
+        for (int x = x0; x <= x1; ++x)
         {
             if (steep)
-                matrix[i][y] = '*';
+                matrix[x][y] = '*';
             else
-                matrix[y][i] = '*';
+                matrix[y][x] = '*';
 
             error += m;
             if (error > 0.5)
