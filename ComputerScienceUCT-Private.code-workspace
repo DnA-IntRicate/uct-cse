@@ -56,6 +56,10 @@
             "name": "CSC1016S: Practical Test 2"
         },
         {
+            "path": "./Main Courses/CSC2004Z/SampleExam1",
+            "name": "CSC2004Z: Sample Exam 1"
+        },
+        {
             "path": "./Side Projects/Algorithms",
             "name": "Side Projects: Algorithms"
         },
