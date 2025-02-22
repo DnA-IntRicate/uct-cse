@@ -89,8 +89,8 @@ public class Check
         input.close();
     }
 
-    private static void Print(final String msg, Object... fmt)
+    private static void Print(final String fmt, Object... args)
     {
-        System.out.println(String.format(msg, fmt));
+        System.out.println(String.format(fmt, args));
     }
 }
