@@ -60,6 +60,10 @@
             "name": "CSC2004Z: Sample Exam 1"
         },
         {
+            "path": "./Main Courses/CSC2004Z/SampleExam2",
+            "name": "CSC2004Z: Sample Exam 2"
+        },
+        {
             "path": "./Side Projects/Algorithms",
             "name": "Side Projects: Algorithms"
         },
