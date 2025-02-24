@@ -1,0 +1,20 @@
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.0  0.2  21172 13172 ?        Ss   11:19   0:05 /sbin/init
+root           2  0.0  0.0   2776  1924 ?        Sl   11:19   0:00 /init
+root           6  0.0  0.0   2776     4 ?        Sl   11:19   0:00 plan9 --control-socket 7 --log-level 4 --server-fd 8 --pipe-fd 10 --log-truncate
+root          43  0.0  0.2  47672 14664 ?        Ss   11:19   0:00 /usr/lib/systemd/systemd-journald
+root          79  0.0  0.1  30272  9088 ?        Ss   11:19   0:01 /usr/lib/systemd/systemd-udevd
+dbus         146  0.0  0.0   8380  4156 ?        Ss   11:19   0:00 /usr/bin/dbus-broker-launch --scope system --audit
+dbus         147  0.0  0.0   4672  2880 ?        S    11:19   0:00 dbus-broker --log 4 --controller 9 --machine-id 6b6c2eeffc5147fbbb970fe89d656e9c --max-bytes 536870912 --max-fds 4096 --max-matches 131072 --audit
+root         148  0.0  0.4 627564 27176 ?        Ssl  11:19   0:01 /usr/bin/NetworkManager --no-daemon
+root         149  0.0  0.1  15700  8108 ?        Ss   11:19   0:00 /usr/lib/systemd/systemd-logind
+root         188  0.0  0.0   8324  1540 hvc0     Ss+  11:19   0:00 /sbin/agetty -o -- \u --noreset --noclear --keep-baud 115200,57600,38400,9600 - vt220
+root         192  0.0  0.0   9324  5068 ?        Ss   11:19   0:00 login -- adam
+adam         211  0.0  0.1  19468 10964 ?        Ss   11:19   0:03 /usr/lib/systemd/systemd --user
+adam         213  0.0  0.0  22320  1824 ?        S    11:19   0:00 (sd-pam)
+adam         233  0.0  0.0   8068  4448 pts/1    Ss+  11:19   0:00 -bash
+root         550  0.0  0.0   2780   212 ?        Ss   11:26   0:00 /init
+root         551  0.0  0.0   2780   216 ?        S    11:26   0:00 /init
+adam         554  0.1  0.0   8584  5308 pts/2    Ss   11:26   0:06 -bash
+adam        1081  0.1  0.1  16000 10540 pts/2    Tl   13:06   0:00 vim
+adam        1086  100  0.0   9940  4080 pts/2    R+   13:07   0:00 ps aux
