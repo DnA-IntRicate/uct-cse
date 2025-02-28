@@ -7,7 +7,7 @@ import java.util.Map;
  * @author Adam Foflonker (FFLADA001)
  * @version 20/02/25
  */
-public class Converter
+public class Convertor
 {
     /**
      * Converts digital 12-hour time into South African.
@@ -25,7 +25,7 @@ public class Converter
                 50, "ten to",
                 45, "quarter to",
                 40, "twenty to",
-                35, "twenty-five to"
+                35, "twenty five to"
         );
 
         // For when minutes are less than 30
@@ -34,7 +34,7 @@ public class Converter
                 10, "ten past",
                 15, "quarter past",
                 20, "twenty past",
-                25, "twenty-five past",
+                25, "twenty five past",
                 30, "half past"
         );
 
@@ -48,6 +48,8 @@ public class Converter
             res = HOUR_NAMES[hour - 1] + " o'clock";
         else if (minutes <= 32)
             res = MINUTE_DESC_LTT_MAP.get(minutesRounded) + " " + HOUR_NAMES[hour - 1];
+        else if (minutes >= 57)
+            res = HOUR_NAMES[hour] + " o'clock";
         else
             res = MINUTE_DESC_GTT_MAP.get(minutesRounded) + " " + HOUR_NAMES[hour % 12];
 
