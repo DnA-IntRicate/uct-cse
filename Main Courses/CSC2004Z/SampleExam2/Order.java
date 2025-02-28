@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.io.File;
 import java.io.IOException;
 
@@ -44,39 +45,41 @@ public class Order
                 words.add(scanner.next());
         }
 
+        if (words.size() == 1)
+            return "Longest is 1.";
+
         // Accumulator for storing the longest sub-sequence lengths
-        ArrayList<Integer> longestLengths = new ArrayList<Integer>();
+        ArrayList<Integer> lengths = new ArrayList<Integer>();
         int subStrLen = 1;
-        int longestSubStr = 1;
 
         for (int i = 1; i < words.size(); ++i)
         {
             if (words.get(i - 1).compareToIgnoreCase(words.get(i)) < 0)
                 subStrLen++;
-            else if (subStrLen >= longestSubStr)
+            else
             {
-                longestSubStr = subStrLen;
+                lengths.add(subStrLen);
                 subStrLen = 1;
-                longestLengths.add(longestSubStr);
             }
         }
 
-        // Account for the value of subStrLen after the loop has ended
-        if (subStrLen >= longestSubStr)
+        // Store the last sequence length
+        lengths.add(subStrLen);
+
+        if (lengths.isEmpty())
+            return "Longest is 1.";
+
+        // Ty1 = SubstringLength, Ty2 = Count
+        HashMap<Integer, Integer> lenOccurenceMap = new HashMap<Integer, Integer>();
+        int longestSubStr = 0;
+
+        for (int i : lengths)
         {
-            longestSubStr = subStrLen;
-            longestLengths.add(longestSubStr);
+            longestSubStr = Math.max(i, longestSubStr);
+            lenOccurenceMap.put(i, lenOccurenceMap.getOrDefault(i, 0) + 1);
         }
 
-        // Check if there are multiple longest sub-sequences
-        int count = 0;
-        for (int i : longestLengths)
-        {
-            if (i == longestSubStr)
-                count++;
-        }
-
-        if (count > 1)
+        if (lenOccurenceMap.get(longestSubStr) > 1)
             return String.format("Multiple solutions length %d.", longestSubStr);
 
         return String.format("Longest is %d.", longestSubStr);
