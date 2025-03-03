@@ -14,7 +14,7 @@ public class Entry
         {
             scanner.useDelimiter("\t");
             m_Term = scanner.next();
-            m_Statement = scanner.next();
+            m_Sentence = scanner.next();
             m_Confidence = scanner.nextDouble();
         }
     }
@@ -25,15 +25,15 @@ public class Entry
     public Entry(final Entry other)
     {
         m_Term = other.m_Term;
-        m_Statement = other.m_Statement;
+        m_Sentence = other.m_Sentence;
         m_Confidence = other.m_Confidence;
     }
 
     public String GetTerm() { return m_Term; }
     public void SetTerm(String term) { m_Term = term; }
 
-    public String GetStatement() { return m_Statement; }
-    public void SetStatement(String sentence) { m_Statement = sentence; }
+    public String GetSentence() { return m_Sentence; }
+    public void SetSentence(String sentence) { m_Sentence = sentence; }
 
     public double GetConfidence() { return m_Confidence; }
     public void SetConfidence(double confidence) { m_Confidence = confidence; }
@@ -45,12 +45,12 @@ public class Entry
             return false;
 
         Entry myOther = (Entry)other;
-        return m_Term.equals(myOther.m_Term) && m_Statement.equals(myOther.m_Statement) &&
+        return m_Term.equals(myOther.m_Term) && m_Sentence.equals(myOther.m_Sentence) &&
             (m_Confidence == myOther.m_Confidence);
     }
 
     private String m_Term;
-    private String m_Statement;
+    private String m_Sentence;
     private double m_Confidence;
 }
 
