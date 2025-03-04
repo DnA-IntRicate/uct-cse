@@ -12,6 +12,11 @@ public class Console
         System.out.println(String.format(fmt, args));
     }
 
+    public static void Write(String fmt, Object... args)
+    {
+        System.out.print(String.format(fmt, args));
+    }
+
     public static String ReadLine()
     {
         InitScannerIfNull();

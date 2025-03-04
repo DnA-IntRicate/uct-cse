@@ -29,6 +29,16 @@ public class Entry
         m_Confidence = other.m_Confidence;
     }
 
+    /**
+     * Default ctor.
+     */
+    public Entry()
+    {
+        m_Term = "";
+        m_Sentence = "";
+        m_Confidence = 0.0;
+    }
+
     public String GetTerm() { return m_Term; }
     public void SetTerm(String term) { m_Term = term; }
 
