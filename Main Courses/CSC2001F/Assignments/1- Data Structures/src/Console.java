@@ -3,7 +3,7 @@ import java.util.Scanner;
 /**
  *
  * @author Adam Foflonker (FFLADA001)
- * @verion 03/03/25
+ * @version 03/03/25
  */
 public class Console
 {

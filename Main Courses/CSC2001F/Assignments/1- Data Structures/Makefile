@@ -1,5 +1,6 @@
 JAVA = java
 JAVAC = javac
+JAVADOC = javadoc
 
 SRC_DIR = src
 BIN_DIR = bin
@@ -12,7 +13,7 @@ TARGET_NAMES = $(SOURCE_FILES:$(SRC_DIR)/%.java=$(BIN_DIR)/%.class)
 all: run
 
 run: build
-	$(JAVA) -cp $(BIN_DIR) GenericsKbArrayApp
+	cd ./$(BIN_DIR) && $(JAVA) GenericsKbArrayApp
 
 build: $(TARGET_NAMES)
 $(BIN_DIR)/%.class: $(SRC_DIR)/%.java
@@ -26,5 +27,8 @@ $(BIN_DIR)/%.class: $(SRC_DIR)/%.java
 # My .gitignore file in the root of my repository also ignores bin folders
 clean:
 	@rm -rf $(BIN_DIR)
+	@rm -rf $(DOC_DIR)
 
-# TODO: Make docs
+doc:
+	$(JAVADOC) -d $(DOC_DIR) $(SOURCE_FILES)
+
