@@ -27,7 +27,7 @@ public class GenericsKbArrayApp // TODO: Create base-class GenericsKbAppBehavior
             switch (option)
             {
                 case 1: LoadKnowledgeBaseImpl(); break;
-                case 2: UpdateEntryImpl(); break;
+                case 2: UpdateStatementImpl(); break;
                 case 3: SearchByTermImpl(); break;
                 case 4: SearchByTermAndSentenceImpl(); break;
             }
@@ -52,35 +52,35 @@ public class GenericsKbArrayApp // TODO: Create base-class GenericsKbAppBehavior
         }
     }
 
-    private static void UpdateEntryImpl()
+    private static void UpdateStatementImpl()
     {
         Console.Write("Enter the term to update: ");
         String searchTerm = Console.ReadLine();
 
-        Entry entry = s_KnowledgeBase.LookupEntry(searchTerm);
-        if (entry == null)
+        Statement st = s_KnowledgeBase.LookupStatement(searchTerm);
+        if (st == null)
         {
             Console.WriteLine("\nSearch term not found! A new statement will now be created for the term '%s'.\n",
                 searchTerm);
 
-            Entry newEntry = new Entry();
-            newEntry.SetTerm(searchTerm);
+            Statement newSt = new Statement();
+            newSt.SetTerm(searchTerm);
 
             Console.Write("Enter the sentence: ");
-            newEntry.SetSentence(Console.ReadLine());
+            newSt.SetSentence(Console.ReadLine());
 
             Console.Write("Enter the confidence score: ");
-            newEntry.SetConfidence(Double.parseDouble(Console.ReadLine()));
+            newSt.SetConfidence(Double.parseDouble(Console.ReadLine()));
 
-            if (s_KnowledgeBase.AddEntry(newEntry))
-                Console.WriteLine("\nStatement for term '%s' has been added.\n", newEntry.GetTerm());
+            if (s_KnowledgeBase.AddStatement(newSt))
+                Console.WriteLine("\nStatement for term '%s' has been added.\n", newSt.GetTerm());
             else
                 Console.WriteLine("\nFailed to add new statement!\n");
 
             return;
         }
 
-        Console.WriteLine("\nOriginal statement: %s (Confidence score: %.2f)", entry.GetSentence(), entry.GetConfidence());
+        Console.WriteLine("\nOriginal statement: %s (Confidence score: %.2f).", st.GetSentence(), st.GetConfidence());
 
         Console.Write("Enter the updated sentence: ");
         String newSentence = Console.ReadLine();
@@ -88,13 +88,13 @@ public class GenericsKbArrayApp // TODO: Create base-class GenericsKbAppBehavior
         Console.Write("Enter the new confidence score: ");
         double newConfidence = Double.parseDouble(Console.ReadLine());
 
-        if (newConfidence >= entry.GetConfidence())
+        if (newConfidence >= st.GetConfidence())
         {
-            Entry updatedEntry = new Entry(entry);
-            updatedEntry.SetSentence(newSentence);
-            updatedEntry.SetConfidence(newConfidence);
+            Statement updatedSt = new Statement(st);
+            updatedSt.SetSentence(newSentence);
+            updatedSt.SetConfidence(newConfidence);
 
-            if (s_KnowledgeBase.UpdateEntry(entry, updatedEntry))
+            if (s_KnowledgeBase.UpdateStatement(st, updatedSt))
                 Console.WriteLine("\nStatement updated.\n");
             else
                 Console.WriteLine("\nFailed to update statement!\n");
@@ -109,7 +109,7 @@ public class GenericsKbArrayApp // TODO: Create base-class GenericsKbAppBehavior
         Console.Write("Enter the term to search: ");
         String searchTerm = Console.ReadLine();
 
-        Entry e = s_KnowledgeBase.LookupEntry(searchTerm);
+        Statement e = s_KnowledgeBase.LookupStatement(searchTerm);
         if (e != null)
         {
             Console.WriteLine("\nStatement found: %s (Confidence score: %.2f).\n", e.GetSentence(), e.GetConfidence());
@@ -127,10 +127,10 @@ public class GenericsKbArrayApp // TODO: Create base-class GenericsKbAppBehavior
         Console.Write("Enter the statement to search for: ");
         String sentence = Console.ReadLine();
 
-        Entry e = s_KnowledgeBase.LookupEntry(term, sentence);
-        if (e != null)
+        Statement st = s_KnowledgeBase.LookupStatement(term, sentence);
+        if (st != null)
         {
-            Console.Write("\nThe statement was found and has a confidence score of %.2f.\n", e.GetConfidence());
+            Console.WriteLine("\nThe statement was found and has a confidence score of %.2f.\n", st.GetConfidence());
             return;
         }
 

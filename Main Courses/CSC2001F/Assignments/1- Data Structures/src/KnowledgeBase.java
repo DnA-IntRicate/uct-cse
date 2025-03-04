@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -31,22 +29,22 @@ public abstract class KnowledgeBase
     /**
      *
      */
-    public abstract Entry LookupEntry(String term);
+    public abstract Statement LookupStatement(String term);
 
     /**
      *
      */
-    public abstract Entry LookupEntry(String term, String sentence);
+    public abstract Statement LookupStatement(String term, String sentence);
 
     /**
      *
      */
-    public abstract boolean AddEntry(final Entry entry);
+    public abstract boolean AddStatement(final Statement st);
 
     /**
      *
      */
-    public abstract boolean UpdateEntry(final Entry oldEntry, final Entry newEntry);
+    public abstract boolean UpdateStatement(final Statement oldSt, final Statement newSt);
 
     /**
      *

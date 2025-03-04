@@ -23,16 +23,16 @@ public class KnowledgeBaseArray extends KnowledgeBase
     @Override
     public boolean LoadKnowledgeBase()
     {
-        m_Entries = null;
-        m_Entries = new Entry[CalcNumLinesInKnowledgeBase()];
+        m_Statements = null;
+        m_Statements = new Statement[CalcNumLinesInKnowledgeBase()];
 
         try (BufferedReader reader = new BufferedReader(new FileReader(m_KnowledgeBasePath)))
         {
             String lineBuf = "";
-            for (int i = 0; (i < m_Entries.length) && (lineBuf != null); ++i)
+            for (int i = 0; (i < m_Statements.length) && (lineBuf != null); ++i)
             {
                 lineBuf = reader.readLine();
-                m_Entries[i] = new Entry(lineBuf);
+                m_Statements[i] = new Statement(lineBuf);
             }
 
             return true;
@@ -51,9 +51,9 @@ public class KnowledgeBaseArray extends KnowledgeBase
     {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(m_KnowledgeBasePath)))
         {
-            for (final Entry e : m_Entries)
+            for (final Statement st : m_Statements)
             {
-                String content = String.format("%s\t%s\t%f", e.GetTerm(), e.GetSentence(), e.GetConfidence());
+                String content = String.format("%s\t%s\t%f", st.GetTerm(), st.GetSentence(), st.GetConfidence());
                 writer.write(content);
                 writer.newLine();
             }
@@ -70,13 +70,13 @@ public class KnowledgeBaseArray extends KnowledgeBase
      *
      */
     @Override
-    public Entry LookupEntry(String term)
+    public Statement LookupStatement(String term)
     {
         // Linear search because the knowledge-base is unsorted
-        for (Entry e : m_Entries)
+        for (Statement st : m_Statements)
         {
-            if (e.GetTerm().toLowerCase().equals(term.toLowerCase()))
-                return e;
+            if (st.GetTerm().toLowerCase().equals(term.toLowerCase()))
+                return st;
         }
 
         return null;
@@ -86,14 +86,14 @@ public class KnowledgeBaseArray extends KnowledgeBase
      *
      */
     @Override
-    public Entry LookupEntry(String term, String sentence)
+    public Statement LookupStatement(String term, String sentence)
     {
         // Linear search because the knowledge-base is unsorted
-        for (final Entry e : m_Entries)
+        for (final Statement st : m_Statements)
         {
-            if (e.GetTerm().toLowerCase().equals(term.toLowerCase()) &&
-                e.GetSentence().toLowerCase().equals(sentence.toLowerCase()))
-                return e;
+            if (st.GetTerm().toLowerCase().equals(term.toLowerCase()) &&
+                st.GetSentence().toLowerCase().equals(sentence.toLowerCase()))
+                return st;
         }
 
         return null;
@@ -103,12 +103,12 @@ public class KnowledgeBaseArray extends KnowledgeBase
      *
      */
     @Override
-    public boolean AddEntry(final Entry entry)
+    public boolean AddStatement(final Statement st)
     {
         // Append the file
         try (FileWriter writer = new FileWriter(m_KnowledgeBasePath, true))
         {
-            writer.write(String.format("%s\t%s\t%f\n", entry.GetTerm(), entry.GetSentence(), entry.GetConfidence()));
+            writer.write(String.format("%s\t%s\t%f\n", st.GetTerm(), st.GetSentence(), st.GetConfidence()));
             return LoadKnowledgeBase();
         }
         catch (IOException e)
@@ -121,13 +121,13 @@ public class KnowledgeBaseArray extends KnowledgeBase
      *
      */
     @Override
-    public boolean UpdateEntry(final Entry oldEntry, final Entry newEntry)
+    public boolean UpdateStatement(final Statement oldSt, final Statement newSt)
     {
-        for (int i = 0; i < m_Entries.length; ++i)
+        for (int i = 0; i < m_Statements.length; ++i)
         {
-            if (m_Entries[i].equals(oldEntry))
+            if (m_Statements[i].equals(oldSt))
             {
-                m_Entries[i] = new Entry(newEntry);
+                m_Statements[i] = new Statement(newSt);
                 return WriteKnowledgeBase();
             }
         }
@@ -135,5 +135,5 @@ public class KnowledgeBaseArray extends KnowledgeBase
         return false;
     }
 
-    private Entry[] m_Entries;
+    private Statement[] m_Statements;
 }

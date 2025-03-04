@@ -6,9 +6,9 @@ import java.util.Scanner;
  * @author Adam Foflonker (FFLADA001)
  * @version 03/03/25
  */
-public class Entry
+public class Statement
 {
-    public Entry(String entryStr)
+    public Statement(String entryStr)
     {
         try (Scanner scanner = new Scanner(entryStr))
         {
@@ -22,7 +22,7 @@ public class Entry
     /**
      * Copy ctor.
      */
-    public Entry(final Entry other)
+    public Statement(final Statement other)
     {
         m_Term = other.m_Term;
         m_Sentence = other.m_Sentence;
@@ -32,7 +32,7 @@ public class Entry
     /**
      * Default ctor.
      */
-    public Entry()
+    public Statement()
     {
         m_Term = "";
         m_Sentence = "";
@@ -51,10 +51,10 @@ public class Entry
     @Override
     public boolean equals(Object other)
     {
-        if (!(other instanceof Entry))
+        if (!(other instanceof Statement))
             return false;
 
-        Entry myOther = (Entry)other;
+        Statement myOther = (Statement)other;
         return m_Term.equals(myOther.m_Term) && m_Sentence.equals(myOther.m_Sentence) &&
             (m_Confidence == myOther.m_Confidence);
     }
