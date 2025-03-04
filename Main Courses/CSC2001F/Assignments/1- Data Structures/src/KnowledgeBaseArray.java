@@ -12,10 +12,58 @@ import java.io.IOException;
  */
 public class KnowledgeBaseArray extends KnowledgeBase
 {
-    public KnowledgeBaseArray(String filePath) throws IOException
+    public KnowledgeBaseArray(String filePath)
     {
         super(filePath);
-        LoadKnowledgeBase();
+    }
+
+    /**
+     *
+     */
+    @Override
+    public boolean LoadKnowledgeBase()
+    {
+        m_Entries = null;
+        m_Entries = new Entry[CalcNumLinesInKnowledgeBase()];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(m_KnowledgeBasePath)))
+        {
+            String lineBuf = "";
+            for (int i = 0; (i < m_Entries.length) && (lineBuf != null); ++i)
+            {
+                lineBuf = reader.readLine();
+                m_Entries[i] = new Entry(lineBuf);
+            }
+
+            return true;
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
+    }
+
+    /**
+     *
+     */
+    @Override
+    public boolean WriteKnowledgeBase()
+    {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(m_KnowledgeBasePath)))
+        {
+            for (final Entry e : m_Entries)
+            {
+                String content = String.format("%s\t%s\t%f", e.GetTerm(), e.GetSentence(), e.GetConfidence());
+                writer.write(content);
+                writer.newLine();
+            }
+
+            return true;
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
     }
 
     /**
@@ -43,7 +91,8 @@ public class KnowledgeBaseArray extends KnowledgeBase
         // Linear search because the knowledge-base is unsorted
         for (final Entry e : m_Entries)
         {
-            if (e.GetTerm().toLowerCase().equals(term.toLowerCase()) && e.GetSentence().toLowerCase().equals(sentence.toLowerCase()))
+            if (e.GetTerm().toLowerCase().equals(term.toLowerCase()) &&
+                e.GetSentence().toLowerCase().equals(sentence.toLowerCase()))
                 return e;
         }
 
@@ -64,10 +113,8 @@ public class KnowledgeBaseArray extends KnowledgeBase
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     /**
@@ -83,69 +130,6 @@ public class KnowledgeBaseArray extends KnowledgeBase
                 m_Entries[i] = new Entry(newEntry);
                 return WriteKnowledgeBase();
             }
-        }
-
-        return false;
-    }
-
-    // TODO: Move me to the parent class.
-    private static int NumLinesInFile(String filePath)
-    {
-        int res = 0;
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath)))
-        {
-            while (reader.readLine() != null)
-                res++;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return res;
-    }
-
-    private boolean LoadKnowledgeBase()
-    {
-        m_Entries = null;
-        m_Entries = new Entry[NumLinesInFile(m_KnowledgeBasePath)];
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(m_KnowledgeBasePath)))
-        {
-            String lineBuf = "";
-            for (int i = 0; (i < m_Entries.length) && (lineBuf != null); ++i)
-            {
-                lineBuf = reader.readLine();
-                m_Entries[i] = new Entry(lineBuf);
-            }
-
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    // TODO: Move me to the parent class.
-    private boolean WriteKnowledgeBase()
-    {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(m_KnowledgeBasePath)))
-        {
-            for (final Entry e : m_Entries)
-            {
-                String content = String.format("%s\t%s\t%f", e.GetTerm(), e.GetSentence(), e.GetConfidence());
-                writer.write(content);
-                writer.newLine();
-            }
-
-            return true;
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
         }
 
         return false;
