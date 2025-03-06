@@ -10,11 +10,15 @@ SOURCE_FILES = $(wildcard $(SRC_DIR)/*.java)
 TARGET_NAMES = $(SOURCE_FILES:$(SRC_DIR)/%.java=$(BIN_DIR)/%.class)
 
 # Default target
-all: run
+all: build
 
-run: build
+array: build
 # Explicitly changing working-dir to the bin folder
 	cd ./$(BIN_DIR) && $(JAVA) GenericsKbArrayApp
+
+bst: build
+# Explicitly changing working-dir to the bin folder
+	cd ./$(BIN_DIR) && $(JAVA) GenericsKbBSTApp
 
 build: $(TARGET_NAMES)
 $(BIN_DIR)/%.class: $(SRC_DIR)/%.java

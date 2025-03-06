@@ -10,7 +10,7 @@ import java.io.IOException;
  * @author Adam Foflonker (FFLADA001)
  * @version 03/03/25
  */
-public class KnowledgeBaseArray extends KnowledgeBase
+public final class KnowledgeBaseArray extends KnowledgeBase
 {
     public KnowledgeBaseArray(String filePath)
     {
