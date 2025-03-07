@@ -6,7 +6,7 @@ import java.util.Scanner;
  * @author Adam Foflonker (FFLADA001)
  * @version 03/03/25
  */
-public class Statement
+public class Statement implements Comparable<Statement>
 {
     public Statement(String entryStr)
     {
@@ -57,6 +57,17 @@ public class Statement
         Statement myOther = (Statement)other;
         return m_Term.equals(myOther.m_Term) && m_Sentence.equals(myOther.m_Sentence) &&
             (m_Confidence == myOther.m_Confidence);
+    }
+
+    /**
+     * Compares this object with the specified object for order.  Returns a
+     * negative integer, zero, or a positive integer as this object is less
+     * than, equal to, or greater than the specified object.
+     */
+    @Override
+    public int compareTo(Statement other)
+    {
+        return m_Term.compareTo(other.m_Term);
     }
 
     private String m_Term;
