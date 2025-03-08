@@ -92,7 +92,7 @@ public class GenericsKbApp
             newSt.SetConfidence(Double.parseDouble(Console.ReadLine()));
 
             if (m_KnowledgeBase.AddStatement(newSt))
-                Console.WriteLine("\nStatement for term '%s' has been added.\n", newSt.GetTerm());
+                Console.WriteLine("\nStatement for the term '%s' has been added.\n", newSt.GetTerm());
             else
                 Console.WriteLine("\nFailed to add new statement!\n");
 

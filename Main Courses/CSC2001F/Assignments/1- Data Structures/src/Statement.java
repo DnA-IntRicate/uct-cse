@@ -60,13 +60,21 @@ public class Statement implements Comparable<Statement>
     }
 
     /**
-     * Compares this object with the specified object for order.  Returns a
-     * negative integer, zero, or a positive integer as this object is less
-     * than, equal to, or greater than the specified object.
+     * Compares this {@link Statement} to the specified object {@code other} for order.
+     * Returns a negative integer, zero or a positive integer if this object's {@code Term}
+     * is less than, equal to, or greater than the specified object.
+     *
+     * If the two objects terms are equal, it compares this object's {@code Sentence} to other's instead.
+     *
+     * @param other the {@link Statement} to compare this object to.
+     * @return a negative integer, zero or a positive integer.
      */
     @Override
     public int compareTo(Statement other)
     {
+        if (m_Term.equals(other.m_Term))
+            return m_Sentence.compareTo(other.m_Sentence);
+
         return m_Term.compareTo(other.m_Term);
     }
 
@@ -74,4 +82,3 @@ public class Statement implements Comparable<Statement>
     private String m_Sentence;
     private double m_Confidence;
 }
-

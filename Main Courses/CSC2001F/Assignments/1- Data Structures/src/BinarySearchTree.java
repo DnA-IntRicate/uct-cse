@@ -107,7 +107,7 @@ public class BinarySearchTree <_Ty extends Comparable<_Ty>> implements Iterable<
         if (root == null)
             return null;
 
-        if (value.compareTo(root.Value) == 0)
+        if (value.equals(root.Value))
             return root;
 
         if (value.compareTo(root.Value) < 0)

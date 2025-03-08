@@ -1,4 +1,5 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,26 +43,44 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         }
     }
 
-    // TODO: You know what, lets remove filewriting...
+    /**
+     *
+     */
     @Override
     public boolean WriteKnowledgeBase()
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'WriteKnowledgeBase'");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(m_KnowledgeBasePath)))
+        {
+            for (final var node : m_StatementTree)
+            {
+                Statement st = node.Value;
+                String content = String.format("%s\t%s\t%f", st.GetTerm(), st.GetSentence(), st.GetConfidence());
+                writer.write(content);
+                writer.newLine();
+            }
+
+            return true;
+        }
+        catch (IOException e)
+        {
+            return false;
+        }
     }
 
-    // TODO: The highest confidence score statement must be returned!
     @Override
     public Statement LookupStatement(String term)
     {
+        Statement res = null;
+
         // Performs an Inorder traversal iteration over the BST
         for (final var node : m_StatementTree)
         {
+            // Finds the statement with the highest confidence score
             if (node.Value.GetTerm().toLowerCase().equals(term.toLowerCase()))
-                return node.Value;
+                res = (res == null) ? node.Value : ((res.GetConfidence() < node.Value.GetConfidence()) ? node.Value : res);
         }
 
-        return null;
+        return res;
     }
 
     @Override
@@ -78,28 +97,22 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         return null;
     }
 
-    // TODO: Make this just add a new statement without the filewriting
     @Override
     public boolean AddStatement(Statement st)
     {
-        // Append the file, we write to the file first so that the order of the KB isn't changed by the
-        // structure of the BST
-        try (FileWriter writer = new FileWriter(m_KnowledgeBasePath, true))
-        {
-            writer.write(String.format("%s\t%s\t%f\n", st.GetTerm(), st.GetSentence(), st.GetConfidence()));
-            return LoadKnowledgeBase();
-        }
-        catch (IOException e)
-        {
-            return false;
-        }
+        m_StatementTree.Insert(st);
+        return WriteKnowledgeBase();
     }
 
     @Override
     public boolean UpdateStatement(Statement oldSt, Statement newSt)
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'UpdateStatement'");
+        var node = m_StatementTree.Find(oldSt);
+        if (node == null)
+            return false;
+
+        node.Value = new Statement(newSt);
+        return WriteKnowledgeBase();
     }
 
     private BinarySearchTree<Statement> m_StatementTree;
