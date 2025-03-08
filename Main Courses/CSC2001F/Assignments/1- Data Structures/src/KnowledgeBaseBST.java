@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 /**
@@ -44,27 +42,22 @@ public final class KnowledgeBaseBST extends KnowledgeBase
     }
 
     /**
+     * This function is unimplemented for BSTs.
+     * When a BST is created, it's structure automatically sorts all data inserted into it.
+     * Since the BST is naturally sorted, when rewriting the KnowledgeBase textfile, the file will now also have
+     * all of its statements sorted. When calling {@link #LoadKnowledgeBase()} on a KnowledgeBase that
+     * is already sorted, this creates an unbalanced tree only inserting elements to the right of each
+     * node, effectively creating a linked list. This also will likely result in
+     * {@link BinarySearchTree#Insert(Comparable)} causing a stack overflow due to the height of the tree
+     * now being O(n) in this case instead of O(log n).
      *
+     * @deprecated
      */
     @Override
+    @Deprecated
     public boolean WriteKnowledgeBase()
     {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(m_KnowledgeBasePath)))
-        {
-            for (final var node : m_StatementTree)
-            {
-                Statement st = node.Value;
-                String content = String.format("%s\t%s\t%f", st.GetTerm(), st.GetSentence(), st.GetConfidence());
-                writer.write(content);
-                writer.newLine();
-            }
-
-            return true;
-        }
-        catch (IOException e)
-        {
-            return false;
-        }
+        return true;
     }
 
     @Override
