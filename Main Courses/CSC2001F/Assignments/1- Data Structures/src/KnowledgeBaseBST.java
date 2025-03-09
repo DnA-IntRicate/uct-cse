@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -88,6 +89,49 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         }
 
         return null;
+    }
+
+    /**
+     *
+     */
+    public ArrayList<Statement> LookupAllStatements(String term)
+    {
+        ArrayList<Statement> res = new ArrayList<Statement>();
+
+        // Performs an Inorder traversal iteration over the BST
+        for (final var node : m_StatementTree)
+        {
+            if (node.Value.GetTerm().toLowerCase().equals(term.toLowerCase()))
+                res.add(node.Value);
+        }
+
+        return res;
+    }
+
+    /**
+     *
+     */
+    public ArrayList<Statement> LookupAllStatementsByPartialTerm(String termPattern)
+    {
+        ArrayList<Statement> res = new ArrayList<Statement>();
+
+        // Performs an Inorder traversal iteration over the BST
+        for (final var node : m_StatementTree)
+        {
+            String stTerm = node.Value.GetTerm().toLowerCase();
+            termPattern = termPattern.toLowerCase();
+
+            if (stTerm.equals(termPattern))
+            {
+                res.add(node.Value);
+                continue;
+            }
+
+            if (stTerm.contains(termPattern))
+                res.add(node.Value);
+        }
+
+        return res;
     }
 
     @Override

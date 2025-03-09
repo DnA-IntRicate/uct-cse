@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -72,14 +73,16 @@ public final class KnowledgeBaseArray extends KnowledgeBase
     @Override
     public Statement LookupStatement(String term)
     {
+        Statement res = null;
+
         // Linear search because the knowledge-base is unsorted
         for (Statement st : m_Statements)
         {
             if (st.GetTerm().toLowerCase().equals(term.toLowerCase()))
-                return st;
+                res = (res == null) ? st : ((res.GetConfidence() < st.GetConfidence()) ? st : res);
         }
 
-        return null;
+        return res;
     }
 
     /**
@@ -97,6 +100,49 @@ public final class KnowledgeBaseArray extends KnowledgeBase
         }
 
         return null;
+    }
+
+    /**
+     *
+     */
+    public ArrayList<Statement> LookupAllStatements(String term)
+    {
+        ArrayList<Statement> res = new ArrayList<Statement>();
+
+        // Linear search because the knowledge-base is unsorted
+        for (Statement st : m_Statements)
+        {
+            if (st.GetTerm().toLowerCase().equals(term.toLowerCase()))
+                res.add(st);
+        }
+
+        return res;
+    }
+
+    /**
+     *
+     */
+    public ArrayList<Statement> LookupAllStatementsByPartialTerm(String termPattern)
+    {
+        ArrayList<Statement> res = new ArrayList<Statement>();
+
+        // Linear search because the knowledge-base is unsorted
+        for (Statement st : m_Statements)
+        {
+            String stTerm = st.GetTerm().toLowerCase();
+            termPattern = termPattern.toLowerCase();
+
+            if (stTerm.equals(termPattern))
+            {
+                res.add(st);
+                continue;
+            }
+
+            if (stTerm.contains(termPattern))
+                res.add(st);
+        }
+
+        return res;
     }
 
     /**

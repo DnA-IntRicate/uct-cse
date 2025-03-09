@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,6 +36,16 @@ public abstract class KnowledgeBase
      *
      */
     public abstract Statement LookupStatement(String term, String sentence);
+
+    /**
+     *
+     */
+    public abstract ArrayList<Statement> LookupAllStatements(String term);
+
+    /**
+     *
+     */
+    public abstract ArrayList<Statement> LookupAllStatementsByPartialTerm(String termPattern);
 
     /**
      *

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  *
  * @author Adam Foflonker (FFLADA001)
@@ -29,12 +31,14 @@ public class GenericsKbApp
             Console.WriteLine("1. Load a knowledge base from a file");
             Console.WriteLine("2. Update a statement in the knowledge base");
             Console.WriteLine("3. Search for a statement in the knowledge base by term");
-            Console.WriteLine("4. Search for a statement in the knowledge base by term and sentence");
-            Console.WriteLine("5. Quit");
+            Console.WriteLine("4. Search for all statements in the knowledge base by term");
+            Console.WriteLine("5. Search for all statements in the knowledge base by partial term");
+            Console.WriteLine("6. Search for a statement in the knowledge base by term and sentence");
+            Console.WriteLine("7. Quit");
             Console.Write("%s> ", kBPath);
 
             int option = Integer.parseInt(Console.ReadLine());
-            if (option == 5)
+            if (option == 7)
                 break;      // Exit application loop
 
             switch (option)
@@ -42,7 +46,9 @@ public class GenericsKbApp
                 case 1: LoadKnowledgeBaseImpl(); break;
                 case 2: UpdateStatementImpl(); break;
                 case 3: SearchByTermImpl(); break;
-                case 4: SearchByTermAndSentenceImpl(); break;
+                case 4: SearchAllByTermImpl(); break;
+                case 5: SearchAllByPartialTermImpl(); break;
+                case 6: SearchByTermAndSentenceImpl(); break;
             }
         }
 
@@ -55,6 +61,7 @@ public class GenericsKbApp
         Console.Write("Enter file name: ");
         String fileName = Console.ReadLine();
 
+        // TODO: Consistent exception handling and throwing
         try
         {
             switch (m_KnowledgeBaseType)
@@ -128,14 +135,62 @@ public class GenericsKbApp
         Console.Write("Enter the term to search: ");
         String searchTerm = Console.ReadLine();
 
-        Statement e = m_KnowledgeBase.LookupStatement(searchTerm);
-        if (e != null)
+        Statement st = m_KnowledgeBase.LookupStatement(searchTerm);
+        if (st != null)
         {
-            Console.WriteLine("\nStatement found: %s (Confidence score: %.2f).\n", e.GetSentence(), e.GetConfidence());
+            Console.WriteLine("\nStatement found: %s (Confidence score: %.2f).\n", st.GetSentence(), st.GetConfidence());
             return;
         }
 
         Console.WriteLine("\nStatement could not be found!\n");
+    }
+
+    private void SearchAllByTermImpl()
+    {
+        Console.Write("Enter the term to search: ");
+        String searchTerm = Console.ReadLine();
+
+        ArrayList<Statement> statements = m_KnowledgeBase.LookupAllStatements(searchTerm);
+        if (statements.isEmpty())
+        {
+            Console.WriteLine("\nNo statements were found!\n");
+            return;
+        }
+
+        Console.WriteLine("");
+
+        int i = 1;
+        for (final Statement st : statements)
+        {
+            Console.WriteLine("%d. Statement found: %s (Confidence score: %.2f).", i++,
+                st.GetSentence(), st.GetConfidence());
+        }
+
+        Console.WriteLine("");
+    }
+
+    private void SearchAllByPartialTermImpl()
+    {
+        Console.Write("Enter the partial term to search: ");
+        String partialTerm = Console.ReadLine();
+
+        ArrayList<Statement> statements = m_KnowledgeBase.LookupAllStatementsByPartialTerm(partialTerm);
+        if (statements.isEmpty())
+        {
+            Console.WriteLine("\nNo statements were found!\n");
+            return;
+        }
+
+        Console.WriteLine("");
+
+        int i = 1;
+        for (final Statement st : statements)
+        {
+            Console.WriteLine("%d. %s: %s (Confidence score: %.2f).", i++,
+                st.GetTerm(), st.GetSentence(), st.GetConfidence());
+        }
+
+        Console.WriteLine("");
     }
 
     private void SearchByTermAndSentenceImpl()
