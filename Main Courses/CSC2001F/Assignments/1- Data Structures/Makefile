@@ -26,7 +26,8 @@ $(BIN_DIR)/%.class: $(SRC_DIR)/%.java
 	$(JAVAC) -d $(BIN_DIR) $(SOURCE_FILES)
 
 # Post-build options
-	@cp -r KnowledgeBases $(BIN_DIR)/
+	@cp KnowledgeBases/GenericsKB.txt $(BIN_DIR)/
+	@cp KnowledgeBases/GenericsKB-additional.txt $(BIN_DIR)/
 
 clean:
 	@rm -rf $(BIN_DIR)
