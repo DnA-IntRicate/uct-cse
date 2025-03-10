@@ -1,24 +1,49 @@
 import java.util.ArrayList;
 
 /**
+ * The common implementation for {@link GenericsKbArrayApp} and {@link GenericsKbBSTApp}.
+ *
+ * @see GenericsKbArrayApp
+ * @see GenericsKbBSTApp
+ * @see KnowledgeBase
+ * @see KnowledgeBaseArray
+ * @see KnowledgeBaseBST
  *
  * @author Adam Foflonker (FFLADA001)
  * @version 05/03/25
  */
 public class GenericsKbApp
 {
+    /**
+     * The type of {@link KnowledgeBase} backend data structure implementation to use.
+     *
+     * @see KnowledgeBaseArray
+     * @see KnowledgeBaseBST
+     */
     public enum KnowledgeBaseType
     {
+        /** Specifies that the backend knowledge base should be implemented as an {@code array}. */
         Array,
+
+        /** Specifies that the backend knowledge base should be implemented as a {@link BinarySearchTree}. */
         BinarySearchTree
     }
 
+    /**
+     * Constructs a new {@link GenericsKbApp}.
+     *
+     * @param appName the name of the app
+     * @param kbType the {@link KnowledgeBaseType} to use for the backend {@link KnowledgeBase}.
+     */
     public GenericsKbApp(String appName, KnowledgeBaseType kbType)
     {
         m_AppName = appName;
         m_KnowledgeBaseType = kbType;
     }
 
+    /**
+     * Runs the program.
+     */
     public void Run()
     {
         Console.WriteLine("--------%s--------", m_AppName);
@@ -55,7 +80,7 @@ public class GenericsKbApp
         Console.WriteLine("\nShutting down...");
     }
 
-
+    // Load knowledge base
     private void LoadKnowledgeBaseImpl()
     {
         Console.Write("Enter file name: ");
@@ -78,6 +103,7 @@ public class GenericsKbApp
         }
     }
 
+    // Update or add a statement in the knowledge base
     private void UpdateStatementImpl()
     {
         Console.Write("Enter the term to update: ");
@@ -130,6 +156,7 @@ public class GenericsKbApp
                 searchTerm);
     }
 
+    // Search the knowledge base by term
     private void SearchByTermImpl()
     {
         Console.Write("Enter the term to search: ");
@@ -145,6 +172,7 @@ public class GenericsKbApp
         Console.WriteLine("\nStatement could not be found!\n");
     }
 
+    // Search for all statements matching a term in the knowledge base
     private void SearchAllByTermImpl()
     {
         Console.Write("Enter the term to search: ");
@@ -169,6 +197,7 @@ public class GenericsKbApp
         Console.WriteLine("");
     }
 
+    // Search for all statements matching a partial term in the knowledge base
     private void SearchAllByPartialTermImpl()
     {
         Console.Write("Enter the partial term to search: ");
@@ -193,6 +222,7 @@ public class GenericsKbApp
         Console.WriteLine("");
     }
 
+    // Search for a term and sentence in the knowledge base
     private void SearchByTermAndSentenceImpl()
     {
         Console.Write("Enter the term: ");
@@ -211,7 +241,12 @@ public class GenericsKbApp
         Console.WriteLine("\nStatement could not be found!\n");
     }
 
+    /** This app's KnowledgeBase. */
     protected KnowledgeBase m_KnowledgeBase;
+
+    /** This app's name. */
     protected String m_AppName;
+
+    /** This app's KnowledgeBaseType. */
     protected KnowledgeBaseType m_KnowledgeBaseType;
 }

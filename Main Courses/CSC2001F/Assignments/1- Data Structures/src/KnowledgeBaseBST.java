@@ -4,19 +4,31 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
+ * Implementation of {@link KnowledgeBase} using a {@link BinarySearchTree}.
+ *
+ * @see BinarySearchTree
+ * @see KnowledgeBase
+ * @see KnowledgeBaseArray
  *
  * @author Adam Foflonker (FFLADA001)
  * @version 03/03/25
  */
 public final class KnowledgeBaseBST extends KnowledgeBase
 {
+    /**
+     * Constructs a new {@link KnowledgeBase}.
+     *
+     * @param filePath the path to the knowledge base textfile
+     */
     public KnowledgeBaseBST(String filePath)
     {
         super(filePath);
     }
 
     /**
+     * Loads the knowledge base from the textfile path supplied during instantiation of this object.
      *
+     * @return {@code true} if the knowledge base textfile was loaded successfully, {@code false} otherwise
      */
     @Override
     public boolean LoadKnowledgeBase()
@@ -61,6 +73,12 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         return true;
     }
 
+    /**
+     * Search for a {@link Statement} in the {@link KnowledgeBase} by {@code term}.
+     *
+     * @param term the term to search for in the {@link KnowledgeBase}
+     * @return the {@link Statement} found matching the {@code term} given, or {@code null} if nothing was found
+     */
     @Override
     public Statement LookupStatement(String term)
     {
@@ -77,6 +95,14 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         return res;
     }
 
+    /**
+     * Search for a {@link Statement} in the {@link KnowledgeBase} by {@code term} and {@code sentence}
+     *
+     * @param term the term to search for in the {@link KnowledgeBase}
+     * @param sentence the sentence to search for in the {@link KnowledgeBase}
+     * @return the {@link Statement} found matching the {@code term} and {@code sentence} given,
+     * or {@code null} if nothing was found
+     */
     @Override
     public Statement LookupStatement(String term, String sentence)
     {
@@ -92,7 +118,11 @@ public final class KnowledgeBaseBST extends KnowledgeBase
     }
 
     /**
+     * Searches for all statements in the {@link KnowledgeBase} matching {@code term}.
      *
+     * @param term the term to search for in the {@link KnowledgeBase}
+     * @return an {@link ArrayList} of {@link Statement} of all the matching statements found matching {@code term},
+     * or an empty {@link ArrayList} if none were found
      */
     public ArrayList<Statement> LookupAllStatements(String term)
     {
@@ -109,7 +139,11 @@ public final class KnowledgeBaseBST extends KnowledgeBase
     }
 
     /**
+     * Searches for all statements in the {@link KnowledgeBase} matching the partial term {@code termPattern}.
      *
+     * @param termPattern the partial term to search for in the {@link KnowledgeBase}
+     * @return an {@link ArrayList} of {@link Statement} of all the matching statements found matching {@code term},
+     * or an empty {@link ArrayList} if none were found
      */
     public ArrayList<Statement> LookupAllStatementsByPartialTerm(String termPattern)
     {
@@ -134,6 +168,12 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         return res;
     }
 
+    /**
+     * Add the given {@link Statement} {@code st} to the {@link KnowledgeBase}.
+     *
+     * @param st the statement to add to the {@link KnowledgeBase}
+     * @return {@code true} if the statement was added successfully, {@code false} otherwise
+     */
     @Override
     public boolean AddStatement(Statement st)
     {
@@ -141,6 +181,13 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         return WriteKnowledgeBase();
     }
 
+    /**
+     * Find and update the found {@link Statement} in the {@link KnowledgeBase}.
+     *
+     * @param oldSt the {@link Statement} to find
+     * @param newSt the new {@link Statement} to update {@code oldSt} with
+     * @return {@code true} if the statement was updated successfully, {@code false} otherwise
+     */
     @Override
     public boolean UpdateStatement(Statement oldSt, Statement newSt)
     {
@@ -152,5 +199,6 @@ public final class KnowledgeBaseBST extends KnowledgeBase
         return WriteKnowledgeBase();
     }
 
+    // The binary search tree of statements
     private BinarySearchTree<Statement> m_StatementTree;
 }
