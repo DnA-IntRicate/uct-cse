@@ -22,6 +22,8 @@ public class GenericsKbArrayApp
         app.Run();
     }
 
-    /** Delete the default constructor. */
+    /**
+     * Delete the default constructor.
+     */
     private GenericsKbArrayApp() { }
 }
