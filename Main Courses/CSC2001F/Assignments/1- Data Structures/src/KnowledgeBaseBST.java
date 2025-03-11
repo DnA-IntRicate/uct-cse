@@ -161,7 +161,10 @@ public final class KnowledgeBaseBST extends KnowledgeBase
                 continue;
             }
 
-            if (stTerm.contains(termPattern))
+            if (stTerm.length() < termPattern.length())
+                continue;
+
+            if (stTerm.substring(0, termPattern.length()).equals(termPattern))
                 res.add(node.Value);
         }
 

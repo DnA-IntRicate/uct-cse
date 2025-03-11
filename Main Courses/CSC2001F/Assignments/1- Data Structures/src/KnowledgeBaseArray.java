@@ -166,12 +166,15 @@ public final class KnowledgeBaseArray extends KnowledgeBase
                 continue;
             }
 
-            if (stTerm.contains(termPattern))
+            if (stTerm.length() < termPattern.length())
+                continue;
+
+            if (stTerm.substring(0, termPattern.length()).equals(termPattern))
                 res.add(st);
         }
 
         return res;
-    }
+   }
 
     /**
      * Add the given {@link Statement} {@code st} to the {@link KnowledgeBase}.
