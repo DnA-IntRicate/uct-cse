@@ -1,6 +1,6 @@
 import java.util.ArrayList;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.io.IOException;
 
 /**
@@ -35,11 +35,10 @@ public final class KnowledgeBaseBST extends KnowledgeBase
     {
         m_StatementTree = new BinarySearchTree<Statement>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(m_KnowledgeBasePath)))
+        try
         {
-            while (true)
+            for (String lineBuf : Files.readAllLines(Paths.get(m_KnowledgeBasePath)))
             {
-                String lineBuf = reader.readLine();
                 if (lineBuf == null)
                     break;
 

@@ -1,9 +1,9 @@
 import java.util.ArrayList;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Implementation of {@link KnowledgeBase} using an array.
@@ -37,13 +37,15 @@ public final class KnowledgeBaseArray extends KnowledgeBase
         m_Statements = null;
         m_Statements = new Statement[CalcNumLinesInKnowledgeBase()];
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(m_KnowledgeBasePath)))
+        try
         {
-            String lineBuf = "";
-            for (int i = 0; (i < m_Statements.length) && (lineBuf != null); ++i)
+            int i = 0;
+            for (String lineBuf : Files.readAllLines(Paths.get(m_KnowledgeBasePath)))
             {
-                lineBuf = reader.readLine();
-                m_Statements[i] = new Statement(lineBuf);
+                if (lineBuf == null)
+                    break;
+
+                m_Statements[i++] = new Statement(lineBuf);
             }
 
             return true;
