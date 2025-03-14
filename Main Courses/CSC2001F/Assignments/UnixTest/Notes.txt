@@ -1,0 +1,15 @@
+chmod-ing:
+
+User-Group-Other
+
+1: x
+2: w
+3: w+x
+4: r
+5: r+x
+6: r+w
+7: r+w+x
+
+chattr (lsattr for view perms):
++i for immutable flag
+ONLY WORKS ON ext drives.
