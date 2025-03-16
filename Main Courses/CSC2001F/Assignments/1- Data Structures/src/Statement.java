@@ -43,6 +43,8 @@ public class Statement implements Comparable<Statement>
 
     /**
      * Default constructor.
+     *
+     * If only Java supported the 'default' keyword like C++...
      */
     public Statement()
     {

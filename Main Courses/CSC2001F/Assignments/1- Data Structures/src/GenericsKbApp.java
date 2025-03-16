@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -83,10 +84,18 @@ public class GenericsKbApp
     // Load knowledge base
     private void LoadKnowledgeBaseImpl()
     {
-        Console.Write("Enter file name: ");
-        String fileName = Console.ReadLine();
+        String fileName;
+        while (true)
+        {
+            Console.Write("Enter file name: ");
+            fileName = Console.ReadLine();
 
-        // TODO: Consistent exception handling and throwing
+            if ((new File(fileName)).exists())
+                break;
+
+            Console.WriteLine("\nFile does not exist, please enter a valid file name!\n");
+        }
+
         try
         {
             switch (m_KnowledgeBaseType)

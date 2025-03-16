@@ -60,6 +60,12 @@ public class Console
     {
         if (s_Scanner == null)
             s_Scanner = new Scanner(System.in);
+
+        /*
+         * This implementation does not actually delete the Scanner when we're done with it.
+         * So we just take the lazy approach here and let the operating system clean it up when the
+         * program terminates. :)
+         */
     }
 
     // The scanner for this class

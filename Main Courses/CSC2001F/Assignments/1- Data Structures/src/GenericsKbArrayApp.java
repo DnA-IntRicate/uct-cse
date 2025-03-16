@@ -24,6 +24,7 @@ public class GenericsKbArrayApp
 
     /**
      * Delete the default constructor.
+     * If only Java allowed the declaration of static classes like C#...
      */
     private GenericsKbArrayApp() { }
 }
