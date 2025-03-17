@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -56,25 +59,27 @@ public class GenericsKbApp
             Console.WriteLine("Choose an action from the menu:");
             Console.WriteLine("1. Load a knowledge base from a file");
             Console.WriteLine("2. Update a statement in the knowledge base");
-            Console.WriteLine("3. Search for a statement in the knowledge base by term");
-            Console.WriteLine("4. Search for all statements in the knowledge base by term");
-            Console.WriteLine("5. Search for all statements in the knowledge base by partial term");
-            Console.WriteLine("6. Search for a statement in the knowledge base by term and sentence");
-            Console.WriteLine("7. Quit");
+            Console.WriteLine("3. Update knowledge base from file");
+            Console.WriteLine("4. Search for a statement in the knowledge base by term");
+            Console.WriteLine("5. Search for all statements in the knowledge base by term");
+            Console.WriteLine("6. Search for all statements in the knowledge base by partial term");
+            Console.WriteLine("7. Search for a statement in the knowledge base by term and sentence");
+            Console.WriteLine("8. Quit");
             Console.Write("%s> ", kBPath);
 
             int option = Integer.parseInt(Console.ReadLine());
-            if (option == 7)
+            if (option == 8)
                 break;      // Exit application loop
 
             switch (option)
             {
                 case 1: LoadKnowledgeBaseImpl(); break;
                 case 2: UpdateStatementImpl(); break;
-                case 3: SearchByTermImpl(); break;
-                case 4: SearchAllByTermImpl(); break;
-                case 5: SearchAllByPartialTermImpl(); break;
-                case 6: SearchByTermAndSentenceImpl(); break;
+                case 3: UpdateFromFileImpl(); break;
+                case 4: SearchByTermImpl(); break;
+                case 5: SearchAllByTermImpl(); break;
+                case 6: SearchAllByPartialTermImpl(); break;
+                case 7: SearchByTermAndSentenceImpl(); break;
             }
         }
 
@@ -163,6 +168,64 @@ public class GenericsKbApp
         else
             Console.WriteLine("\nStatement not updated! A statement for the term '%s' already exists with a higher confidence score.\n",
                 searchTerm);
+    }
+
+    // Update knowledge base from file
+    private void UpdateFromFileImpl()
+    {
+        String fileName;
+        while (true)
+        {
+            Console.Write("Enter the other knowledge base file path: ");
+            fileName = Console.ReadLine();
+
+            if (fileName.equals(m_KnowledgeBase.GetKnowledgeBasePath()))
+            {
+                Console.WriteLine("\nCannot load the same knowledge base twice!\n");
+                continue;
+            }
+
+            if ((new File(fileName)).exists())
+                break;
+
+            Console.WriteLine("\nFile does not exist, please enter a valid file name!\n");
+        }
+
+        Console.Write("\nUpdating knowledge base, this action may take a while...");
+
+        try
+        {
+            int updates = 0;
+            int adds = 0;
+            for (String lineBuf : Files.readAllLines(Paths.get(fileName)))
+            {
+                Statement newSt = new Statement(lineBuf);
+                Statement oldSt = m_KnowledgeBase.LookupStatement(newSt.GetTerm());
+
+                if (oldSt == null)
+                {
+                    m_KnowledgeBase.AddStatement(newSt);
+                    adds++;
+
+                    continue;
+                }
+
+                if (newSt.GetConfidence() >= oldSt.GetConfidence())
+                {
+                    m_KnowledgeBase.UpdateStatement(oldSt, newSt);
+                    updates++;
+                }
+            }
+
+            Console.WriteLine("\nDone!");
+            Console.WriteLine("Updated %d statements.", updates);
+            Console.WriteLine("Added %d statements.\n", adds);
+        }
+        catch (IOException e)
+        {
+            Console.WriteLine("\nFailed to update knowledge base!\n");
+            return;
+        }
     }
 
     // Search the knowledge base by term
