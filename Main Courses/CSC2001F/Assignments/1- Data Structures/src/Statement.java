@@ -89,11 +89,11 @@ public class Statement implements Comparable<Statement>
     public double GetConfidence() { return m_Confidence; }
 
     /**
-     * Set this statement's {@code confidence level}.
+     * Set this statement's {@code confidence level}. Value is clamped between {@code 0.0} and {@code 1.0}.
      *
      * @param confidence the new {@code confidence level} to set
      */
-    public void SetConfidence(double confidence) { m_Confidence = confidence; }
+    public void SetConfidence(double confidence) { m_Confidence = Math.clamp(confidence, 0.0, 1.0); }
 
     /**
      * Checks for equality between this {@link Statement} and {@code other}.
