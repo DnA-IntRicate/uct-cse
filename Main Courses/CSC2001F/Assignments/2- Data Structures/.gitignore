@@ -1,0 +1,10 @@
+[Dd]oc/
+[Dd]ocs/
+
+[Bb]in/
+
+*.class
+
+# Ignore docx temp files
+~$*.docx
+

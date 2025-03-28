@@ -1,0 +1,10 @@
+Input	Input is the process of recording in the brain information that comes from the senses.	0.7091723680496216
+strangler	A strangler is a killer	1.0
+structural adhesive	Structural adhesive has strong chemical resistance.	1.0
+shoemaker	A shoemaker is a maker	1.0
+mainstream scientist	Mainstream scientists use analyses.	1.0
+local	Locals are local organizations.	1.0
+bullpen	A bullpen is an area	1.0
+fictional character	A fictional character is imagination	1.0
+milk chocolate	Milk chocolate is where the cocoa butter in chocolate is replaced with milk.	0.7011349201202393
+haploid organism	Haploid organisms undergo meiosis.	1.0

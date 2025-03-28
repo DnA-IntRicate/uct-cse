@@ -1,0 +1,100 @@
+eldorado	Eldorados are albums.	1.0
+sweet flower	Sweet flowers attract hummingbirds.	1.0
+sauropod dinosaur	Sauropod dinosaurs have necks.	1.0
+mass murder	Mass murder is murder	1.0
+podding	Poddings are biological growth.	1.0
+priestess	A priestess is a priest	1.0
+sporangiophore	Sporangiophores arise among distinctive, root-like rhizoids.	0.7918800115585327
+deep burrow	Deep burrows contain circular chambers.	1.0
+various invertebrate	Various invertebrates attach to drift kelp, including nudibranchs and barnacles.	0.7541913390159607
+devotional	A devotional is a service	1.0
+cocklebur fruit	Cocklebur fruit contains seeds.	1.0
+hedgefund	A hedgefund is a fund	1.0
+reliable breeder	Reliable breeders have pet bunnies.	1.0
+traditional technique	Traditional techniques provide only temporary relief.	1.0
+xenolith	Xenoliths are rocks.	1.0
+envelope membrane	Envelope membranes act as barriers.	1.0
+natural hormone	Natural hormones are extremely potent and operate at minute concentrations in the body.	0.7823246717453003
+carnivore number	Carnivore numbers are limited by food, larger predators, or disease.	0.7544407248497009
+traditional meal	Traditional meals include meat.	1.0
+busting	Bustings are raidings.	1.0
+guenon monkey	Guenon monkeys share habitats.	1.0
+oral steroid	Oral steroids reduce swelling, inflammation, and mucus production in the airways.	0.8326677680015564
+polecat	Polecats have (part) rib cages.	1.0
+weekly	Weeklies are serieses.	1.0
+personal life	Personal life has affects.	1.0
+excursionist	An excursionist is a tourist	1.0
+engagement ring	An engagement ring is a band	1.0
+ursodeoxycholic acid	Ursodeoxycholic acid is drugs.	1.0
+steak	Steak is edibles.	1.0
+spinel	Spinels are minerals.	1.0
+menstruation cycle	Menstruation cycles allow females to reproduce.	0.7859532833099365
+rubber eraser	Rubber erasers are part of pencils.	1.0
+disc golf	Disc golf is sports.	1.0
+large bird	Large birds have heads.	1.0
+wind velocity	Wind velocity accelerates body heat loss under conditions of both coldness and wetness.	0.7091518044471741
+autophagic vacuole	Autophagic vacuoles fuse with the prelysosomal compartment in cultured rat fibroblasts.	0.7906867861747742
+income statement	An income statement is a financial statement	1.0
+calabash	A calabash is a bottle	1.0
+powerful storm	Powerful storms have wind.	1.0
+bright nebula	Bright nebulae are comparatively dense clouds of gas within the diffuse interstellar medium.	0.7770952582359314
+good taste	Good taste is part of style.	1.0
+pocketknife	A pocketknife is a knife	1.0
+galvanic corrosion	Galvanic corrosion occurs on pipes buried in soil.	0.7718855738639832
+paintball	Paintballs are thin nylon coated balls that break up on impact, releasing a water soluble dye.	0.7259747982025146
+sidereal midnight	Sidereal midnight occurs when the vernal equinox crosses the meridian.	0.7741880416870117
+roper	A roper is a cowboy	1.0
+acrylic fiber	Acrylic fiber is synthetic fiber	1.0
+renal blood	Renal blood enters kidneys.	1.0
+computerization	Computerization is automation.	1.0
+ferromagnetic material	Ferromagnetic materials are natural producers of magnetic fields like iron, cobalt, and nickel.	0.7765738368034363
+faculty member	Faculty members help students.	1.0
+resuscitator	A resuscitator is a ventilator	1.0
+bibliophile	A bibliophile is a student	1.0
+cryptology	A cryptology is science	1.0
+vanadium compound	Vanadium compounds are used in advanced ceramics.	0.7311145663261414
+clay pigeon	A clay pigeon is a target	1.0
+acid digestion	Acid digestion takes places.	1.0
+sea dragon	Sea dragons survive on tiny crustaceans such as mysids, or sea lice.	0.7347304224967957
+less oxygen	Less oxygen reaches brains.	1.0
+pacific dogwood	Pacific dogwood is a native, deciduous, long-lived shrub or tree.	0.7232094407081604
+speech intelligibility	Speech intelligibility is intelligibility	1.0
+coronary thrombosis	Coronary thrombosis is a blood clot in the arteries supplying the heart.	0.8453847765922546
+ionic interaction	Ionic interactions are the attraction of opposite charges for one another.	0.7532250881195068
+business leader	Business leaders consider interaction.	1.0
+compatible pollen	Compatible pollen fertilizes flowers.	1.0
+saline water	Saline water has a high concentration of many different salts, including calcium and magnesium.	0.7463197708129883
+stinkpot	A stinkpot is a mud turtle	1.0
+blue jay	Blue jays are monogamous, meaning pairs bond and remain together for life.	0.7457963228225708
+ground almond	A ground almond is a sedge	1.0
+Melanoma	Melanoma occurs when pigment cells start dividing uncontrollably.	0.8397036790847778
+octogenarian	An octogenarian is an oldster	1.0
+pollard	Pollards are ruminants.	1.0
+family unit	A family unit is a clan	1.0
+Albuminuria	Albuminuria is the first sign of diabetic kidney disease.	0.7678353190422058
+polyprotic acid	Polyprotic acids lose their H one at a time.	0.7533271312713623
+cyclonic storm	Cyclonic storms develop when an advancing cold front pushes into a region of lighter, warmer air.	0.7252398133277893
+protectorate	A protectorate is a district	1.0
+special bond	Special bonds involve obligation.	1.0
+famine	Famines are extreme shortages of food that cause people to die of starvation.	0.7642377018928528
+permanent paralysis	Permanent paralysis is paralysis.	1.0
+hour diet	Hour diets contain other nutrients.	1.0
+biocomposite material	Biocomposite materials exist in nature in the form of such substances as shell and bone.	0.7565001845359802
+engineer service	Engineer services perform in other countries.	1.0
+gang	Gang is units.	1.0
+madrigal	A madrigal is a song	1.0
+hydrogenated oil	Hydrogenated oils are also high in saturated fat.	0.7471402287483215
+Paraguayan	Paraguayan has (part) cells.	1.0
+adult hookworm	Adult hookworms infect humans.	1.0
+interpersonal intelligence	Interpersonal intelligence is the capacity to understand and interact effectively with others.	0.7197015285491943
+nonproliferation	A nonproliferation is prevention	1.0
+switcher	A switcher is an oppressor	1.0
+sudden blizzard	Sudden blizzards cause terrible damage.	1.0
+nasal	Nasals are bones.	1.0
+leave side	Leave sides become surfaces.	1.0
+weather prediction	Weather predictions involve mathematical concepts.	1.0
+anhydrous hydrazine	Anhydrous hydrazine is a strong reducing agent.	0.8217519521713257
+nitpicker	A nitpicker is a critic	1.0
+sweet basil	A sweet basil is a basil	1.0
+nought	A nought is a figure	1.0
+foal	Foals are young mammals.	1.0
