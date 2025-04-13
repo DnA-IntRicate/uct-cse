@@ -56,6 +56,18 @@
             "name": "CSC1016S: Practical Test 2"
         },
         {
+            "path": "./Main Courses/CSC2001F/Assignments/1- Data Structures",
+            "name": "CSC2001F: Assignment 1- Data Structures"
+        },
+        {
+            "path": "./Main Courses/CSC2001F/Assignments/2- Data Structures",
+            "name": "CSC2001F: Assignment 2- Data Structures"
+        },
+        {
+            "path": "./Main Courses/CSC2001F/Assignments/4- Data Structures",
+            "name": "CSC2001F: Assignment 4- Data Structures"
+        },
+        {
             "path": "./Main Courses/CSC2004Z/SampleExam1",
             "name": "CSC2004Z: Sample Exam 1"
         },
