@@ -406,3 +406,6 @@ target/
 *.bak
 *.swp
 *.orig
+
+# Where I keep private files from UCT Automarker
+AM/
