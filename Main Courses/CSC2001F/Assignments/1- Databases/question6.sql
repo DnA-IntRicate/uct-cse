@@ -1,0 +1,1 @@
+SELECT AVG(COALESCE(A, B, C, D, E)) AS AverageMark FROM R;

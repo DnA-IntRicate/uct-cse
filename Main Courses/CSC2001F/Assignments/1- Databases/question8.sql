@@ -1,0 +1,6 @@
+-- customers. Splitting customers into separate tables enforces the
+-- principle of normalization and improves the modularity of the database.
+-- As it currently stands, the customers table is a combination of 3 different
+-- distinct concerns being: customer data, contact info and address info.
+-- Splitting these concerns into 3 separate tables will keep them normalized,
+-- improve modularity and reduce the risk of update inconsistencies/anomalies.

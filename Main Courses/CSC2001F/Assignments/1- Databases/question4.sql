@@ -1,0 +1,1 @@
+-- change MSRP to retailPrice in products
