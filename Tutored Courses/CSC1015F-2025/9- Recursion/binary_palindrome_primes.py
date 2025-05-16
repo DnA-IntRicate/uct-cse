@@ -28,9 +28,11 @@ def is_palindrome(s):
 
 
 def search_palindromic_primes(n, m):
+    pass
     # Recursive range traversal
 
 def main():
+    pass
     # your code here
 
 # Main block to take input and start the recursive search
