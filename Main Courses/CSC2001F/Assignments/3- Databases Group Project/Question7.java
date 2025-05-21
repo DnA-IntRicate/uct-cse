@@ -34,6 +34,8 @@ public class Question7
             password = varScanner.nextLine();
             System.out.println("Enter database name (default is student number): ");
             database = varScanner.nextLine();
+
+            varScanner.close();
         }
 
         //localhost:3306/cs";//
