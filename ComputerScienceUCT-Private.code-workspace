@@ -99,5 +99,16 @@
             "path": "./Side Projects/Strings",
             "name": "Side Projects: Strings"
         }
-    ]
+    ],
+    "settings": {
+        "files.associations": {
+            "format": "cpp",
+            "type_traits": "cpp",
+            "iosfwd": "cpp",
+            "initializer_list": "cpp",
+            "utility": "cpp",
+            "xstring": "cpp",
+            "xutility": "cpp"
+        }
+    }
 }
