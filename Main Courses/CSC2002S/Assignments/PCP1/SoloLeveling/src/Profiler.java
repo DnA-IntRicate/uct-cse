@@ -17,7 +17,7 @@ public class Profiler
     /** Where to output the profiling data */
     public static final String OUTPUT_FILE_PATH = "TestOutputData.csv";
 
-    /** The optimal search density for profiling */
+    /** The optimal search density for profiling on my 4-Core AMD Ryzen 3 7320U */
     public static final double SEARCH_DENSITY = 0.35;
 
     /** The random seed to use for profiling */
