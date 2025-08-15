@@ -1,17 +1,12 @@
 package SoloLeveling.Parallel;
 
-// import SoloLeveling.DungeonHunter;
-// import SoloLeveling.DungeonMap;
-// import SoloLeveling.Hunt;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
 /**
- * Implementation of {@link SoloLeveling.Hunt} for use in {@link DungeonHunterParallel}.
+ * Implementation of {@link SoloLeveling.Serial.Hunt} for use in {@link DungeonHunterParallel}.
  *
  * @author Adam Foflonker (FFLADA001)
- * @version 10/08/2025
+ * @version 15/08/2025
  */
 public class HuntParallel extends RecursiveTask<Integer>
 {
@@ -29,17 +24,26 @@ public class HuntParallel extends RecursiveTask<Integer>
         DownRight
     }
 
+    /**
+     * Creates a new {@link HuntParallel}.
+     *
+     * @param id the ID of the hunt
+     * @param rowPos the row-index of the hunt
+     * @param colPos the column-index of the hunt
+     * @param dungeon the dungeon map to search inside of
+     */
     public HuntParallel(int id, int rowPos, int colPos, final DungeonMapParallel dungeon)
     {
         super();
 
         m_ID = id;
-        m_RowPos = rowPos; // Randomly generated
-        m_ColPos = colPos; // Randomly generated
+        m_RowPos = rowPos;
+        m_ColPos = colPos;
         m_Dungeon = dungeon;
         m_Stopped = false;
     }
 
+    /** Allows {@link HuntParallel#FindManaPeak()} to be called concurrently on separate threads */
     @Override
     protected Integer compute()
     {
@@ -141,21 +145,21 @@ public class HuntParallel extends RecursiveTask<Integer>
      */
     public boolean IsStopped() {return m_Stopped;}
 
-    /** Identifier for this hunt */
+    // Identifier for this hunt
     private int m_ID = 0;
 
-    /** Row position in the dungeon map */
+    // Row position in the dungeon map
     private int m_RowPos = 0;
 
-    /** Column position in the dungeon map */
+    // Column position in the dungeon map
     private int m_ColPos = 0;
 
-    /** Number of steps to the end of the search */
+    // Number of steps to the end of the search
     private int m_Steps = 0;
 
-    /** The dungeon map */
+    // The dungeon map
     private DungeonMapParallel m_Dungeon;
 
-    /** Did the search hit a previously searched location? */
+    // Did the search hit a previously searched location?
     private boolean m_Stopped = false;
 }

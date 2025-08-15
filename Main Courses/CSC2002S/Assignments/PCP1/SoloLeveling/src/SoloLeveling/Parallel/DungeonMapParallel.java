@@ -1,32 +1,30 @@
 package SoloLeveling.Parallel;
 
-// import SoloLeveling.DungeonHunter;
-// import SoloLeveling.Serial.DungeonMap;
-// import SoloLeveling.Hunt;
-
 import java.io.File;
 import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveTask;
-
-import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 /**
- * Implementation of {@link SoloLeveling.DungeonMap} for use in {@link DungeonHunterParallel}.
+ * Implementation of {@link SoloLeveling.Serial.DungeonMap} for use in {@link DungeonHunterParallel}.
  *
  * @author Adam Foflonker (FFLADA001)
- * @version 10/08/2025
+ * @version 15/08/2025
  */
-public class DungeonMapParallel // extends RecursiveAction
+public class DungeonMapParallel
 {
+    /**
+     * Creates a new {@link DungeonMapParallel}.
+     *
+     * @param xMin the minimum x-coordinate
+     * @param xMax the maximum x-coordinate
+     * @param yMin the minimum y-coordinate
+     * @param yMax the maximum y-coordinate
+     * @param seed the random seed defining where the boss peak is placed in the dungeon map
+     */
     public DungeonMapParallel(double xMin, double xMax, double yMin, double yMax, int seed)
     {
-        // TODO: Super must be called here once we make this class derive from either RecursiveTask or RecursiveAction
-        // super();
-
         m_XMin = xMin;
         m_XMax = xMax;
         m_YMin = yMin;
@@ -46,7 +44,7 @@ public class DungeonMapParallel // extends RecursiveAction
         m_BossY = m_YMin + (yRange * rand.nextDouble());
 
         // Calculate decay factor based on range
-        m_DecayFactor = 2.0 / (xRange * 0.1);
+        // m_DecayFactor = 2.0 / (xRange * 0.1);
 
         m_ManaMap = new int[m_Rows][m_Columns];
         m_Visit = new int[m_Rows][m_Columns];
@@ -68,7 +66,7 @@ public class DungeonMapParallel // extends RecursiveAction
      *
      * @return {@code true} if this cell has been visited, {@code false} otherwise
     */
-    /*synchronized*/ boolean Visited(int x, int y) { return m_Visit[x][y] != -1; }
+    /* synchronized */ boolean Visited(int x, int y) { return m_Visit[x][y] != -1; }
 
     /**
      * Mark the cell at coordinates {@code x} and {@code y} as visited.
@@ -77,7 +75,7 @@ public class DungeonMapParallel // extends RecursiveAction
      * @param y the y-coordinate of the cell
      * @param id the ID of the hunt that visited the cell
      */
-    /*synchronized*/ void SetVisited(int x, int y, int id)
+    /* synchronized */ void SetVisited(int x, int y, int id)
     {
         if (!Visited(x, y))
             m_Visit[x][y] = id;
@@ -129,6 +127,7 @@ public class DungeonMapParallel // extends RecursiveAction
 
      /**
      * Returns the direction of the neighbouring cell with the highest mana
+     *
      * @param x The x-coordinate in the dungeon grid
      * @param y The y-coordinate in the dungeon grid
      * @return the direction of highest mana
@@ -151,7 +150,6 @@ public class DungeonMapParallel // extends RecursiveAction
             { 1,  1}  // DownRight
         };
 
-        // TODO: Use Map.of for this, instead of using 2 parallel arrays
         HuntParallel.Direction[] directionEnums =
         {
             HuntParallel.Direction.Left,
@@ -320,42 +318,45 @@ public class DungeonMapParallel // extends RecursiveAction
         return new Color(r, g, b);
     }
 
+    /** Grid precision */
     public static final int PRECISION = 10000;
+
+    /** Grid resolution */
     public static final int RESOLUTION = 5;
 
-    /** Number of rows in the dungeon grid */
+    // Number of rows in the dungeon grid
     private int m_Rows = 0;
 
-    /** Number of columns in the dungeon grid */
+    // Number of columns in the dungeon grid
     private int m_Columns = 0;
 
-    /** X minimum limit */
+    // X minimum limit
     private double m_XMin = 0.0;
 
-    /** X maximum limit */
+    // X maximum limit
     private double m_XMax = 0.0;
 
-    /** Y minimum limit */
+    // Y minimum limit
     private double m_YMin = 0.0;
 
-    /** Y maximum limit */
+    // Y maximum limit
     private double m_YMax = 0.0;
 
-    /** The mana map represented as a 2D array */
+    // The mana map represented as a 2D array
     private int[][] m_ManaMap;
 
-    /** The map of all visited cells in the dungeon grid */
+    // The map of all visited cells in the dungeon grid
     private int[][] m_Visit;
 
-    /** The number of dungeon grid points that have been evaluated */
+    // The number of dungeon grid points that have been evaluated
     private int m_DungeonGridPointsEvaluated = 0;
 
-    /** The x-coordinate of the boss peak in the dungeon grid */
+    // The x-coordinate of the boss peak in the dungeon grid
     private double m_BossX = 0.0;
 
-    /** The y-coordinate of the boss peak in the dungeon grid */
+    // The y-coordinate of the boss peak in the dungeon grid
     private double m_BossY = 0.0;
 
-    // TODO: Have no idea what this is for but hey, its here...
-    private double m_DecayFactor = 0.0;
+    // Have no idea what this is for but hey, its here...
+    // private double m_DecayFactor = 0.0;
 }

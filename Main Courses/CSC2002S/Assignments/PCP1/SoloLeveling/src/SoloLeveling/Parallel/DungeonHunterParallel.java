@@ -1,41 +1,60 @@
 package SoloLeveling.Parallel;
 
-// imports
 import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
-// import SoloLeveling.DungeonMap;
-
 /**
- * Parallel implementation of the {@link SoloLeveling.DungeonHunter} program.
+ * Parallel implementation of the {@link SoloLeveling.Serial.DungeonHunter} program.
  *
  * @author Adam Foflonker (FFLADA001)
- * @version 11/08/2025
+ * @version 15/08/2025
  */
 public class DungeonHunterParallel
 {
+    /**
+     * The return-value for {@link ComputeHuntMaxTask}.
+     * This class is meant to act like a C-style struct allowing us to return "multiple values"
+     */
     static class ComputeMaxHuntResult
     {
-        ComputeMaxHuntResult(int value, int index)
+        /**
+         * Creates a new {@link ComputeMaxHuntResult}.
+         *
+         * @param value the value of this result (max)
+         * @param index the index of the value (finder)
+         */
+        public ComputeMaxHuntResult(int value, int index)
         {
             Value = value;
             Index = index;
         }
 
+        /** The value of this result */
         public int Value;
+
+        /** The index at which {@code Value} was found */
         public int Index;
     }
 
+    /** Recursive parallelized implementation for finding the max {@link HuntParallel} value */
     static class ComputeHuntMaxTask extends RecursiveTask<ComputeMaxHuntResult>
     {
-        ComputeHuntMaxTask(final HuntParallel[] searches, int start, int end)
+        /**
+         * Creates a new {@link ComputeHuntMaxTask}.
+         *
+         * @param searches the array of {@link HuntParallel} to find the max of
+         * @param start the starting index
+         * @param end the ending index
+         */
+        public ComputeHuntMaxTask(final HuntParallel[] searches, int start, int end)
         {
             m_Searches = searches;
             m_Start = start;
             m_End = end;
         }
 
+        /** Recursively computes the max hunt value */
         @Override
         protected ComputeMaxHuntResult compute()
         {
@@ -46,7 +65,7 @@ public class DungeonHunterParallel
                 return new ComputeMaxHuntResult(m_Searches[m_Start].join(), m_Start);
             }
 
-            // Split task into two halves
+            // Recursively split task into two halves
             int mid = m_Start + (m_End - m_Start) / 2;
             ComputeHuntMaxTask leftTask = new ComputeHuntMaxTask(m_Searches, m_Start, mid);
             ComputeHuntMaxTask rightTask = new ComputeHuntMaxTask(m_Searches, mid, m_End);
@@ -55,23 +74,34 @@ public class DungeonHunterParallel
             ComputeMaxHuntResult rightResult = rightTask.compute();
             ComputeMaxHuntResult leftResult = leftTask.join();
 
-            return (leftResult.Value >= rightResult.Value) ? leftResult : rightResult; // Return max
+            return (leftResult.Value >= rightResult.Value) ? leftResult : rightResult; // Return the max
         }
 
+        // Search array
         private final HuntParallel[] m_Searches;
+
+        // Search starting index
         private final int m_Start;
+
+        // Search ending index
         private final int m_End;
     }
 
+    /**
+     * The entry-point for {@link DungeonHunterParallel}.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args)
     {
-        double xMin, xMax, yMin, yMax; // Dungeon limits - dungeons are square
+        double xMin, xMax, yMin, yMax;
 
         int numSearches = 10;
         int gateSize = 10;
 
-        Random rand = new Random();
         int randomSeed = 0;
+        Random rand = new Random();
+
 
         if (args.length != 3)
         {
@@ -85,8 +115,7 @@ public class DungeonHunterParallel
             if (gateSize <= 0)
                 throw new IllegalArgumentException("Grid size must be greater than 0.");
 
-            numSearches = (int)(Double.parseDouble(args[1]) * (gateSize * 2) * (gateSize * 2) *
-                DungeonMapParallel.RESOLUTION);
+            numSearches = (int)(Double.parseDouble(args[1]) * (gateSize * 2) * (gateSize * 2) * DungeonMapParallel.RESOLUTION);
 
             randomSeed = Integer.parseInt(args[2]);
             if (randomSeed < 0)
@@ -110,26 +139,32 @@ public class DungeonHunterParallel
         yMin = -gateSize;
         yMax = gateSize;
 
+        HuntParallel[] searches = new HuntParallel[numSearches];
         DungeonMapParallel dungeon = new DungeonMapParallel(xMin, xMax, yMin, yMax, randomSeed);
 
         int dungeonRows = dungeon.GetRows();
         int dungeonColumns = dungeon.GetColumns();
-        HuntParallel[] searches = new HuntParallel[numSearches];
 
+        // ForkJoinPool.close() doesn't exist on Nightmare's version of the OpenJDK.
+        // This attribute is to suppress resource leak warnings on newer versions of
+        // the OpenJDK contaning ForkJoinPool.close()
+        @SuppressWarnings("resource")
         ForkJoinPool pool = new ForkJoinPool();
 
-        Tick(); // Begin timer
-        for (int i = 0; i < numSearches; ++i)  // Initialize searches at random locations in dungeon
+        // Begin timer
+        Tick();
+
+        for (int i = 0; i < numSearches; ++i)
             searches[i] = new HuntParallel(i + 1, rand.nextInt(dungeonRows), rand.nextInt(dungeonColumns), dungeon);
 
         ComputeMaxHuntResult result = pool.invoke(new ComputeHuntMaxTask(searches, 0, numSearches));
         pool.shutdown();
-        pool.close();
 
         int max = result.Value;
         int finder = result.Index;
 
-        Tock(); // End timer
+        // End timer
+        Tock();
 
         System.out.printf("\t dungeon size: %d,\n", gateSize);
         System.out.printf("\t rows: %d, columns: %d\n", dungeonRows, dungeonColumns);
@@ -151,18 +186,18 @@ public class DungeonHunterParallel
         dungeon.VisualisePowerMap("visualiseSearchPath.png", true);
     }
 
-    // TODO: Comment
-    private static void Tick() { s_StartTime = System.currentTimeMillis(); }
-
-    // TODO: Comment
-    private static void Tock(){ s_EndTime=System.currentTimeMillis(); }
-
-    // TODO: Why?
+    /** Not currently being used */
     public static final boolean DEBUG = false;
 
-    // TODO: Comment
+    // Record current system time as the start time
+    private static void Tick() { s_StartTime = System.currentTimeMillis(); }
+
+    // Record current system time as the end time
+    private static void Tock() { s_EndTime = System.currentTimeMillis(); }
+
+    // The start time of the max hunt value search
     private static long s_StartTime = 0;
 
-    // TODO: Comment
+    // The end time of the max hunt value search
     private static long s_EndTime = 0;
 }

@@ -5,20 +5,34 @@ import java.io.PrintStream;
 import SoloLeveling.Serial.DungeonHunter;
 import SoloLeveling.Parallel.DungeonHunterParallel;
 
-
+/**
+ * Measures the optimal search density (num searches) for both the serial and parallel implementations of the
+ * SoloLeveling program, using a gate size of 200 and a random seed of 627
+ *
+ * @see SoloLeveling.Serial.DungeonHunter
+ * @see SoloLeveling.Parallel.DungeonHunterParallel
+ *
+ * @author Adam Foflonker (FFLADA001)
+ * @version 15/08/2025
+ */
 public class SearchDensityProfiler
 {
+    /** Where to output the profiling data */
+    public static final String OUTPUT_FILE_PATH = "SearchDensityTestOutputData.csv";
+
     /** Number of warm-up iterations per test case */
     public static final int WARMUP_ITERATIONS = 3;
 
     /** Number of timed iterations per test case */
     public static final int MEASURE_ITERATIONS = 5;
 
-    // TODO: COmment
+    /** The fixed gate size for search density tests */
     public static final int GATE_SIZE = 200;
+
+    /** The fixed random seed for search density tests */
     public static final int RANDOM_SEED = 627;
 
-    // TODO: Comment
+    /** The array of search densities to measure */
     public static final double[] SEARCH_DENSITIES =
     {
         0.05,
@@ -43,8 +57,11 @@ public class SearchDensityProfiler
         1.0
     };
 
-    public static final String OUTPUT_FILE_PATH = "SearchDensityTestOutputData.csv";
-
+    /**
+     * Entry-point for {@link SearchDensityProfiler}.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args)
     {
         try (PrintWriter writer = new PrintWriter(new FileWriter(OUTPUT_FILE_PATH)))
@@ -70,6 +87,7 @@ public class SearchDensityProfiler
         Print("Output saved to \"%s\".", OUTPUT_FILE_PATH);
     }
 
+    // Runs an individual profile test, serial first, then parallel
     private static void RunTest(int densityIndex, PrintWriter outputFileWriter)
     {
         final String TOKEN_MS = " ms";
@@ -115,7 +133,8 @@ public class SearchDensityProfiler
         System.gc();
     }
 
-    private static String GetTimeFromOutput(String outputStr, int n)
+    // Extracts the time from program output
+    private static String GetTimeFromOutput(final String outputStr, int n)
     {
         final String TOKEN_TIME = "time";
         final int TOKEN_TIME_LENGTH = TOKEN_TIME.length();
@@ -139,6 +158,7 @@ public class SearchDensityProfiler
         return outputStr.substring(idxToken + TOKEN_TIME_LENGTH + 2, idxEol);
     }
 
+    // Print line helper
     private static void Print(final String fmt, Object... args)
     {
         System.out.println(String.format(fmt, args));

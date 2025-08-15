@@ -5,17 +5,25 @@ import java.io.PrintStream;
 import SoloLeveling.Serial.DungeonHunter;
 import SoloLeveling.Parallel.DungeonHunterParallel;
 
-
+/**
+ * Speedup profiler for the parallel vs serial implementations of the SoloLeveling program.
+ *
+ * @see SoloLeveling.Serial.DungeonHunter
+ * @see SoloLeveling.Parallel.DungeonHunterParallel
+ *
+ * @author Adam Foflonker (FFLADA001)
+ * @version 15/08/2025
+ */
 public class Profiler
 {
+    /** Where to output the profiling data */
+    public static final String OUTPUT_FILE_PATH = "TestOutputData.csv";
+
     /** Number of warm-up iterations per test case */
     public static final int WARMUP_ITERATIONS = 3;
 
     /** Number of timed iterations per test case */
     public static final int MEASURE_ITERATIONS = 10;
-
-    /** Where to output the profiling data */
-    public static final String OUTPUT_FILE_PATH = "TestOutputData.csv";
 
     /** The optimal search density for profiling on my 4-Core AMD Ryzen 3 7320U */
     public static final double SEARCH_DENSITY = 0.35;
@@ -32,6 +40,11 @@ public class Profiler
     /** The increment step for each gate size */
     public static final int GATE_SIZE_STEP = 10;
 
+    /**
+     * Entry-point for {@link Profiler}.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args)
     {
         try (PrintWriter writer = new PrintWriter(new FileWriter(OUTPUT_FILE_PATH)))
@@ -57,6 +70,7 @@ public class Profiler
         Print("Output saved to \"%s\".", OUTPUT_FILE_PATH);
     }
 
+    // Runs an individual profile test, serial first, then parallel
     private static void RunTest(int testIndex, int gateSize, double searchDensity, PrintWriter outputFileWriter)
     {
         final String TOKEN_MS = " ms";
@@ -92,13 +106,17 @@ public class Profiler
             serialTime = serialTime.substring(0, serialTime.indexOf(TOKEN_MS));
             parallelTime = parallelTime.substring(0, parallelTime.indexOf(TOKEN_MS));
             outputFileWriter.write(String.format("%d,%s,%s\n", gateSize, serialTime, parallelTime));
+
+            // Flush each time to force the write to happen NOW, rather then only at the end
+            outputFileWriter.flush();
         }
 
         // Request the Garbage Collector to run at the end of each test to ensure everything has been cleaned up
         System.gc();
     }
 
-    private static String GetTimeFromOutput(String outputStr, int n)
+    // Extracts the time from program output
+    private static String GetTimeFromOutput(final String outputStr, int n)
     {
         final String TOKEN_TIME = "time";
         final int TOKEN_TIME_LENGTH = TOKEN_TIME.length();
@@ -122,6 +140,7 @@ public class Profiler
         return outputStr.substring(idxToken + TOKEN_TIME_LENGTH + 2, idxEol);
     }
 
+    // Print line helper
     private static void Print(final String fmt, Object... args)
     {
         System.out.println(String.format(fmt, args));
