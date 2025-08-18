@@ -1,0 +1,233 @@
+commit 1b286929fb2e1d681b4f2cfbce37c710e380a8f3
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 20:39:24 2025 +0200
+
+    Amend to previous
+
+commit 9f08031ebc652415e2a48e08c09e33cf2d2d7199
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 20:36:34 2025 +0200
+
+    SearchDensityProfiler code cleanup & javadoc comments
+
+commit eca05b44b1c55f46aef549e2dffa45e8147bd722
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 20:29:12 2025 +0200
+
+    Profiler code cleanup & javadoc comments
+
+commit 7876cd3ef6f11030f6d0afb3234ec884c2c0eb5a
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 20:22:57 2025 +0200
+
+    HuntParallel code cleanup & zero warnings
+
+commit b0ac0bd65b6724168f5497a8c3850ebc8126d803
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 20:17:12 2025 +0200
+
+    DungeonMapParallel code cleanup & zero warnings
+
+commit 39eaad68965eadf1df3ef23ecba6dfa401e86067
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 20:09:29 2025 +0200
+
+    DungeonHunterParallel code cleanup & zero warnings
+
+commit 416ba44393e0059ad2a9c7847d1fe449401d04c3
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 19:45:14 2025 +0200
+
+    Run new tests & update plots
+
+commit 44a06ae9c69c6dff4bf680e7f652191c3fb0e39a
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 19:43:43 2025 +0200
+
+    SpeedupPlotter plotting 2 speedup graphs on same axis
+
+commit cb5fadda390e98a6eb0aef19e975518d31537b87
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 07:38:56 2025 +0200
+
+    Move all scripts into Scripts/ dir
+
+commit 53ab9f9949b71ad8625b6a03add0acc4c427b03b
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Fri Aug 15 07:26:38 2025 +0200
+
+    Rewrite CompareSearchMaps script in Python
+
+commit 2b6e8405e209520977cc109835a6be77df91044d
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 14 21:47:54 2025 +0200
+
+    Create plots
+
+commit 0dfe5475ba66e16394bd93d5171f3e629cf7dcaf
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 14 21:47:10 2025 +0200
+
+    Collect profiling test data
+
+commit 9e4ca7f1c8e6852b2849ada15ccfba663a24d043
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 14 21:45:51 2025 +0200
+
+    Rewrite Profiler
+
+commit ab7e5d83f686016ad9a7f82a005e88fd061ba0f2
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 14 12:42:27 2025 +0200
+
+    DungeonHunterParallel recursively search for max mana
+
+commit 255fba0a08f9cf737257805ff67cb802c09579f7
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 14 10:39:34 2025 +0200
+
+    Optimal search density plots
+
+commit a6d06cbbfca81395341d2d9467b9fe8915175c60
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 14 10:11:05 2025 +0200
+
+    SearchDensity profiling & plotting to find optimal density
+
+commit fe96039404ed2ff06709cc4d09c0e3e5dd8fa51f
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Wed Aug 13 18:39:26 2025 +0200
+
+    Profiled PC
+
+commit 4f426e521a0262bae17214838faaea9210903a90
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Wed Aug 13 18:38:53 2025 +0200
+
+    Force profiler to invoke GC after each test
+
+commit b232906bcb22b901fc2b4a96a48ae4975fb7242a
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Wed Aug 13 17:11:50 2025 +0200
+
+    Move src dir to SoloLeveling/src/
+
+commit 429b21bbd56e5b2d210db1b5d53999b96496c94b
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Wed Aug 13 17:04:39 2025 +0200
+
+    Delete Notes.java.txt
+
+commit 764f3fa2a342ae418aa9d1945b09d174682a8f0a
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Wed Aug 13 17:04:15 2025 +0200
+
+    Reimplement Python Profiler in Java
+
+commit 8a86a64f22f22671b5d9b36a5b17181f85f9985c
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Wed Aug 13 10:36:11 2025 +0200
+
+    Create Profiler and TestInputData for profiling serial vs. parallel
+
+commit b02b3f1a61fbb46879d58ad6cd1351527e462adb
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Tue Aug 12 12:46:37 2025 +0200
+
+    Parallelize HuntParallel & DungeonHunterParallel
+
+commit d1d8339450e510a2c7b1d8ec6fb08b1b643bc8dc
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Tue Aug 12 09:21:46 2025 +0200
+
+    Bug fixes following V2 of assignment serial code
+
+commit c26bc2001fe3ef5e325854236c94a4422c78f5e5
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 19:35:02 2025 +0200
+
+    ImageCompare switch to main bin dir
+
+commit 1569bc400b772581bb7ed3a14eda1a4643c0b127
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 19:25:17 2025 +0200
+
+    Makefile set default run to run both serial & parallel
+
+commit 4c4d4ab76ca17facb8660ea82848c5817d16cbb7
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 19:23:48 2025 +0200
+
+    Create CompareSearchMaps.sh
+
+commit c37cccf8870c4cbbf91b642c752fdbc3688f0d9f
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 19:23:14 2025 +0200
+
+    .editorconfig LF line endings for shell scripts
+
+commit 4c5c5343d93c182854ba046bc463132a3e1ec17a
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 18:54:56 2025 +0200
+
+    Separate Serial & Parallel directories & build targets
+
+commit aca8a1f26036c61fc65490fb674bdb7e17151009
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 18:26:53 2025 +0200
+
+    Create ImageCompare app
+
+commit 6381cf67843694dae016eb7531b2647aa4926d13
+Author: Adam <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon Aug 11 10:29:49 2025 +0200
+
+    Create & implement DungeonHunterParallel
+
+commit cb961acc37a96cc49446355d857ed7f0268f96ff
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun Aug 10 16:42:41 2025 +0200
+
+    Create & Implement DungeonMapParallel
+
+commit eba39f96307948d8fcaf18745a3a56f24c779001
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun Aug 10 15:41:32 2025 +0200
+
+    Create & implement HuntParallel
+
+commit a1717b7344151322306a35a43f86da6799042758
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 7 16:26:33 2025 +0200
+
+    Amend to previous
+
+commit b46d4aeed3bf7ac8803ed33da8d46a2394862f72
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 7 16:23:40 2025 +0200
+
+    SoloLeveling Package. Apply .editorconfig formatting
+
+commit c1df480f553f44607d4b58261ef58074966e40ac
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 7 16:01:18 2025 +0200
+
+    Zero Warnings
+
+commit c8666b13215c7fe689800b76ff527284fc27eafc
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 7 15:57:50 2025 +0200
+
+    Fix typo SoloLevelling -> SoloLeveling
+
+commit 26c188643de89ec5c72b5c9a6cba3a8d9507e2d1
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Thu Aug 7 15:50:59 2025 +0200
+
+    Update Makefile
+
+commit 7aaadaaf31f21a5ccc03742f26bfd88595640ace
+Author: Adam Foflonker <adam.foflonker@gmail.com>
+Date:   Thu Aug 7 15:35:25 2025 +0200
+
+    Add project files
