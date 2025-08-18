@@ -66,7 +66,7 @@ public class DungeonMapParallel
      *
      * @return {@code true} if this cell has been visited, {@code false} otherwise
     */
-    /* synchronized */ boolean Visited(int x, int y) { return m_Visit[x][y] != -1; }
+    boolean Visited(int x, int y) { return m_Visit[x][y] != -1; }
 
     /**
      * Mark the cell at coordinates {@code x} and {@code y} as visited.
@@ -75,7 +75,7 @@ public class DungeonMapParallel
      * @param y the y-coordinate of the cell
      * @param id the ID of the hunt that visited the cell
      */
-    /* synchronized */ void SetVisited(int x, int y, int id)
+    void SetVisited(int x, int y, int id)
     {
         if (!Visited(x, y))
             m_Visit[x][y] = id;
@@ -89,7 +89,7 @@ public class DungeonMapParallel
     * @param y The y-coordinate in the dungeon grid.
     * @return an int value representing the mana level at (x, y).
     */
-    /*synchronized*/ int GetManaLevel(int x, int y)
+    int GetManaLevel(int x, int y)
     {
         if (Visited(x,y))
             return m_ManaMap[x][y];

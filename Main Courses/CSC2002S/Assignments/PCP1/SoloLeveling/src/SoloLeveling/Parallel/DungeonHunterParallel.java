@@ -157,7 +157,9 @@ public class DungeonHunterParallel
         for (int i = 0; i < numSearches; ++i)
             searches[i] = new HuntParallel(i + 1, rand.nextInt(dungeonRows), rand.nextInt(dungeonColumns), dungeon);
 
-        ComputeMaxHuntResult result = pool.invoke(new ComputeHuntMaxTask(searches, 0, numSearches));
+        ComputeHuntMaxTask computeMaxHuntTask = new ComputeHuntMaxTask(searches, 0, numSearches);
+        pool.execute(computeMaxHuntTask);
+        ComputeMaxHuntResult result = computeMaxHuntTask.join();
         pool.shutdown();
 
         int max = result.Value;

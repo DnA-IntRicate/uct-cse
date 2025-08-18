@@ -1,0 +1,67 @@
+JAVA = java
+JAVAC = javac
+JAVADOC = javadoc
+
+DOC_DIR = doc
+
+SRC_DIR = SoloLeveling/src
+# SRC_DIR_SERIAL = $(SRC_DIR)/SoloLeveling/Serial
+SRC_DIR_PARALLEL = $(SRC_DIR)/SoloLeveling/Parallel
+
+BIN_DIR = bin
+# BIN_DIR_SERIAL = $(BIN_DIR)/Serial
+BIN_DIR_PARALLEL = $(BIN_DIR)/Parallel
+
+SOURCE_FILES := $(shell find $(SRC_DIR) -name "*.java")
+# SOURCE_FILES_SERIAL := $(shell find $(SRC_DIR_SERIAL) -name "*.java")
+SOURCE_FILES_PARALLEL := $(shell find $(SRC_DIR_PARALLEL) -name "*.java")
+
+# TARGET_NAMES_SERIAL = $(SOURCE_FILES_SERIAL:$(SRC_DIR_SERIAL)/%.java=$(BIN_DIR_SERIAL)/%.class)
+TARGET_NAMES_PARALLEL = $(SOURCE_FILES_PARALLEL:$(SRC_DIR_PARALLEL)/%.java=$(BIN_DIR_PARALLEL)/%.class)
+
+# Default arguments
+ARGS ?= 100 0.5 627
+
+all: build
+
+# buildSerial
+build: buildParallel # buildProfiler
+
+# buildSerial:
+# 	@mkdir -p $(BIN_DIR_SERIAL)
+# 	$(JAVAC) -d $(BIN_DIR_SERIAL) $(SOURCE_FILES_SERIAL)
+
+buildParallel:
+	@mkdir -p $(BIN_DIR_PARALLEL)
+	$(JAVAC) -d $(BIN_DIR_PARALLEL) $(SOURCE_FILES_PARALLEL)
+
+# buildProfiler:
+# 	@mkdir -p $(BIN_DIR)
+# 	$(JAVAC) -cp "$(BIN_DIR_SERIAL):$(BIN_DIR_PARALLEL)" -d $(BIN_DIR) $(SRC_DIR)/Profiler.java
+# 	$(JAVAC) -cp "$(BIN_DIR_SERIAL):$(BIN_DIR_PARALLEL)" -d $(BIN_DIR) $(SRC_DIR)/SearchDensityProfiler.java
+
+run:
+# $(MAKE) runSerial ARGS="$(ARGS)"
+# @echo
+# @echo "----- Finished Serial Run, Starting Parallel Run -----"
+# @echo
+	$(MAKE) runParallel ARGS="$(ARGS)"
+
+# runSerial: buildSerial
+# 	cd ./$(BIN_DIR_SERIAL) && $(JAVA) SoloLeveling.Serial.DungeonHunter $(ARGS)
+
+runParallel: buildParallel
+	cd ./$(BIN_DIR_PARALLEL) && $(JAVA) SoloLeveling.Parallel.DungeonHunterParallel $(ARGS)
+
+# profiler: build
+# 	cd ./$(BIN_DIR) && $(JAVA) -cp ".:Serial:Parallel" Profiler
+
+# searchDensityProfiler: build
+# 	cd ./$(BIN_DIR) && $(JAVA) -cp ".:Serial:Parallel" SearchDensityProfiler
+
+clean:
+	@rm -rf $(BIN_DIR)
+	@rm -rf $(DOC_DIR)
+
+doc:
+	$(JAVADOC) -d $(DOC_DIR) $(SOURCE_FILES)
