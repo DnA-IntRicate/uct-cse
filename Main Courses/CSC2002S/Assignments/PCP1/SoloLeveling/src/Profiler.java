@@ -51,7 +51,7 @@ public class Profiler
         {
             writer.println("GateSize,SerialTimeMS,ParallelTimeMS");
 
-            // Warm-up phase here...
+            // Warm-up phase here
             for (int i = 0; i < WARMUP_ITERATIONS; ++i)
                 RunTest(i, MIN_GATE_SIZE, SEARCH_DENSITY, null); // Pass a null writer to ignore these timings
 
