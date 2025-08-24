@@ -408,3 +408,6 @@ target/
 
 # Where I keep private files from UCT Automarker
 AM/
+
+# Large Machine Learning datasets
+data/
