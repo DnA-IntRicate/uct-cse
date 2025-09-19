@@ -1,83 +1,119 @@
-# Assignment 2 Report — Simpsons MNIST Perceptron Classification
+# CSC2042S Assignment 2 ~ Adam Foflonker
 
-## 1. Introduction
-This project implements a perceptron-based image classifier for the Simpsons-MNIST dataset. The assignment required extending the binary perceptron to a multi-class classifier using a one-vs-rest strategy. Models were trained and evaluated on both grayscale and RGB images.
+## **Preamble**
+
+### **3rd Party Libraries Used**
+
+- NumPy
+- Pillow
+- Scikit-Learn
+- Matplotlib
+
+### **Running the Notebook**
+
+Prerequisites for running `notebook-assignment2.ipynb`:
+- Aforementioned 3rdParty libraries must be installed.
+- Datasets must be placed in `"data/rgb"` and `"data/grayscale"`. For example, all training data for the rgb set must be available in `"data/rgb/train/"`.
+- Note that the `"data/"` directory has been ignored by git.
+
+### **Global Constants, State and Flags**
+
+A constant *random state* was defined to ensure code reproducibility accross different machines. The following hyperparameters were defined as well:
+``` python
+TEST_SIZE: float = 0.3  # 70% of dataset used for training
+RANDOM_SEED: int = 42
+
+np.random.seed(RANDOM_SEED)
+random.seed(RANDOM_SEED)
+
+EPOCHS: int = 50
+PATIENCE: int = 10 # Was 3
+LEARNING_RATE: float = 0.001 # Was 0.01
+```
 
 ---
 
-## 2. Data Processing
-- Dataset loaded using **PIL** into NumPy arrays.
-- Both grayscale and RGB versions prepared.
-- Training set split into **train** and **validation** subsets (80/20).
-- Images were flattened into 1D feature vectors.
-- Normalisation techniques explored: none, min-max, and z-score.
+## **Tasks**
 
----
+### **Data Processing**
 
-## 3. Perceptron Implementation
-- **BinaryPerceptron**: Maintains weights and bias, applies perceptron update rule.
-- **MultiClassPerceptron**: Composed of 10 binary perceptrons (one per class). Prediction is made via highest score (argmax).
-- Object-oriented structure ensured modularity and reuse.
+The *grayscale* and *RGB* datasets were loaded into separate `train/test` arrays. Each of these arrays were then partitioned into **training**, **validation** and **testing** sets. The size of each partitioned dataset is as follows:
+- Training: **70%** of original dataset
+- Validation: **15%** of original dataset
+- Testing: **15%** of original dataset
 
----
 
-## 4. Training
-Two stopping criteria were implemented:
-- **Fixed epochs**: Training runs for a specified number of epochs (default 50).
-- **Early stopping**: Stops when validation accuracy fails to improve for several epochs.
+### **Multi-class Perceptron Implementation**
+
+A `BinaryPerceptron` class was implemented with the following fields:
+- `weights`: An array of weights for the perceptron (cardinality equaling number of features)
+- `bias`: The floating-point bias for the perceptron
+- `lr`: The floating-point learning rate for the perceptron
+
+This `BinaryPerceptron` was then used to implement the `MultiClassPerceptron` class, which contans the following fields:
+- `classes`: The number of classes
+- `models`: A list of all `BinaryPerceptron` instances required, where each `BinaryPerceptron` maps to a single class.
+
+### **Training**
+
+A perceptron training function was implemented with the following signature:
+``` python
+def train_perceptron(model, X_train, y_train, X_val, y_val, epochs, stop_criteria, patience) -> dict[str, list]
+```
+
+This function allows for one of two stopping criterions to be used when training, namely:
+- `"epochs"`: Training ends when all epochs have been iterated.
+- `"early_stop"`: Training ends when the training loop has iterated for `"patience"` number of times without any parameter adjustments being made.
 
 Training data was shuffled each epoch to improve generalisation.
 
----
+### **Hyperparameter Tuning**
+- A learning rate of `0.001` was chosen as this yielded a higher accuracy than a learning rate of `0.01`.
+- Perceptron weights were **zero initialized**.
+- MinMax and Z-score normalization were implemented, but Z-score normalization was chosen for the final model.
+- A max epochs of `50`. Higher values such as `200` resulted in almost zero improvement over `50` epochs, which is why `50` was selected as the optimal value.
+- A patience of `10` was used for *early stopping* to ensure proper convergence of perceptrons when training.
 
-## 5. Hyperparameter Tuning
-A grid search explored:
-- Learning rates: `0.01, 0.1`
-- Initialisation: zeros, random small values
-- Normalisation: none, min-max, z-score
+### **Evaluation**
 
-Findings:
-- **Z-score normalisation** consistently improved convergence.
-- **Random initialisation** yielded better results than all-zero weights.
-- **Lower learning rates** improved stability but required more epochs.
+Evaluation metrics used:
+- Accuracy (acc)
+- Precision (prec/P)
+- Recall (rec/R)
+- F1-score (f1/F1)
+- Confusion matrix (per-class)
 
----
+Evaluation metrics for *RGB vs Grayscale* datasets:
+```
+=== Overall Comparison ===
+Grayscale Test: {'acc': 0.215, 'prec': 0.21665837103897467, 'rec': 0.215, 'f1': 0.21470492509352185}
+RGB Test: {'acc': 0.38416666666666666, 'prec': 0.37915496681491845, 'rec': 0.38416666666666666, 'f1': 0.38096880252661763}
 
-## 6. Evaluation
-Metrics used:
-- Accuracy
-- Precision
-- Recall
-- F1-score
-- Confusion matrix (per-class analysis)
+=== Per-class Comparison ===
+bart_simpson              | Gray: P = 0.18, R = 0.23, F1 = 0.20 || RGB: P = 0.29, R = 0.27, F1 = 0.28
+charles_montgomery_burns  | Gray: P = 0.30, R = 0.30, F1 = 0.30 || RGB: P = 0.28, R = 0.25, F1 = 0.27
+homer_simpson             | Gray: P = 0.17, R = 0.19, F1 = 0.18 || RGB: P = 0.32, R = 0.28, F1 = 0.30
+krusty_the_clown          | Gray: P = 0.21, R = 0.23, F1 = 0.22 || RGB: P = 0.49, R = 0.51, F1 = 0.50
+lisa_simpson              | Gray: P = 0.17, R = 0.15, F1 = 0.16 || RGB: P = 0.35, R = 0.37, F1 = 0.36
+marge_simpson             | Gray: P = 0.22, R = 0.16, F1 = 0.18 || RGB: P = 0.61, R = 0.66, F1 = 0.63
+milhouse_van_houten       | Gray: P = 0.20, R = 0.19, F1 = 0.19 || RGB: P = 0.39, R = 0.40, F1 = 0.40
+moe_szyslak               | Gray: P = 0.25, R = 0.24, F1 = 0.25 || RGB: P = 0.33, R = 0.33, F1 = 0.33
+ned_flanders              | Gray: P = 0.23, R = 0.23, F1 = 0.23 || RGB: P = 0.34, R = 0.33, F1 = 0.33
+principal_skinner         | Gray: P = 0.23, R = 0.23, F1 = 0.23 || RGB: P = 0.39, R = 0.46, F1 = 0.42
+```
 
-### Results (illustrative placeholder — replace with actual runs):
-- **Grayscale**: Accuracy ~ XX%, best with learning rate 0.01 and z-score normalisation.
-- **RGB**: Accuracy ~ YY%, slightly higher overall, suggesting colour features help distinguish some characters (e.g., Marge’s blue hair).
+![Grayscale Confusion Matrix](Plots/confmat_grayscale.png)
+![RGB Confusion Matrix](Plots/confmat_rgb.png)
 
-Confusion matrices revealed common confusions between visually similar characters (e.g., Homer vs. Bart).
+On inspection of the above confusion matrices, it can be determined that the most accurately predicted class is `marge_simpson`, likely due to the character's big blue hair. And it appears that the least accurately predicted class is `charles_montgomery_burns`. It also appears that `bart_simpson` and `lisa_simpson` are commonly confused.
 
----
+### **RGB vs Grayscale Analysis**
 
-## 7. RGB vs Grayscale Analysis
-- RGB models generally outperformed grayscale.
-- Characters with distinctive colours (Marge, Krusty) benefitted from RGB.
-- Others (Lisa, Bart) were recognised well even in grayscale.
-- Grayscale sufficed for some classes, but RGB improved overall robustness.
+The **RGB model** has a significantly higher *accuracy, precision, recall and F1-score* than the **grayscale model.** The **RGB model** also performs better per-class than the **grayscale model** however, this is not true for all classes. For instance, the **grayscale model** predicts `charles_montgomery_burns` more accurately than the **RGB model**. Although the **grayscale model** tends to confuse the classes much more than the **RGB model** due to the limited color range (neutrals only).
 
----
+`marge_simpson` Benefits greatly from color cues due to her big blue hair - which is also likely the reason why she is the most accurately predicted class. While on the other hand, classes like `bart_simpson`, `homer_simpson` and `charles_montgomery_burns` get confused quite a bit even in the **RGB model**, likely due to all of them having the same *yellow skin-tone*.
 
-## 8. Code Quality and Reproducibility
-- Code written in a modular style with classes and functions.
-- Random seeds fixed for reproducibility.
-- Grid search automated hyperparameter exploration.
+Despite this challenge with the **RGB model**, it still vastly out-performs the **grayscale model**. **Grayscale** just doesn't suffice - it confuses the classes way too much therefore, **RGB** clearly provides the advantage here.
 
----
-
-## 9. Conclusion
-This assignment demonstrated:
-- How to extend the perceptron to multi-class classification.
-- The importance of preprocessing and hyperparameters for perceptron performance.
-- The advantages of RGB data for certain visual tasks.
-
-Future improvements could include feature extraction (e.g., edge detection) or more advanced models (e.g., multi-layer perceptrons).
+### **References**
+- ChatGPT: Debugging, pipeline overview, results/output verification.
