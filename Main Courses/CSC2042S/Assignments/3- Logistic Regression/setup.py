@@ -15,7 +15,10 @@ def install_requirements():
         sys.exit(f"Failed to install dependencies. Pip exited with code {e.returncode}!")
 
 def main():
-    install_requirements()
+    choice = input("Would you like to install the required modules? (y/n): ")
+
+    if choice.lower() == "y":
+        install_requirements()
 
     if not os.path.isdir("data"):
         print("\nMasakhane repo dataset not found!")
