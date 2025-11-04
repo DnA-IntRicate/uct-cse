@@ -6,10 +6,18 @@
 S = \frac{1}{(1 - P) + \frac{P}{N}}
 ```
 
-#### Where:  
+#### Where:
 - **P** = fraction of the program that can be parallelized
 - **N** = number of processors
 - **1 − P** = fraction that's strictly sequential
+
+``` math
+S = \frac{T_1}{T_{\infty}}
+```
+
+#### Where:
+- $T_1$ = Work
+- $T_{\infty}$ = Span
 
 #### Brief:
 Amdahl's law asserts diminishing gains for increasing parallel processor counts - it defines the theoretical maximum limit achievable by parallel speedup even under theoretically infinite parallel processors.
