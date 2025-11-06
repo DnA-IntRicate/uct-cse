@@ -27,4 +27,25 @@ The language of all strings over $\{0,1\}$ with an **even number of 1s** is **Tu
 
 > **All decidable languages can be recognized, but some recognizable languages are undecidable**.
 
+### Theorems
+
+1. If $L$ is recursive, then $L^c$ is recursive.
+2. If Both $L$ and $L^c$ are RE, then they are both recursive.
+3. If $L_1$ is recursive, then its Kleene closure $L_1^*$ will be recursive.
+4. If $L_1,L_2$ are recursive, then $L_1 \cup L_2$ are recursive.
+5. If $L_1,L_2$ are recursive, their intersection $L_1 \cap L_2$ will be recursive.
+6. If $L_1,L_2$ are recursive, their concatenation $L_1 \cdot L_2$ will be recursive.
+7. If $L_1,L_2$ are RE, then $L_1 \cup L_2$ are RE.
+
+---
+
+## P and NP
+
+- **P**: All languages where we can test membership quickly.
+- **NP**: All languages where we can verify membership quickly.
+    - HAMPATH
+    - Composites
+
+$P \subseteq NP \;;\; P \neq NP$
+
 ---
