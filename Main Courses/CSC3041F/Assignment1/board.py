@@ -67,7 +67,7 @@ class RawChessBoard:
 		colors = ['white', 'black']
 		for color in colors:
 			row, col = self.find_king(color)
-			
+
 			if self.is_king_in_checkmate(color):
 				return color
 		return None
@@ -77,7 +77,7 @@ class RawChessBoard:
 
 		if not row and not col:
 			return False
-		
+
 		opponent_color = 'black' if color == 'white' else 'white'
 
 		possible_moves = self.get_playable_moves(opponent_color)
@@ -88,7 +88,7 @@ class RawChessBoard:
 					return True
 
 		return False
-		
+
 	def is_king_in_checkmate(self, color):
 		if not self.is_check(color):
 			return False
@@ -131,16 +131,16 @@ class RawChessBoard:
 	def get_rook_moves(self, start_row, start_col):
 		moves = []
 		piece = self.board[start_row][start_col]
-		
+
 		directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-		
+
 		for dr, dc in directions:
 			for i in range(1, 8):
 				nr, nc = start_row + dr * i, start_col + dc * i
-				
+
 				if 0 <= nr < len(self.board) and 0 <= nc < len(self.board[0]):
 					target = self.board[nr][nc]
-				
+
 					if target is None:
 						moves.append((nr, nc))
 					else:
@@ -149,16 +149,16 @@ class RawChessBoard:
 						break
 				else:
 					break
-					
+
 		return moves
 
 	def get_knight_moves(self, start_row, start_col):
 		moves = []
-		
+
 		potential_offsets = [
-			(-2, -1), (-2, 1), 
+			(-2, -1), (-2, 1),
 			(-1, -2), (-1, 2),
-			(1, -2), (1, 2), 
+			(1, -2), (1, 2),
 			(2, -1), (2, 1)
 		]
 
@@ -173,7 +173,7 @@ class RawChessBoard:
 
 	def get_queen_moves(self, start_row, start_col):
 		moves = []
-		
+
 		directions = [
 			(-1, 0), (1, 0), (0, -1), (0, 1),  # Rook-like
 			(-1, -1), (-1, 1), (1, -1), (1, 1) # Bishop-like
@@ -186,7 +186,7 @@ class RawChessBoard:
 
 				if 0 <= end_row < BOARD_SIZE and 0 <= end_col < BOARD_SIZE:
 					target_piece = self.board[end_row][end_col]
-					
+
 					if target_piece is None:
 						moves.append((end_row, end_col))
 					elif target_piece.islower() != self.board[start_row][start_col].islower():
@@ -196,12 +196,12 @@ class RawChessBoard:
 						break
 				else:
 					break
-		
+
 		return moves
 
 	def get_king_moves(self, start_row, start_col):
 		moves = []
-		
+
 		directions = [
 			(-1, -1), (-1, 0), (-1, 1), # Top
 			(0, -1),		   (0, 1), # Middle
@@ -213,25 +213,25 @@ class RawChessBoard:
 
 			if 0 <= end_row < BOARD_SIZE and 0 <= end_col < BOARD_SIZE:
 				target_piece = self.board[end_row][end_col]
-				
+
 				if target_piece is None or target_piece.islower()!= self.board[start_row][start_col].islower():
 					moves.append((end_row, end_col))
-		
+
 		return moves
 
 	def get_bishop_moves(self, start_row, start_col):
 		moves = []
 		piece = self.board[start_row][start_col]
-		
+
 		directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-		
+
 		for dr, dc in directions:
 			for i in range(1, 8):
 				nr, nc = start_row + dr * i, start_col + dc * i
-				
+
 				if 0 <= nr < len(self.board) and 0 <= nc < len(self.board[0]):
 					target = self.board[nr][nc]
-					
+
 					if target is None:
 						moves.append((nr, nc))
 					else:
@@ -245,16 +245,16 @@ class RawChessBoard:
 	def get_pawn_moves(self, row, col): #TODO? En passant
 		moves = []
 		piece = self.board[row][col]
-		
+
 		direction = -1 if piece.islower() else 1
 		start_row = 1 if piece.islower() else 6
-		
+
 		#Forward move
 		nr, nc = row + direction, col
 		if 0 <= nr < BOARD_SIZE:
 			if self.board[nr][nc] is None:
 				moves.append((nr, nc))
-				
+
 				#possible initial double move
 				if row == start_row:
 					nr2, nc2 = row + (2 * direction), col
@@ -268,7 +268,7 @@ class RawChessBoard:
 				target = self.board[nr][nc]
 				if target is not None and self.is_pos_same_color(target, piece):
 					moves.append((nr, nc))
-					
+
 		return moves
 
 	def is_pos_same_color(self, value1, value2):
@@ -341,14 +341,14 @@ class ChessBoardGUI:
 		#scale images
 		for k,v in self.images.items():
 			self.images[k] = v.subsample(20, 20)
-		
+
 		for row in range(BOARD_SIZE):
 			for col in range(BOARD_SIZE):
 				x1, y1 = col * SQUARE_SIZE, row * SQUARE_SIZE
 				x2, y2 = (col + 1) * SQUARE_SIZE, (row + 1) * SQUARE_SIZE
 				color = "white" if (row + col) % 2 == 0 else "black"
 				self.canvas.create_rectangle(x1, y1, x2, y2, fill=color)
-		
+
 		self.place_pieces()
 
 	def move_piece(self, color, curr_x, curr_y, next_x, next_y): #assumes next position is possible. not logic to check consistency
