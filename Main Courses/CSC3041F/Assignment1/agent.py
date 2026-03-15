@@ -9,9 +9,21 @@ class MonteCarloChessAgent(object):
         self.opponent = opponent
 
 
-    def get_next_move(self, board): #must return src_row, src_col, dest_row, dest_col
-        #TODO: complete
-        return 0,0,0,0
+    def get_next_move(self, board: ChessBoardGUI):
+        uboard: RawChessBoard = board.uboard
+        color_playable_moves = uboard.get_playable_moves(self.color)
+
+        # MCTS rough impl
+        visited = []
+        # tree: dict[]
+        # s0 = something...
+
+        # UCB1 formula:
+        # UCB1 = Vi + C * sqrt(ln(N) / ni) ; C = 1.14
+        # NOTE: We'll need to compute the argmax(UCB1) for all child nodes in each iteration, the argmax becomes
+        # the next node we visit
+
+        return 0,0,0,0 #must return src_row, src_col, dest_row, dest_col
 
 
 class RandomChessAgent(object):
