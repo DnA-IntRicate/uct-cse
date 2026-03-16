@@ -1,0 +1,56 @@
+# Question One #
+191
+196.42.77.243
+59444
+
+# Question two #
+191
+128.119.245.12
+80
+
+# Question three #
+14
+3527098115
+
+# Question four #
+16
+2710870323
+3527098116
+
+# Question five #
+18
+3527098116
+
+# Question six #
+18
+4.473
+4.679
+0.206
+0.205
+0.206
+
+# Question seven #
+605
+1270
+1270
+1270
+
+# Question eight #
+63744
+
+# Question 10 #
+44
+192.168.86.61
+
+# Question 11 #
+1
+
+# Question 12 #
+17
+
+# Question 13 #
+20
+36
+
+# Question 14 #
+no
