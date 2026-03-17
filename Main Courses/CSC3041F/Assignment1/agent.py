@@ -6,6 +6,7 @@ import math
 
 
 _MCTS_MAX_ITERS: int = 500
+_MCTS_ROLLOUT_DEPTH: int = 50
 
 # TODO: Impl me for the random agent
 def _get_all_actions(uboard: RawChessBoard, color: str) -> list[tuple[int, int, int, int]]:
@@ -29,6 +30,7 @@ def _get_all_actions(uboard: RawChessBoard, color: str) -> list[tuple[int, int, 
 
     return actions
 
+
 class MCTSNode:
     def __init__(
             self,
@@ -50,8 +52,10 @@ class MCTSNode:
     def is_terminal(self):
         return self.uboard.is_terminal(self.color)
 
+
     def is_fully_expanded(self):
-        return len(self.avail_actions) == 0
+        return (len(self.avail_actions) == 0) and (len(self.children) > 0)
+
 
     def expand(self) -> 'MCTSNode':
         action = self.avail_actions.pop()
@@ -75,7 +79,11 @@ class MCTSNode:
         self.children.append(child)
         return child
 
+
     def best_child(self, c: float = 1.14) -> 'MCTSNode':
+        if not self.children:
+            raise RuntimeError("MCTSNode.best_child called on node with no children!")
+
         for child in self.children:
             if child.visits == 0:
                 return child
@@ -87,14 +95,21 @@ class MCTSNode:
 
         return max(self.children, key=ucb)
 
+
     def backpropagate(self, result: int):
         node = self
-        while node is not None: # We could do this recurisvely but eh.
+        while node is not None: # We could do this recursively but eh.
             node.visits += 1
             if node.color == "black":
-                node.wins += result
-            else:
-                node.wins -= result
+                if result == -1:    # White won
+                    node.wins += 1
+                elif result == 0:   # Draw
+                    node.wins += 0.5
+            else: # node.color == "white" (Black just moved)
+                if result == 1: # Black won
+                    node.wins += 1
+                elif result == 0:   # Draw
+                    node.wins += 0.5
 
             node = node.parent
 
@@ -117,7 +132,7 @@ class MonteCarloChessAgent(object):
 
         for _ in range(_MCTS_MAX_ITERS):
             node = root
-            while not node.is_terminal() and node.is_fully_expanded():
+            while not node.is_terminal() and node.is_fully_expanded() and node.children:
                 node = node.best_child()
 
             if not node.is_terminal() and not node.is_fully_expanded():
@@ -138,16 +153,19 @@ class MonteCarloChessAgent(object):
         uboard_copy = deepcopy(node.uboard)
         current_color = node.color
 
-        while not uboard_copy.is_terminal(current_color):
+        moves = 0
+        while not uboard_copy.is_terminal(current_color) and (moves < _MCTS_ROLLOUT_DEPTH):
             dests = _get_all_actions(uboard_copy, current_color)
             if not dests:
                 continue
 
             src_row, src_col, dest_row, dest_col = choice(dests)
-            uboard_copy.move_piece(src_row, src_col, dest_row, dest_col)
+            uboard_copy.move_piece(current_color, src_row, src_col, dest_row, dest_col)
             current_color = "white" if current_color == "black" else "black" # Switch player
+            moves += 1
 
         return self._check_winner(uboard_copy)
+
 
     # Returns 1 if black wins, -1 if white, and 0 if neither.
     def _check_winner(self, uboard: RawChessBoard) -> int:
@@ -163,6 +181,7 @@ class MonteCarloChessAgent(object):
 class RandomChessAgent(object):
     def __init__(self, color):
         self.color = color
+
 
     def get_next_move(self, board: ChessBoardGUI, is_init: bool = False) -> tuple[int, int, int, int]:
         uboard: RawChessBoard = board.uboard
