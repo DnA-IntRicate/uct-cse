@@ -8,13 +8,11 @@ import math
 _MCTS_MAX_ITERS: int = 500
 _MCTS_ROLLOUT_DEPTH: int = 50
 
-# TODO: Impl me for the random agent
-def _get_all_actions(uboard: RawChessBoard, color: str) -> list:
+def _mcts_get_all_actions(uboard: RawChessBoard, color: str) -> list:
     actions = []
     pieces = uboard.get_playable_moves(color)
 
     for piece in pieces:
-        #print(piece)
         src_row, src_col = piece["row"], piece["col"]
 
         match piece["piece"]:
@@ -70,7 +68,7 @@ class MCTSNode:
 
         # Check opponent's next move
         opp_color = "white" if self.color == "black" else "black"
-        opp_actions = _get_all_actions(uboard_copy, opp_color)
+        opp_actions = _mcts_get_all_actions(uboard_copy, opp_color)
 
         child = MCTSNode(
             uboard=uboard_copy,
@@ -102,18 +100,19 @@ class MCTSNode:
 
     def backpropagate(self, result: int):
         node = self
-        while node is not None: # We could do this recursively but eh.
+        while node is not None:
             node.visits += 1
-            if node.color == "black":
-                if result == -1:    # White won
-                    node.wins += 1
-                elif result == 0:   # Draw
-                    node.wins += 0.5
-            else: # node.color == "white" (Black just moved)
-                if result == 1: # Black won
-                    node.wins += 1
-                elif result == 0:   # Draw
-                    node.wins += 0.5
+            if node.parent is None:
+                prev_player = node.color
+            else:
+                prev_player = "white" if node.color == "black" else "black"
+
+            if result == 0:  # Draw
+                node.wins += 0.5
+            elif result == 1 and prev_player == "black":
+                node.wins += 1
+            elif result == -1 and prev_player == "white":
+                node.wins += 1
 
             node = node.parent
 
@@ -124,7 +123,7 @@ class MonteCarloChessAgent(object):
 
     def get_next_move(self, board: ChessBoardGUI):
         uboard: RawChessBoard = board.uboard
-        root_actions = _get_all_actions(uboard, self.color)
+        root_actions = _mcts_get_all_actions(uboard, self.color)
 
         root = MCTSNode(
             uboard=deepcopy(uboard),
@@ -159,7 +158,7 @@ class MonteCarloChessAgent(object):
 
         moves = 0
         while not uboard_copy.is_terminal(current_color) and (moves < _MCTS_ROLLOUT_DEPTH):
-            dests = _get_all_actions(uboard_copy, current_color)
+            dests = _mcts_get_all_actions(uboard_copy, current_color)
             if not dests:
                 break
 
