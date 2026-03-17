@@ -79,22 +79,51 @@ class MonteCarloChessAgent(object):
         self.color = color
         self.opponent = opponent
 
-
     def get_next_move(self, board: ChessBoardGUI):
         uboard: RawChessBoard = board.uboard
         color_playable_moves = uboard.get_playable_moves(self.color)
-
-        # MCTS rough impl
-        visited = []
-        # tree: dict[]
-        # s0 = something...
-
-        # UCB1 formula:
-        # UCB1 = Vi + C * sqrt(ln(N) / ni) ; C = 1.14
-        # NOTE: We'll need to compute the argmax(UCB1) for all child nodes in each iteration, the argmax becomes
-        # the next node we visit
-
         return 0,0,0,0 #must return src_row, src_col, dest_row, dest_col
+
+    def _rollout(self, node: MCTSNode) -> int:
+        uboard_copy = deepcopy(node.uboard)
+        current_color = node.color
+
+        while not uboard_copy.is_terminal(current_color):
+            moves = uboard_copy.get_playable_moves(current_color)
+            if not moves:
+                break
+
+            move = choice(moves)
+            src_row, src_col = move["row"], move["col"]
+
+            dests: list = []
+            match move["piece"]:
+                case "b": dests = uboard_copy.get_bishop_moves(src_row, src_col)
+                case "k": dests = uboard_copy.get_king_moves(src_row, src_col)
+                case "n": dests = uboard_copy.get_knight_moves(src_row, src_col)
+                case "p": dests = uboard_copy.get_pawn_moves(src_row, src_col)
+                case "q": dests = uboard_copy.get_queen_moves(src_row, src_col)
+                case "r": dests = uboard_copy.get_rook_moves(src_row, src_col)
+
+            if not dests:
+                continue
+
+            dest_row, dest_col = choice(dests)
+
+            uboard_copy.move_piece(src_row, src_col, dest_row, dest_col)
+            current_color = "white" if current_color == "black" else "black" # Switch player
+
+        return self._check_winner(uboard_copy)
+
+    # Returns 1 if black wins, -1 if white, and 0 if neither.
+    def _check_winner(self, uboard: RawChessBoard) -> int:
+        res = uboard.find_king_in_checkmate("white")
+        if res == "white":
+            return -1  # white wins
+        if res == "black":
+            return 1   # black wins
+
+        return 0
 
 
 class RandomChessAgent(object):
