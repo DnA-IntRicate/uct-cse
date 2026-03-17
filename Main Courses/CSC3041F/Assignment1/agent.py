@@ -5,6 +5,30 @@ from typing import Optional
 import math
 
 
+_MCTS_MAX_ITERS: int = 500
+
+# TODO: Impl me for the random agent
+def _get_all_actions(uboard: RawChessBoard, color: str) -> list[tuple[int, int, int, int]]:
+    actions = []
+    pieces = uboard.get_playable_moves(color)
+
+    for piece in pieces:
+        src_row, src_col = piece["row"], piece["col"]
+
+        match piece["piece"]:
+            case "b": dests = uboard.get_bishop_moves(src_row, src_col)
+            case "k": dests = uboard.get_king_moves(src_row, src_col)
+            case "n": dests = uboard.get_knight_moves(src_row, src_col)
+            case "p": dests = uboard.get_pawn_moves(src_row, src_col)
+            case "q": dests = uboard.get_queen_moves(src_row, src_col)
+            case "r": dests = uboard.get_rook_moves(src_row, src_col)
+            case _: dests = []
+
+        for dest_row, dest_col in dests:
+            actions.append((src_row, src_col, dest_row, dest_col))
+
+    return actions
+
 class MCTSNode:
     def __init__(
             self,
@@ -12,13 +36,13 @@ class MCTSNode:
             color: str,
             parent: Optional['MCTSNode'] = None,
             action: Optional[tuple[int, int, int, int]] = None,
-            avail_actions: list[tuple[int, int, int, int]] = []
+            avail_actions = None
     ):
         self.uboard = uboard
         self.color = color
         self.parent = parent
         self.action = action
-        self.avail_actions = avail_actions
+        self.avail_actions = avail_actions if avail_actions is not None else []
         self.children: list['MCTSNode'] = []
         self.visits: int = 0
         self.wins: float = 0.0
@@ -81,35 +105,45 @@ class MonteCarloChessAgent(object):
 
     def get_next_move(self, board: ChessBoardGUI):
         uboard: RawChessBoard = board.uboard
-        color_playable_moves = uboard.get_playable_moves(self.color)
-        return 0,0,0,0 #must return src_row, src_col, dest_row, dest_col
+        root_actions = _get_all_actions(uboard, self.color)
+
+        root = MCTSNode(
+            uboard=deepcopy(uboard),
+            color=self.color,
+            parent=None,
+            action=None,
+            avail_actions=root_actions.copy()
+        )
+
+        for _ in range(_MCTS_MAX_ITERS):
+            node = root
+            while not node.is_terminal() and node.is_fully_expanded():
+                node = node.best_child()
+
+            if not node.is_terminal() and not node.is_fully_expanded():
+                node = node.expand()
+
+            res = self._rollout(node)
+            node.backpropagate(res)
+
+        # Return a randomly incase anything breaks so that we don't crash
+        if not root.children:
+            return choice(root_actions)
+
+        best = max(root.children, key=lambda x: x.visits)
+        return best.action # Must return src_row, src_col, dest_row, dest_col
+
 
     def _rollout(self, node: MCTSNode) -> int:
         uboard_copy = deepcopy(node.uboard)
         current_color = node.color
 
         while not uboard_copy.is_terminal(current_color):
-            moves = uboard_copy.get_playable_moves(current_color)
-            if not moves:
-                break
-
-            move = choice(moves)
-            src_row, src_col = move["row"], move["col"]
-
-            dests: list = []
-            match move["piece"]:
-                case "b": dests = uboard_copy.get_bishop_moves(src_row, src_col)
-                case "k": dests = uboard_copy.get_king_moves(src_row, src_col)
-                case "n": dests = uboard_copy.get_knight_moves(src_row, src_col)
-                case "p": dests = uboard_copy.get_pawn_moves(src_row, src_col)
-                case "q": dests = uboard_copy.get_queen_moves(src_row, src_col)
-                case "r": dests = uboard_copy.get_rook_moves(src_row, src_col)
-
+            dests = _get_all_actions(uboard_copy, current_color)
             if not dests:
                 continue
 
-            dest_row, dest_col = choice(dests)
-
+            src_row, src_col, dest_row, dest_col = choice(dests)
             uboard_copy.move_piece(src_row, src_col, dest_row, dest_col)
             current_color = "white" if current_color == "black" else "black" # Switch player
 
