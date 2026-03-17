@@ -9,20 +9,21 @@ _MCTS_MAX_ITERS: int = 500
 _MCTS_ROLLOUT_DEPTH: int = 50
 
 # TODO: Impl me for the random agent
-def _get_all_actions(uboard: RawChessBoard, color: str) -> list[tuple[int, int, int, int]]:
+def _get_all_actions(uboard: RawChessBoard, color: str) -> list:
     actions = []
     pieces = uboard.get_playable_moves(color)
 
     for piece in pieces:
+        #print(piece)
         src_row, src_col = piece["row"], piece["col"]
 
         match piece["piece"]:
-            case "b": dests = uboard.get_bishop_moves(src_row, src_col)
-            case "k": dests = uboard.get_king_moves(src_row, src_col)
-            case "n": dests = uboard.get_knight_moves(src_row, src_col)
-            case "p": dests = uboard.get_pawn_moves(src_row, src_col)
-            case "q": dests = uboard.get_queen_moves(src_row, src_col)
-            case "r": dests = uboard.get_rook_moves(src_row, src_col)
+            case "B": dests = uboard.get_bishop_moves(src_row, src_col)
+            case "K": dests = uboard.get_king_moves(src_row, src_col)
+            case "N": dests = uboard.get_knight_moves(src_row, src_col)
+            case "P": dests = uboard.get_pawn_moves(src_row, src_col)
+            case "Q": dests = uboard.get_queen_moves(src_row, src_col)
+            case "R": dests = uboard.get_rook_moves(src_row, src_col)
             case _: dests = []
 
         for dest_row, dest_col in dests:
@@ -37,13 +38,13 @@ class MCTSNode:
             uboard: RawChessBoard,
             color: str,
             parent: Optional['MCTSNode'] = None,
-            action: Optional[tuple[int, int, int, int]] = None,
+            action = None,
             avail_actions = None
     ):
         self.uboard = uboard
         self.color = color
         self.parent = parent
-        self.action = action
+        self.action = action if action is not None else []
         self.avail_actions = avail_actions if avail_actions is not None else []
         self.children: list['MCTSNode'] = []
         self.visits: int = 0
@@ -54,10 +55,13 @@ class MCTSNode:
 
 
     def is_fully_expanded(self):
-        return (len(self.avail_actions) == 0) and (len(self.children) > 0)
+        return len(self.avail_actions) == 0
 
 
     def expand(self) -> 'MCTSNode':
+        if not self.avail_actions:
+            raise RuntimeError("MCTSNode.expand called with no available actions!")
+
         action = self.avail_actions.pop()
         src_row, src_col, dest_row, dest_col = action
 
@@ -66,7 +70,7 @@ class MCTSNode:
 
         # Check opponent's next move
         opp_color = "white" if self.color == "black" else "black"
-        opp_actions = uboard_copy.get_playable_moves(opp_color)
+        opp_actions = _get_all_actions(uboard_copy, opp_color)
 
         child = MCTSNode(
             uboard=uboard_copy,
@@ -157,7 +161,7 @@ class MonteCarloChessAgent(object):
         while not uboard_copy.is_terminal(current_color) and (moves < _MCTS_ROLLOUT_DEPTH):
             dests = _get_all_actions(uboard_copy, current_color)
             if not dests:
-                continue
+                break
 
             src_row, src_col, dest_row, dest_col = choice(dests)
             uboard_copy.move_piece(current_color, src_row, src_col, dest_row, dest_col)
@@ -169,13 +173,11 @@ class MonteCarloChessAgent(object):
 
     # Returns 1 if black wins, -1 if white, and 0 if neither.
     def _check_winner(self, uboard: RawChessBoard) -> int:
-        res = uboard.find_king_in_checkmate("white")
-        if res == "white":
-            return -1  # white wins
-        if res == "black":
-            return 1   # black wins
+        res = uboard.find_king_in_checkmate() # Returns the color that lost
+        if res is None:
+            return 0
 
-        return 0
+        return 1 if res == "white" else -1
 
 
 class RandomChessAgent(object):
