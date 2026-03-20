@@ -7740,6 +7740,48 @@
 		)
 	)
 	(sheet
+		(at 2.54 405.13)
+		(size 299.72 163.83)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0.0000)
+		)
+		(uuid "ba0fdacf-10c1-441b-9b0d-4ec39c58f45e")
+		(property "Sheetname" "I"
+			(at 2.54 404.4184 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "Practical2_I.kicad_sch"
+			(at 2.54 569.5446 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "Practical2"
+				(path "/ace74c6e-23b9-4de0-b351-789173787281"
+					(page "3")
+				)
+			)
+		)
+	)
+	(sheet
 		(at 2.54 219.71)
 		(size 294.64 166.37)
 		(exclude_from_sim no)

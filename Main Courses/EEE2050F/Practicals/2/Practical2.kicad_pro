@@ -598,7 +598,7 @@
     },
     "net_format_name": "",
     "page_layout_descr_file": "",
-    "plot_directory": "",
+    "plot_directory": "./",
     "space_save_all_events": true,
     "spice_current_sheet_as_root": false,
     "spice_external_command": "spice \"%I\"",
@@ -617,6 +617,10 @@
     [
       "e11ada5e-99cd-4e71-b1fb-388ad75a403e",
       "E"
+    ],
+    [
+      "ba0fdacf-10c1-441b-9b0d-4ec39c58f45e",
+      "I"
     ]
   ],
   "text_variables": {}
