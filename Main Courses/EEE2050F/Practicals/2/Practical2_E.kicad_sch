@@ -3352,6 +3352,14 @@
 		(uuid "91d290c4-213a-4a43-b83c-ea8880945e70")
 	)
 	(no_connect
+		(at 243.84 111.76)
+		(uuid "a1d4291d-078f-4f74-b533-99480335137a")
+	)
+	(no_connect
+		(at 243.84 91.44)
+		(uuid "aa91a2fe-4659-4e57-b569-6de42eeda1ac")
+	)
+	(no_connect
 		(at 189.23 29.21)
 		(uuid "bff5d60d-e2ab-4c1f-a90a-31e2204d0fec")
 	)
@@ -3556,6 +3564,16 @@
 			(type default)
 		)
 		(uuid "4a1f0b7d-705c-44c6-8afd-7a3311c5127a")
+	)
+	(wire
+		(pts
+			(xy 227.33 111.76) (xy 228.6 111.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4cd7df26-5aa4-4fba-b92d-e5f7f2f799de")
 	)
 	(wire
 		(pts
@@ -3849,6 +3867,16 @@
 	)
 	(wire
 		(pts
+			(xy 227.33 91.44) (xy 228.6 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c6178c33-657e-460d-983b-456bbcca4c4d")
+	)
+	(wire
+		(pts
 			(xy 201.93 53.34) (xy 203.2 53.34)
 		)
 		(stroke
@@ -3866,6 +3894,16 @@
 			(type default)
 		)
 		(uuid "cf877547-30f4-42a5-a0db-b620eb2aac0e")
+	)
+	(wire
+		(pts
+			(xy 227.33 91.44) (xy 227.33 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d312597c-59e5-4559-8059-eb69d006832d")
 	)
 	(wire
 		(pts
@@ -3956,6 +3994,16 @@
 			(type default)
 		)
 		(uuid "ed4fa014-d5c2-4383-99cf-c8e09ad0fd2f")
+	)
+	(wire
+		(pts
+			(xy 227.33 111.76) (xy 227.33 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "edb538ae-cdeb-4528-8d9c-c801f255cead")
 	)
 	(wire
 		(pts
@@ -5374,6 +5422,110 @@
 		)
 	)
 	(symbol
+		(lib_id "4xxx:4049")
+		(at 236.22 111.76 0)
+		(unit 6)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "79a38645-e4e2-4bb3-a7ba-f45831941223")
+		(property "Reference" "IC1"
+			(at 236.22 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4049"
+			(at 236.22 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 236.22 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.intersil.com/content/dam/intersil/documents/cd40/cd4049ubms.pdf"
+			(at 236.22 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Hex Buffer Inverter"
+			(at 236.22 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "7"
+			(uuid "08567382-bfe9-4bc2-855f-e79b99b88ff6")
+		)
+		(pin "4"
+			(uuid "4c80862e-251a-40fb-8a82-daf5142b904c")
+		)
+		(pin "1"
+			(uuid "8032b862-e228-45f7-8e06-d43b120f79e3")
+		)
+		(pin "10"
+			(uuid "2b409df0-e531-49ef-b22e-bb00fd9ba2b2")
+		)
+		(pin "9"
+			(uuid "8d970e0f-03ce-4819-82df-86e18b8a1a77")
+		)
+		(pin "6"
+			(uuid "b3f5f418-2bdb-4197-a100-8864093388b5")
+		)
+		(pin "5"
+			(uuid "6d750acf-5287-4234-ab74-5ac810e53047")
+		)
+		(pin "2"
+			(uuid "c08865c0-63c0-4725-a49d-213279eeed39")
+		)
+		(pin "3"
+			(uuid "fd28e90b-937a-46d4-add1-7bc15a283b40")
+		)
+		(pin "11"
+			(uuid "b0db2022-ad3b-4811-b1df-2f33e4cf0ec7")
+		)
+		(pin "12"
+			(uuid "17eedbad-b697-4717-aa6c-438f9851b9c7")
+		)
+		(pin "15"
+			(uuid "d2742d44-dafc-4768-9eb2-f7c7eae25582")
+		)
+		(pin "14"
+			(uuid "033adcdd-5e34-4ff5-b5b0-00be439bec11")
+		)
+		(pin "8"
+			(uuid "61cb65b2-8120-480a-849a-8b4e9b78b532")
+		)
+		(instances
+			(project "Practical2"
+				(path "/ace74c6e-23b9-4de0-b351-789173787281/e11ada5e-99cd-4e71-b1fb-388ad75a403e"
+					(reference "IC1")
+					(unit 6)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "4xxx:4071")
 		(at 181.61 72.39 0)
 		(unit 4)
@@ -5473,6 +5625,176 @@
 				(path "/ace74c6e-23b9-4de0-b351-789173787281/e11ada5e-99cd-4e71-b1fb-388ad75a403e"
 					(reference "IC3")
 					(unit 4)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 227.33 99.06 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "82f932e6-6310-4696-a538-4827d6118277")
+		(property "Reference" "#PWR020"
+			(at 227.33 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 227.33 104.14 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 227.33 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 227.33 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 227.33 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "08fa0155-da3a-4486-9d8a-61dd7c66163c")
+		)
+		(instances
+			(project "Practical2"
+				(path "/ace74c6e-23b9-4de0-b351-789173787281/e11ada5e-99cd-4e71-b1fb-388ad75a403e"
+					(reference "#PWR020")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "4xxx:4049")
+		(at 236.22 91.44 0)
+		(unit 5)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "851a4929-7da4-4c3a-a3e9-865b8ca3bf82")
+		(property "Reference" "IC1"
+			(at 236.22 82.55 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "4049"
+			(at 236.22 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 236.22 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "http://www.intersil.com/content/dam/intersil/documents/cd40/cd4049ubms.pdf"
+			(at 236.22 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Hex Buffer Inverter"
+			(at 236.22 91.44 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "7"
+			(uuid "08567382-bfe9-4bc2-855f-e79b99b88ff6")
+		)
+		(pin "4"
+			(uuid "4c80862e-251a-40fb-8a82-daf5142b904c")
+		)
+		(pin "1"
+			(uuid "8032b862-e228-45f7-8e06-d43b120f79e3")
+		)
+		(pin "10"
+			(uuid "4e77f7bd-f018-4532-a680-fd7b2f80ad64")
+		)
+		(pin "9"
+			(uuid "df122bef-7dc5-4912-affb-f275e5bdc283")
+		)
+		(pin "6"
+			(uuid "b3f5f418-2bdb-4197-a100-8864093388b5")
+		)
+		(pin "5"
+			(uuid "6d750acf-5287-4234-ab74-5ac810e53047")
+		)
+		(pin "2"
+			(uuid "c08865c0-63c0-4725-a49d-213279eeed39")
+		)
+		(pin "3"
+			(uuid "fd28e90b-937a-46d4-add1-7bc15a283b40")
+		)
+		(pin "11"
+			(uuid "b0db2022-ad3b-4811-b1df-2f33e4cf0ec7")
+		)
+		(pin "12"
+			(uuid "17eedbad-b697-4717-aa6c-438f9851b9c7")
+		)
+		(pin "15"
+			(uuid "d2742d44-dafc-4768-9eb2-f7c7eae25582")
+		)
+		(pin "14"
+			(uuid "033adcdd-5e34-4ff5-b5b0-00be439bec11")
+		)
+		(pin "8"
+			(uuid "61cb65b2-8120-480a-849a-8b4e9b78b532")
+		)
+		(instances
+			(project "Practical2"
+				(path "/ace74c6e-23b9-4de0-b351-789173787281/e11ada5e-99cd-4e71-b1fb-388ad75a403e"
+					(reference "IC1")
+					(unit 5)
 				)
 			)
 		)
@@ -5711,6 +6033,72 @@
 				(path "/ace74c6e-23b9-4de0-b351-789173787281/e11ada5e-99cd-4e71-b1fb-388ad75a403e"
 					(reference "IC2")
 					(unit 5)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 227.33 119.38 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ab04c500-6e24-4e9c-a0f4-1d07f94a9527")
+		(property "Reference" "#PWR021"
+			(at 227.33 125.73 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 227.33 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 227.33 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 227.33 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 227.33 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "9e6078e5-965f-4a27-95f9-399875d49e26")
+		)
+		(instances
+			(project "Practical2"
+				(path "/ace74c6e-23b9-4de0-b351-789173787281/e11ada5e-99cd-4e71-b1fb-388ad75a403e"
+					(reference "#PWR021")
+					(unit 1)
 				)
 			)
 		)
