@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.util.Queue;
+import java.util.LinkedList;
 
 
 public class FIFO
@@ -6,11 +8,44 @@ public class FIFO
     private static int firstInFirstOut(final Memory frames, final Integer[] pageReferences)
     {
         int pageFaults = 0;
-        /**
-         * Your code here.
-         *
-         * Using the frames memory object, process the pageReferences using the FIFO paging algorithm, returning the number of page faults.
-         */
+        Queue<Integer> pageQueue = new LinkedList<Integer>(); // FIFO Queue
+
+        for (int page : pageReferences)
+        {
+            // Handle page hit
+            if (frames.contains(page))
+            {
+                System.out.printf("%d: -\n", page);
+                continue;
+            }
+
+            pageFaults++;
+
+            // Insert page in the first empty frame
+            boolean inserted = false;
+            for (int frame = 0; frame < frames.size(); ++frame)
+            {
+                if (frames.isEmpty(frame))
+                {
+                    frames.put(frame, page);
+                    pageQueue.add(page);
+                    inserted = true;
+
+                    System.out.printf("%d: %s\n", page, frames);
+                    break;
+                }
+            }
+
+            // If no empty frame is found, perform the FIFO page replacement
+            if (!inserted)
+            {
+                frames.replace(pageQueue.remove(), page);
+                pageQueue.add(page);
+
+                System.out.printf("%d: %s\n", page, frames);
+            }
+        }
+
         return pageFaults;
     }
 
