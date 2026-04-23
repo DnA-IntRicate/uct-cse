@@ -411,3 +411,6 @@ AM/
 
 # Large Machine Learning datasets
 data/
+
+# Make build output
+build/
