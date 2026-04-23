@@ -414,3 +414,8 @@ data/
 
 # Make build output
 build/
+
+# KiCAD backups and temp
+*-backups/
+*.kicad_sch.lck
+fp-info-cache
