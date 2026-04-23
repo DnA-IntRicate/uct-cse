@@ -1,2 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+###############################################################################
+# Excludes source code files from being indexed
+# by GitHub Linguist.
+###############################################################################
+/Drivers/CMSIS/**               linguist-generated=true
+/Drivers/STM32F0xx_HAL_DRIVER   linguist-generated=true
