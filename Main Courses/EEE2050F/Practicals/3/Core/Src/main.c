@@ -45,7 +45,7 @@ flag_t thirdFlag = FALSE;
 void init_clock(void);
 
 void init_gpio(void);
-void delay(void);
+void my_delay(void);    // 'delay' is already defined in lcd_stm32f0.h
 void firstDisplay(void);
 void secondDisplay(void);
 void thirdDisplay(void);
@@ -105,7 +105,7 @@ void init_gpio(void)
     GPIOA->PUPDR &= ~0x000000FF;
 }
 
-void delay(void)
+void my_delay(void)
 {
     for (volatile int i = 0; i < DELAY1; i++)
     {
@@ -122,11 +122,11 @@ void firstDisplay(void)
     while (firstFlag)
     {
         GPIOB->ODR = bitpattern1;
-        delay();
+        my_delay();
         GPIOB->ODR = bitpattern2;
-        delay();
+        my_delay();
         GPIOB->ODR = bitpattern3;
-        delay();
+        my_delay();
         checkPB(); // Check buttons during display
     }
 }
@@ -139,7 +139,7 @@ void secondDisplay(void)
         for (int i = 0; i < 8; i++)
         {
             GPIOB->ODR = (1 << i);
-            delay();
+            my_delay();
         }
         checkPB(); // Check buttons during display
     }
@@ -153,7 +153,7 @@ void thirdDisplay(void)
         for (int i = 0; i < 256; i++)
         {
             GPIOB->ODR = i;
-            delay();
+            my_delay();
         }
         checkPB(); // Check buttons during display
     }
