@@ -56,23 +56,27 @@ void display(void);
 //====================================================================
 int main(void)
 {
-    // Do not delete: Initializes system clock to correct configuration
     init_clock();
-
     init_gpio();
 
-    // Switch on LED D0 (PB0)
+    // Switch on D0 briefly as startup indicator
     GPIOB->BSRR = (1 << 0);
+    my_delay();
 
-    // All LEDs off before starting display loops
-    GPIOB->BRR = 0x00000CFF; // Clear PB0-PB7, PB10-PB11
+    // All LEDs OFF
+    GPIOB->BRR = 0x00000CFF;
 
+    // Wait until SW0 is explicitly pressed and released
+    while (GPIOA->IDR & (1 << 0)); // Wait for press (goes LOW)
+    while (!(GPIOA->IDR & (1 << 0))); // Wait for release (goes HIGH)
+
+    startFlag = TRUE;
     while (1)
     {
         checkPB();
         display();
     }
-}							// End of main
+}
 
 //====================================================================
 // FUNCTION DEFINITIONS
@@ -161,32 +165,23 @@ void thirdDisplay(void)
 
 void checkPB(void)
 {
-    uint16_t pb = GPIOA->IDR & 0x000F; // Read PA0-PA3
+    uint16_t pb = GPIOA->IDR & 0x000F;
 
-    // SW0 (PA0) - sets startFlag
-    if (!(pb & (1 << 0)))
-    {
-        startFlag = TRUE;
-        firstFlag = FALSE;
-        secondFlag = FALSE;
-        thirdFlag = FALSE;
-    }
-    // SW1 (PA1) - sets firstFlag
-    if (!(pb & (1 << 1)))
+    if (!(pb & (1 << 1))) // SW1
     {
         firstFlag = TRUE;
         secondFlag = FALSE;
         thirdFlag = FALSE;
     }
-    // SW2 (PA2) - sets secondFlag
-    if (!(pb & (1 << 2)))
+
+    if (!(pb & (1 << 2))) // SW2
     {
         firstFlag = FALSE;
         secondFlag = TRUE;
         thirdFlag = FALSE;
     }
-    // SW3 (PA3) - sets thirdFlag
-    if (!(pb & (1 << 3)))
+
+    if (!(pb & (1 << 3))) // SW3
     {
         firstFlag = FALSE;
         secondFlag = FALSE;
@@ -196,9 +191,6 @@ void checkPB(void)
 
 void display(void)
 {
-    if (startFlag == FALSE)
-        return; // Wait until SW0 pressed
-
     if (firstFlag)
         firstDisplay();
     else if (secondFlag)
