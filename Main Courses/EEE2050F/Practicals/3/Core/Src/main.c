@@ -1,7 +1,7 @@
 //********************************************************************
 //*                    EEE2046F C template                           *
 //*==================================================================*
-//* WRITTEN BY: Jesse Arendse   	                 		               *
+//* WRITTEN BY: Jesse Arendse   	                 		         *
 //* DATE CREATED: 07/04/2023                                         *
 //* MODIFIED:                                                        *
 //*==================================================================*
@@ -18,25 +18,55 @@
 //====================================================================
 // GLOBAL CONSTANTS
 //====================================================================
+#define TRUE 1
+#define FALSE 0
 
+// Delay macros (tune values for 1s at 48MHz)
+#define DELAY1 1000
+#define DELAY2 1000
+
+// Bit patterns for LEDs on PB0-PB7, PB10-PB11
+// (adjust these to your desired patterns)
+#define bitpattern1 0x00000055 // PB0, PB2, PB4, PB6
+#define bitpattern2 0x000000AA // PB1, PB3, PB5, PB7
+#define bitpattern3 0x00000C00 // PB10, PB11
 //====================================================================
 // GLOBAL VARIABLES
 //====================================================================
+typedef uint8_t flag_t;
 
+flag_t startFlag = FALSE;
+flag_t firstFlag = FALSE;
+flag_t secondFlag = FALSE;
+flag_t thirdFlag = FALSE;
 //====================================================================
 // FUNCTION DECLARATIONS
 //====================================================================
-void init_clock();
-void helloWorld();
+void init_clock(void);
+
+void init_gpio(void);
+void delay(void);
+void firstDisplay(void);
+void secondDisplay(void);
+void thirdDisplay(void);
+void checkPB(void);
+void display(void);
 //====================================================================
 // MAIN FUNCTION
 //====================================================================
-int main (void)
+int main(void)
 {
-    //Do not delete: Initializes system clock to correct configuration
+    // Do not delete: Initializes system clock to correct configuration
     init_clock();
-    
-    helloWorld();
+
+    init_gpio();
+
+    // Switch on LED D0 (PB0)
+    GPIOB->BSRR = (1 << 0);
+
+    // All LEDs off before starting display loops
+    GPIOB->BRR = 0x00000CFF; // Clear PB0-PB7, PB10-PB11
+
     while(1){
 
     }
@@ -46,10 +76,133 @@ int main (void)
 // FUNCTION DEFINITIONS
 //====================================================================
 
-void helloWorld(){
-    init_LCD();
-    lcd_command(CLEAR);
-    lcd_putstring("Hello World! :)");
+void init_gpio(void)
+{
+    // Enable clocks for GPIOA (buttons) and GPIOB (LEDs)
+    RCC->AHBENR |= (1 << 17); // IOPAEN - GPIOA
+    RCC->AHBENR |= (1 << 18); // IOPBEN - GPIOB
+
+    // --- LEDs on PB0-PB7, PB10-PB11 as outputs ---
+    // Set MODER to 01 (output) for PB0-PB7, PB10-PB11
+    GPIOB->MODER |= 0x00505555;
+
+    // Push-pull output type (default, but explicit)
+    GPIOB->OTYPER &= ~0x00000CFF;
+
+    // Low speed (default, but explicit)
+    GPIOB->OSPEEDR &= ~0x00F0FFFF;
+
+    // No pull-up/pull-down for outputs
+    GPIOB->PUPDR &= ~0x00F0FFFF;
+
+    // --- Buttons on PA0-PA3 as inputs ---
+    // MODER = 00 (input) for PA0-PA3 (default, but explicit)
+    GPIOA->MODER &= ~0x000000FF;
+
+    // No pull (external resistors on board handle this)
+    GPIOA->PUPDR &= ~0x000000FF;
+}
+
+void delay(void)
+{
+    for (volatile int i = 0; i < DELAY1; i++)
+    {
+        for (volatile int j = 0; j < DELAY2; j++)
+        {
+            __NOP();
+        }
+    }
+}
+
+void firstDisplay(void)
+{
+    // Cycle through 3 patterns with 1s delay, repeat
+    while (firstFlag)
+    {
+        GPIOB->ODR = bitpattern1;
+        delay();
+        GPIOB->ODR = bitpattern2;
+        delay();
+        GPIOB->ODR = bitpattern3;
+        delay();
+        checkPB(); // Check buttons during display
+    }
+}
+
+void secondDisplay(void)
+{
+    // 8-step LED chase on PB0-PB7, repeat
+    while (secondFlag)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            GPIOB->ODR = (1 << i);
+            delay();
+        }
+        checkPB(); // Check buttons during display
+    }
+}
+
+void thirdDisplay(void)
+{
+    // 8-bit binary counter on PB0-PB7, repeat
+    while (thirdFlag)
+    {
+        for (int i = 0; i < 256; i++)
+        {
+            GPIOB->ODR = i;
+            delay();
+        }
+        checkPB(); // Check buttons during display
+    }
+}
+
+void checkPB(void)
+{
+    uint16_t pb = GPIOA->IDR & 0x000F; // Read PA0-PA3
+
+    // SW0 (PA0) - sets startFlag
+    if (!(pb & (1 << 0)))
+    {
+        startFlag = TRUE;
+        firstFlag = FALSE;
+        secondFlag = FALSE;
+        thirdFlag = FALSE;
+    }
+    // SW1 (PA1) - sets firstFlag
+    if (!(pb & (1 << 1)))
+    {
+        firstFlag = TRUE;
+        secondFlag = FALSE;
+        thirdFlag = FALSE;
+    }
+    // SW2 (PA2) - sets secondFlag
+    if (!(pb & (1 << 2)))
+    {
+        firstFlag = FALSE;
+        secondFlag = TRUE;
+        thirdFlag = FALSE;
+    }
+    // SW3 (PA3) - sets thirdFlag
+    if (!(pb & (1 << 3)))
+    {
+        firstFlag = FALSE;
+        secondFlag = FALSE;
+        thirdFlag = TRUE;
+    }
+}
+
+void display(void)
+{
+    if (startFlag == FALSE)
+        return; // Wait until SW0 pressed
+
+    if (firstFlag)
+        firstDisplay();
+    else if (secondFlag)
+        secondDisplay();
+    else if (thirdFlag)
+        thirdDisplay();
 }
 
 void init_clock(void)
