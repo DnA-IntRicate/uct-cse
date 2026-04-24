@@ -21,9 +21,13 @@
 #define TRUE 1
 #define FALSE 0
 
+#define NULLPTR ((void*)0)
+
 // Delay macros (tune values for 1s at 48MHz)
 #define DELAY1 1000
 #define DELAY2 1000
+#define DELAY_STEPS 100                             // Number of chunks
+#define DELAY_CHUNK (DELAY1 * DELAY2 / DELAY_STEPS) // Each chunk
 
 // Bit patterns for LEDs on PB0-PB7, PB10-PB11
 // (adjust these to your desired patterns)
@@ -45,7 +49,8 @@ flag_t thirdFlag = FALSE;
 void init_clock(void);
 
 void init_gpio(void);
-void my_delay(void);    // 'delay' is already defined in lcd_stm32f0.h
+void my_delay_blocking(void);
+void my_delay(flag_t* flag);    // 'delay' is already defined in lcd_stm32f0.h
 void firstDisplay(void);
 void secondDisplay(void);
 void thirdDisplay(void);
@@ -56,12 +61,12 @@ void display(void);
 //====================================================================
 int main(void)
 {
-    init_clock();
+    // init_clock();
     init_gpio();
 
     // Switch on D0 briefly as startup indicator
     GPIOB->BSRR = (1 << 0);
-    my_delay();
+    my_delay_blocking();
 
     // All LEDs OFF
     GPIOB->BRR = 0x00000CFF;
@@ -71,7 +76,7 @@ int main(void)
     while (!(GPIOA->IDR & (1 << 0))); // Wait for release (goes HIGH)
 
     startFlag = TRUE;
-    while (1)
+    while (TRUE)
     {
         checkPB();
         display();
@@ -109,57 +114,76 @@ void init_gpio(void)
     GPIOA->PUPDR &= ~0x000000FF;
 }
 
-void my_delay(void)
+void my_delay_blocking(void)
 {
-    for (volatile int i = 0; i < DELAY1; i++)
+    for (int i = 0; i < DELAY1; ++i)
     {
-        for (volatile int j = 0; j < DELAY2; j++)
+        for (volatile int j = 0; j < DELAY2; ++j)
         {
             __NOP();
         }
     }
 }
 
+void my_delay(flag_t* flag)
+{
+    for (int s = 0; s < DELAY_STEPS; s++)
+    {
+        for (volatile int i = 0; i < DELAY_CHUNK; i++)
+        {
+            __NOP();
+        }
+
+        checkPB();
+        if (!(*flag))
+            return; // Exit early if flag cleared
+    }
+}
+
 void firstDisplay(void)
 {
-    // Cycle through 3 patterns with 1s delay, repeat
     while (firstFlag)
     {
         GPIOB->ODR = bitpattern1;
-        my_delay();
+        my_delay(&firstFlag);
+        if (!firstFlag)
+            break;
+
         GPIOB->ODR = bitpattern2;
-        my_delay();
+        my_delay(&firstFlag);
+        if (!firstFlag)
+            break;
+
         GPIOB->ODR = bitpattern3;
-        my_delay();
-        checkPB(); // Check buttons during display
+        my_delay(&firstFlag);
     }
 }
 
 void secondDisplay(void)
 {
-    // 8-step LED chase on PB0-PB7, repeat
     while (secondFlag)
     {
         for (int i = 0; i < 8; i++)
         {
             GPIOB->ODR = (1 << i);
-            my_delay();
+            my_delay(&secondFlag);
+            if (!secondFlag)
+                return;
         }
-        checkPB(); // Check buttons during display
     }
 }
 
 void thirdDisplay(void)
 {
-    // 8-bit binary counter on PB0-PB7, repeat
     while (thirdFlag)
     {
         for (int i = 0; i < 256; i++)
         {
             GPIOB->ODR = i;
-            my_delay();
+            my_delay(&thirdFlag);
+            if (!thirdFlag)
+                return;
         }
-        checkPB(); // Check buttons during display
     }
 }
 
