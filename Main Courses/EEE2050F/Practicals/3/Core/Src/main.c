@@ -67,8 +67,10 @@ int main(void)
     // All LEDs off before starting display loops
     GPIOB->BRR = 0x00000CFF; // Clear PB0-PB7, PB10-PB11
 
-    while(1){
-
+    while (1)
+    {
+        checkPB();
+        display();
     }
 }							// End of main
 
