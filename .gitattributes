@@ -5,4 +5,4 @@
 # Excludes source code files from being indexed
 # by GitHub Linguist.
 ###############################################################################
-/Drivers/** linguist-generated=true
+**/Drivers/** linguist-vendored=true
