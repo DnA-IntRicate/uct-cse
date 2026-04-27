@@ -1,63 +1,66 @@
 // Adam Foflonker
 // FFLADA001
-// 24 April 2026
+// 27 April 2026
 
-#include "stm32f0xx.h"
+#include <main.h>
 #include <lcd_stm32f0.h>
+#include "stm32f0xx.h"
 
 #define TRUE 1
 #define FALSE 0
-#define NULLPTR ((void*)0)
 
-// Delay macros (tune values for 1s at 48MHz)
-#define DELAY1 1000
-#define DELAY2 1000
+#define LED_COUNT 8
+#define BUTTON_COUNT 4
 
-// Interruptible delays
-#define DELAY_STEPS 100
-#define DELAY_CHUNK (DELAY1 * DELAY2 / DELAY_STEPS)
+#define DELAY1 2000
+#define DELAY2 400
 
-// Bit patterns for LEDs on PB0-PB7, PB10-PB11
-#define BIT_PATTERN_1 0x00000055 // PB0, PB2, PB4, PB6
-#define BIT_PATTERN_2 0x000000AA // PB1, PB3, PB5, PB7
-#define BIT_PATTERN_3 0x00000C00 // PB10, PB11
+// TODO: Figure out what the fuck to define these as
+#define BITPATTERN1
+#define BITPATTERN2
+#define BITPATTERN3
+
+//====================================================================
+// GLOBAL VARIABLES
+//====================================================================
 
 typedef uint8_t flag_t;
 
-flag_t g_start_flag = FALSE;
-flag_t g_first_flag = FALSE;
-flag_t g_second_flag = FALSE;
-flag_t g_third_flag = FALSE;
+volatile flag_t g_start_flag = FALSE;
+volatile flag_t g_first_flag = FALSE;
+volatile flag_t g_second_flag = FALSE;
+volatile flag_t g_third_flag = FALSE;
 
-// Forward declarations
 void init_clock(void);
 void init_gpio(void);
-void my_delay_blocking(void);
-void my_delay(flag_t* flag);    // 'delay' is already defined in lcd_stm32f0.h
+void my_delay(void); // NOTE: 'delay' is already defined in lcd_stm32f0.h
+
+void write_leds(uint8_t pattern);
 void first_display(void);
 void second_display(void);
 void third_display(void);
+
 void check_pb(void);
 void display(void);
 
 int main(void)
 {
-    // TODO: Investigate why clock initialization is interfering with our delay logic
-    // init_clock();
+    // Do not delete: Initializes system clock to correct configuration
+    init_clock();
+
     init_gpio();
 
-    // Switch on D0 briefly as startup indicator
-    GPIOB->BSRR = (1 << 0);
-    my_delay_blocking();
+    // LCD print
+    init_LCD();
+    lcd_command(CLEAR | TWOLINE_MODE);
+    lcd_putstring("EEE2046 Prac3");
+    lcd_command(LINE_TWO);
+    lcd_putstring("By Adam");
 
-    // All LEDs OFF
-    GPIOB->BRR = 0x00000CFF;
-
-    // Wait until SW0 is explicitly pressed and released
-    while (GPIOA->IDR & (1 << 0)); // Wait for press (LOW)
-    while (!(GPIOA->IDR & (1 << 0))); // Wait for release (HIGH)
-
+    // Switch on LED D0
+    GPIOB->BSRR = (1 << 0); // TODO: Keep this on for a short duration then turn it off
     g_start_flag = TRUE;
+
     while (TRUE)
     {
         check_pb();
@@ -65,151 +68,17 @@ int main(void)
     }
 }
 
-void init_gpio(void)
-{
-    // Enable clocks for GPIOA (buttons) and GPIOB (LEDs)
-    RCC->AHBENR |= (1 << 17); // IOPAEN - GPIOA
-    RCC->AHBENR |= (1 << 18); // IOPBEN - GPIOB
-
-    // Set MODER to 01 (output) for PB0-PB7, PB10-PB11
-    GPIOB->MODER |= 0x00505555;
-
-    // Push-pull output type (default, but explicit)
-    GPIOB->OTYPER &= ~0x00000CFF;
-
-    // Low speed (default, but explicit)
-    GPIOB->OSPEEDR &= ~0x00F0FFFF;
-
-    // No pull-up/pull-down for outputs
-    GPIOB->PUPDR &= ~0x00F0FFFF;
-
-    // --- Buttons on PA0-PA3 as inputs ---
-    // MODER = 00 (input) for PA0-PA3 (default, but explicit)
-    GPIOA->MODER &= ~0x000000FF;
-
-    // No pull (external resistors on board handle this)
-    GPIOA->PUPDR &= ~0x000000FF;
-}
-
-void my_delay_blocking(void)
-{
-    for (int i = 0; i < DELAY1; ++i)
-    {
-        for (volatile int j = 0; j < DELAY2; ++j)
-            __NOP();
-    }
-}
-
-void my_delay(flag_t* flag)
-{
-    for (int s = 0; s < DELAY_STEPS; ++s)
-    {
-        for (volatile int i = 0; i < DELAY_CHUNK; ++i)
-            __NOP();
-
-        check_pb();
-        if (!(*flag))
-            return; // Exit early if flag cleared
-    }
-}
-
-void first_display(void)
-{
-    while (g_first_flag)
-    {
-        GPIOB->ODR = BIT_PATTERN_1;
-        my_delay(&g_first_flag);
-
-        if (!g_first_flag)
-            break;
-
-        GPIOB->ODR = BIT_PATTERN_2;
-        my_delay(&g_first_flag);
-
-        if (!g_first_flag)
-            break;
-
-        GPIOB->ODR = BIT_PATTERN_3;
-        my_delay(&g_first_flag);
-    }
-}
-
-void second_display(void)
-{
-    while (g_second_flag)
-    {
-        for (int i = 0; i < 8; ++i)
-        {
-            GPIOB->ODR = (1 << i);
-            my_delay(&g_second_flag);
-
-            if (!g_second_flag)
-                return;
-        }
-    }
-}
-
-void third_display(void)
-{
-    while (g_third_flag)
-    {
-        for (int i = 0; i < 256; ++i)
-        {
-            GPIOB->ODR = i;
-            my_delay(&g_third_flag);
-
-            if (!g_third_flag)
-                return;
-        }
-    }
-}
-
-void check_pb(void)
-{
-    uint16_t pb = GPIOA->IDR & 0x000F;
-
-    if (!(pb & (1 << 1))) // SW1
-    {
-        g_first_flag = TRUE;
-        g_second_flag = FALSE;
-        g_third_flag = FALSE;
-    }
-
-    if (!(pb & (1 << 2))) // SW2
-    {
-        g_first_flag = FALSE;
-        g_second_flag = TRUE;
-        g_third_flag = FALSE;
-    }
-
-    if (!(pb & (1 << 3))) // SW3
-    {
-        g_first_flag = FALSE;
-        g_second_flag = FALSE;
-        g_third_flag = TRUE;
-    }
-}
-
-void display(void)
-{
-    if (g_first_flag)
-        first_display();
-    else if (g_second_flag)
-        second_display();
-    else if (g_third_flag)
-        third_display();
-}
-
 void init_clock(void)
 {
     // 1. Enable HSE
     RCC->CR |= RCC_CR_HSEON;
-    while (!(RCC->CR & RCC_CR_HSERDY));
+    while (!(RCC->CR & RCC_CR_HSERDY))
+        ;
 
     // 2. Configure Flash latency for 48 MHz
     FLASH->ACR |= FLASH_ACR_LATENCY;
 
-    // 3. Set PREDIV = ÷2 (HSE / 2)
+    // 3. Set PREDIV = / 2 (HSE / 2)
     RCC->CFGR2 &= ~RCC_CFGR2_PREDIV;
     RCC->CFGR2 |= RCC_CFGR2_PREDIV_DIV2;
 
@@ -224,7 +93,8 @@ void init_clock(void)
 
     // 5. Enable PLL
     RCC->CR |= RCC_CR_PLLON;
-    while (!(RCC->CR & RCC_CR_PLLRDY));
+    while (!(RCC->CR & RCC_CR_PLLRDY))
+        ;
 
     // 6. Set AHB prescaler = 1
     RCC->CFGR &= ~RCC_CFGR_HPRE;
@@ -236,5 +106,154 @@ void init_clock(void)
     RCC->CFGR &= ~RCC_CFGR_SW;
     RCC->CFGR |= RCC_CFGR_SW_PLL;
 
-    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL);
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL)
+        ;
+}
+
+void init_gpio(void)
+{
+    // Enable clocks for GPIOA (buttons) and GPIOB (LEDs)
+    RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN;
+
+    // Initialize GPIOA (buttons) as input with pull-up
+    // PA0 - PA3
+    for (int pin = 0; pin < BUTTON_COUNT; ++pin)
+    {
+        // Input mode
+        GPIOA->MODER &= ~(3 << (pin * 2));
+
+        // Pull-up
+        GPIOA->PUPDR &= ~(3 << (pin * 2));
+        GPIOA->PUPDR |= (1 << (pin * 2));
+    }
+
+    // Initialize GPIOB (LEDs) as outputs
+    // PB0 - PB7
+    for (int pin = 0; pin < LED_COUNT; ++pin)
+    {
+        // Output mode
+        GPIOB->MODER &= ~(3 << (pin * 2));
+        GPIOB->MODER |= (1 << (pin * 2));
+
+        // Push-pull
+        GPIOB->OTYPER &= ~(1 << pin);
+
+        // High speed
+        GPIOB->OSPEEDR |= (3 << (pin * 2));
+
+        // No pull-up/down
+        GPIOB->PUPDR &= ~(3 << (pin * 2));
+    }
+}
+
+void my_delay(void)
+{
+    volatile int i, j;
+    for (i = 0; i < DELAY2; ++i)
+    {
+        for (j = 0; j < DELAY1; ++j)
+        {
+            check_pb();
+            __asm__ volatile("nop");
+        }
+    }
+}
+
+void write_leds(uint8_t pattern)
+{
+    // Clear all LEDs
+    GPIOB->BRR = UINT8_MAX;
+    GPIOB->BSRR = pattern;
+}
+
+void first_display(void)
+{
+    while (g_first_flag)
+    {
+        // TODO: This must show the bitpatterns!
+
+        write_leds(1 << 0);
+        my_delay();
+
+        if (!g_first_flag)
+            break;
+
+        write_leds(1 << 1);
+        my_delay();
+
+        if (!g_first_flag)
+            break;
+
+        write_leds(1 << 2);
+        my_delay();
+    }
+}
+
+void second_display(void)
+{
+    while (g_second_flag)
+    {
+        for (int led = 0; led < LED_COUNT; ++led)
+        {
+            if (!g_second_flag)
+                break;
+
+            write_leds(1 << led);
+            my_delay();
+        }
+    }
+}
+
+void third_display(void)
+{
+    uint8_t counter = 0;
+    while (g_third_flag)
+    {
+        write_leds(counter);
+        counter++;
+        my_delay();
+    }
+}
+
+void check_pb(void)
+{
+    // Read buttons
+    int btn0 = (GPIOA->IDR & (1 << 0)) == FALSE;
+    int btn1 = (GPIOA->IDR & (1 << 1)) == FALSE;
+    int btn2 = (GPIOA->IDR & (1 << 2)) == FALSE;
+
+    if (btn0)
+    {
+        g_start_flag = FALSE;
+        g_first_flag = TRUE;
+        g_second_flag = FALSE;
+        g_third_flag = FALSE;
+    }
+    else if (btn1)
+    {
+        g_start_flag = FALSE;
+        g_first_flag = FALSE;
+        g_second_flag = TRUE;
+        g_third_flag = FALSE;
+    }
+    else if (btn2)
+    {
+        g_start_flag = FALSE;
+        g_first_flag = FALSE;
+        g_second_flag = FALSE;
+        g_third_flag = TRUE;
+    }
+}
+
+void display(void)
+{
+    if (g_start_flag)
+        return;
+
+    if (g_first_flag)
+        first_display();
+    else if (g_second_flag)
+        second_display();
+    else if (g_third_flag)
+        third_display();
 }
