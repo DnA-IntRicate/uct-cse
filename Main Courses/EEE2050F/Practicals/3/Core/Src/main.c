@@ -22,10 +22,10 @@
 
 typedef uint8_t flag_t;
 
-volatile flag_t g_start_flag = FALSE;
-volatile flag_t g_first_flag = FALSE;
-volatile flag_t g_second_flag = FALSE;
-volatile flag_t g_third_flag = FALSE;
+flag_t g_start_flag = FALSE;
+flag_t g_first_flag = FALSE;
+flag_t g_second_flag = FALSE;
+flag_t g_third_flag = FALSE;
 
 void init_clock(void);
 void init_gpio(void);
@@ -50,9 +50,9 @@ int main(void)
     // Splash screen
     init_LCD();
     lcd_command(CLEAR | TWOLINE_MODE);
-    lcd_putstring("EEE2046 Prac3");
+    lcd_putstring("EEE2046 Prac 3");
     lcd_command(LINE_TWO);
-    lcd_putstring("By Adam");
+    lcd_putstring("~ By Adam");
 
     while (TRUE)
     {
