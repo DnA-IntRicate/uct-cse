@@ -15,14 +15,10 @@
 #define DELAY1 2000
 #define DELAY2 400
 
-// TODO: Figure out what the fuck to define these as
-#define BITPATTERN1
-#define BITPATTERN2
-#define BITPATTERN3
-
-//====================================================================
-// GLOBAL VARIABLES
-//====================================================================
+// For use in first_display
+#define BITPATTERN1 0b11111111
+#define BITPATTERN2 0b10101010
+#define BITPATTERN3 0b10011001
 
 typedef uint8_t flag_t;
 
@@ -170,21 +166,19 @@ void first_display(void)
 {
     while (g_first_flag)
     {
-        // TODO: This must show the bitpatterns!
-
-        write_leds(1 << 0);
+        write_leds(BITPATTERN1);
         my_delay();
 
         if (!g_first_flag)
             break;
 
-        write_leds(1 << 1);
+        write_leds(BITPATTERN2);
         my_delay();
 
         if (!g_first_flag)
             break;
 
-        write_leds(1 << 2);
+        write_leds(BITPATTERN3);
         my_delay();
     }
 }
