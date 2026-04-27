@@ -44,23 +44,29 @@ int main(void)
     // Do not delete: Initializes system clock to correct configuration
     init_clock();
 
+    // Initialize all buttons and LEDs
     init_gpio();
 
-    // LCD print
+    // Splash screen
     init_LCD();
     lcd_command(CLEAR | TWOLINE_MODE);
     lcd_putstring("EEE2046 Prac3");
     lcd_command(LINE_TWO);
     lcd_putstring("By Adam");
 
-    // Switch on LED D0
-    GPIOB->BSRR = (1 << 0); // TODO: Keep this on for a short duration then turn it off
-    g_start_flag = TRUE;
-
     while (TRUE)
     {
         check_pb();
         display();
+
+        if (g_start_flag)
+        {
+            lcd_command(CLEAR);
+            lcd_putstring("Ready to start");
+            write_leds(1 << 0);
+
+            g_start_flag = FALSE; // Reset state since start doesn't require any continuous logic
+        }
     }
 }
 
@@ -227,22 +233,30 @@ void check_pb(void)
     int btn0 = (GPIOA->IDR & (1 << 0)) == FALSE;
     int btn1 = (GPIOA->IDR & (1 << 1)) == FALSE;
     int btn2 = (GPIOA->IDR & (1 << 2)) == FALSE;
+    int btn3 = (GPIOA->IDR & (1 << 3)) == FALSE;
 
     if (btn0)
     {
-        g_start_flag = FALSE;
-        g_first_flag = TRUE;
+        g_start_flag = TRUE;
+        g_first_flag = FALSE;
         g_second_flag = FALSE;
         g_third_flag = FALSE;
     }
     else if (btn1)
     {
         g_start_flag = FALSE;
+        g_first_flag = TRUE;
+        g_second_flag = FALSE;
+        g_third_flag = FALSE;
+    }
+    else if (btn2)
+    {
+        g_start_flag = FALSE;
         g_first_flag = FALSE;
         g_second_flag = TRUE;
         g_third_flag = FALSE;
     }
-    else if (btn2)
+    else if (btn3)
     {
         g_start_flag = FALSE;
         g_first_flag = FALSE;
@@ -253,9 +267,6 @@ void check_pb(void)
 
 void display(void)
 {
-    if (g_start_flag)
-        return;
-
     if (g_first_flag)
         first_display();
     else if (g_second_flag)
