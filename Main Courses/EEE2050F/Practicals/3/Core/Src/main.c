@@ -13,7 +13,7 @@
 #define BUTTON_COUNT 4
 
 #define DELAY1 2000
-#define DELAY2 400
+#define DELAY2 300
 
 // For use in first_display
 #define BITPATTERN1 0b11111111
