@@ -149,6 +149,7 @@ void my_delay(void)
     {
         for (j = 0; j < DELAY1; ++j)
         {
+            // To ensure delays are non-blocking, we poll for input within the delay
             check_pb();
             __asm__ volatile("nop");
         }
@@ -164,11 +165,15 @@ void write_leds(uint8_t pattern)
 
 void first_display(void)
 {
+    lcd_command(CLEAR);
+    lcd_putstring("First display");
+
     while (g_first_flag)
     {
         write_leds(BITPATTERN1);
         my_delay();
 
+        // We check exit condition in-between delays for responsive display mode switching
         if (!g_first_flag)
             break;
 
@@ -185,10 +190,14 @@ void first_display(void)
 
 void second_display(void)
 {
+    lcd_command(CLEAR);
+    lcd_putstring("Second display");
+
     while (g_second_flag)
     {
         for (int led = 0; led < LED_COUNT; ++led)
         {
+            // We check exit condition in each nested-iteration for responsive display mode switching
             if (!g_second_flag)
                 break;
 
@@ -200,6 +209,9 @@ void second_display(void)
 
 void third_display(void)
 {
+    lcd_command(CLEAR);
+    lcd_putstring("Third display");
+
     uint8_t counter = 0;
     while (g_third_flag)
     {
