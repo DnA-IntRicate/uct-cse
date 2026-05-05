@@ -1,43 +1,22 @@
 // Adam Foflonker
 // FFLADA001
-// 27 April 2026
+// 05 May 2026
 
 #include <main.h>
 #include <lcd_stm32f0.h>
 #include "stm32f0xx.h"
 
+
 #define TRUE 1
 #define FALSE 0
 
-#define LED_COUNT 8
-#define BUTTON_COUNT 4
-
-#define DELAY1 2000
-#define DELAY2 300
-
-// For use in first_display
-#define BITPATTERN1 0b11111111
-#define BITPATTERN2 0b10101010
-#define BITPATTERN3 0b10011001
-
-typedef uint8_t flag_t;
-
-flag_t g_start_flag = FALSE;
-flag_t g_first_flag = FALSE;
-flag_t g_second_flag = FALSE;
-flag_t g_third_flag = FALSE;
-
 void init_clock(void);
 void init_gpio(void);
-void my_delay(void); // NOTE: 'delay' is already defined in lcd_stm32f0.h
+void init_timer(void);
 
 void write_leds(uint8_t pattern);
-void first_display(void);
-void second_display(void);
-void third_display(void);
 
 void check_pb(void);
-void display(void);
 
 int main(void)
 {
@@ -47,26 +26,28 @@ int main(void)
     // Initialize all buttons and LEDs
     init_gpio();
 
+    // Initialize TIM14
+    init_timer();
+
     // Splash screen
     init_LCD();
     lcd_command(CLEAR | TWOLINE_MODE);
-    lcd_putstring("EEE2046 Prac 3");
+    lcd_putstring("EEE2046 Prac 4");
     lcd_command(LINE_TWO);
     lcd_putstring("~ By Adam");
 
     while (TRUE)
     {
         check_pb();
-        display();
 
-        if (g_start_flag)
-        {
-            lcd_command(CLEAR);
-            lcd_putstring("Ready to start");
-            write_leds(1 << 0);
+        // if (g_start_flag)
+        // {
+        //     lcd_command(CLEAR);
+        //     lcd_putstring("Ready to start");
+        //     write_leds(1 << 0);
 
-            g_start_flag = FALSE; // Reset state since start doesn't require any continuous logic
-        }
+        //     g_start_flag = FALSE; // Reset state since start doesn't require any continuous logic
+        // }
     }
 }
 
@@ -118,48 +99,46 @@ void init_gpio(void)
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN;
 
     // Initialize GPIOA (buttons) as input with pull-up
-    // PA0 - PA3
-    for (int pin = 0; pin < BUTTON_COUNT; ++pin)
+    // PA0 - PA2
     {
-        // Input mode
-        GPIOA->MODER &= ~(3 << (pin * 2));
+        GPIOA->MODER &= ~(GPIO_MODER_MODER0 | GPIO_MODER_MODER1 | GPIO_MODER_MODER2); // Input mode
 
         // Pull-up
-        GPIOA->PUPDR &= ~(3 << (pin * 2));
-        GPIOA->PUPDR |= (1 << (pin * 2));
+        GPIOA->PUPDR &= ~(GPIO_PUPDR_PUPDR0 | GPIO_PUPDR_PUPDR1 | GPIO_PUPDR_PUPDR2);
+        GPIOA->PUPDR |= GPIO_PUPDR_PUPDR0_0 | GPIO_PUPDR_PUPDR1_0 | GPIO_PUPDR_PUPDR2_0;
     }
 
     // Initialize GPIOB (LEDs) as outputs
     // PB0 - PB7
-    for (int pin = 0; pin < LED_COUNT; ++pin)
     {
-        // Output mode
-        GPIOB->MODER &= ~(3 << (pin * 2));
-        GPIOB->MODER |= (1 << (pin * 2));
+        GPIOB->MODER &= ~(GPIO_MODER_MODER0 | GPIO_MODER_MODER1 | GPIO_MODER_MODER2 | GPIO_MODER_MODER3 | GPIO_MODER_MODER4
+                | GPIO_MODER_MODER5 | GPIO_MODER_MODER6 | GPIO_MODER_MODER7);
+        GPIOB->MODER |= GPIO_MODER_MODER0_0 | GPIO_MODER_MODER1_0 | GPIO_MODER_MODER2_0 | GPIO_MODER_MODER3_0 | GPIO_MODER_MODER4_0
+            | GPIO_MODER_MODER5_0 | GPIO_MODER_MODER6_0 | GPIO_MODER_MODER7_0; // Output mode
 
-        // Push-pull
-        GPIOB->OTYPER &= ~(1 << pin);
-
-        // High speed
-        GPIOB->OSPEEDR |= (3 << (pin * 2));
+        // Push-pull output
+        GPIOB->OTYPER &= ~(GPIO_OTYPER_OT_0 | GPIO_OTYPER_OT_1 | GPIO_OTYPER_OT_2 | GPIO_OTYPER_OT_3 | GPIO_OTYPER_OT_4
+                | GPIO_OTYPER_OT_5 | GPIO_OTYPER_OT_6 | GPIO_OTYPER_OT_7);
 
         // No pull-up/down
-        GPIOB->PUPDR &= ~(3 << (pin * 2));
+        GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPDR0 | GPIO_PUPDR_PUPDR1 | GPIO_PUPDR_PUPDR2 | GPIO_PUPDR_PUPDR3 | GPIO_PUPDR_PUPDR4
+                | GPIO_PUPDR_PUPDR5 | GPIO_PUPDR_PUPDR6 | GPIO_PUPDR_PUPDR7);
     }
 }
 
-void my_delay(void)
+void init_timer(void)
 {
-    volatile int i, j;
-    for (i = 0; i < DELAY2; ++i)
-    {
-        for (j = 0; j < DELAY1; ++j)
-        {
-            // To ensure delays are non-blocking, we poll for input within the delay
-            check_pb();
-            __asm__ volatile("nop");
-        }
-    }
+    // Enable clock for TIM14
+    RCC->APB1ENR |= RCC_APB1ENR_TIM14EN;
+
+    // TODO: Calculate PSC and ARR values correctly to simulate a 1s period.
+    TIM14->PSC = 4999;  // Prescaler
+    TIM14->ARR = 199; // Auto-reload register
+    TIM14->CNT = 0;
+    TIM14->DIER |= TIM_DIER_UIE; // Enable interrupts
+
+    // Start the timer
+    TIM14->CR1 |= TIM_CR1_CEN;
 }
 
 void write_leds(uint8_t pattern)
@@ -167,64 +146,6 @@ void write_leds(uint8_t pattern)
     // Clear all LEDs
     GPIOB->BRR = UINT8_MAX;
     GPIOB->BSRR = pattern;
-}
-
-void first_display(void)
-{
-    lcd_command(CLEAR);
-    lcd_putstring("First display");
-
-    while (g_first_flag)
-    {
-        write_leds(BITPATTERN1);
-        my_delay();
-
-        // We check exit condition in-between delays for responsive display mode switching
-        if (!g_first_flag)
-            break;
-
-        write_leds(BITPATTERN2);
-        my_delay();
-
-        if (!g_first_flag)
-            break;
-
-        write_leds(BITPATTERN3);
-        my_delay();
-    }
-}
-
-void second_display(void)
-{
-    lcd_command(CLEAR);
-    lcd_putstring("Second display");
-
-    while (g_second_flag)
-    {
-        for (int led = 0; led < LED_COUNT; ++led)
-        {
-            // We check exit condition in each nested-iteration for responsive display mode switching
-            if (!g_second_flag)
-                break;
-
-            write_leds(1 << led);
-            my_delay();
-        }
-    }
-}
-
-void third_display(void)
-{
-    lcd_command(CLEAR);
-    lcd_putstring("Third display");
-
-    uint8_t counter = 0;
-    while (g_third_flag)
-    {
-        write_leds(counter);
-        counter++;
-        my_delay();
-    }
 }
 
 void check_pb(void)
@@ -235,42 +156,32 @@ void check_pb(void)
     int btn2 = (GPIOA->IDR & (1 << 2)) == FALSE;
     int btn3 = (GPIOA->IDR & (1 << 3)) == FALSE;
 
-    if (btn0)
-    {
-        g_start_flag = TRUE;
-        g_first_flag = FALSE;
-        g_second_flag = FALSE;
-        g_third_flag = FALSE;
-    }
-    else if (btn1)
-    {
-        g_start_flag = FALSE;
-        g_first_flag = TRUE;
-        g_second_flag = FALSE;
-        g_third_flag = FALSE;
-    }
-    else if (btn2)
-    {
-        g_start_flag = FALSE;
-        g_first_flag = FALSE;
-        g_second_flag = TRUE;
-        g_third_flag = FALSE;
-    }
-    else if (btn3)
-    {
-        g_start_flag = FALSE;
-        g_first_flag = FALSE;
-        g_second_flag = FALSE;
-        g_third_flag = TRUE;
-    }
-}
-
-void display(void)
-{
-    if (g_first_flag)
-        first_display();
-    else if (g_second_flag)
-        second_display();
-    else if (g_third_flag)
-        third_display();
+    // if (btn0)
+    // {
+    //     g_start_flag = TRUE;
+    //     g_first_flag = FALSE;
+    //     g_second_flag = FALSE;
+    //     g_third_flag = FALSE;
+    // }
+    // else if (btn1)
+    // {
+    //     g_start_flag = FALSE;
+    //     g_first_flag = TRUE;
+    //     g_second_flag = FALSE;
+    //     g_third_flag = FALSE;
+    // }
+    // else if (btn2)
+    // {
+    //     g_start_flag = FALSE;
+    //     g_first_flag = FALSE;
+    //     g_second_flag = TRUE;
+    //     g_third_flag = FALSE;
+    // }
+    // else if (btn3)
+    // {
+    //     g_start_flag = FALSE;
+    //     g_first_flag = FALSE;
+    //     g_second_flag = FALSE;
+    //     g_third_flag = TRUE;
+    // }
 }
