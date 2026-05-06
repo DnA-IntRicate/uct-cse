@@ -10,13 +10,18 @@
 #define TRUE 1
 #define FALSE 0
 
+typedef uint8_t flag_t;
+flag_t g_start_flag = FALSE;
+flag_t g_up_flag = FALSE;
+flag_t g_down_flag = FALSE;
+
 void init_clock(void);
 void init_gpio(void);
 void init_timer(void);
 
 void write_leds(uint8_t pattern);
-
 void check_pb(void);
+void display(void);
 
 int main(void)
 {
@@ -39,15 +44,7 @@ int main(void)
     while (TRUE)
     {
         check_pb();
-
-        // if (g_start_flag)
-        // {
-        //     lcd_command(CLEAR);
-        //     lcd_putstring("Ready to start");
-        //     write_leds(1 << 0);
-
-        //     g_start_flag = FALSE; // Reset state since start doesn't require any continuous logic
-        // }
+        display();
     }
 }
 
@@ -124,6 +121,9 @@ void init_gpio(void)
         GPIOB->PUPDR &= ~(GPIO_PUPDR_PUPDR0 | GPIO_PUPDR_PUPDR1 | GPIO_PUPDR_PUPDR2 | GPIO_PUPDR_PUPDR3 | GPIO_PUPDR_PUPDR4
                 | GPIO_PUPDR_PUPDR5 | GPIO_PUPDR_PUPDR6 | GPIO_PUPDR_PUPDR7);
     }
+
+    // Turn D0 on
+    write_leds(GPIO_BSRR_BS_0);
 }
 
 void init_timer(void)
@@ -166,37 +166,66 @@ void write_leds(uint8_t pattern)
 void check_pb(void)
 {
     // Read buttons
-    int btn0 = (GPIOA->IDR & (1 << 0)) == FALSE;
-    int btn1 = (GPIOA->IDR & (1 << 1)) == FALSE;
-    int btn2 = (GPIOA->IDR & (1 << 2)) == FALSE;
-    int btn3 = (GPIOA->IDR & (1 << 3)) == FALSE;
+    int btn0 = (GPIOA->IDR & GPIO_IDR_0) == FALSE;
+    int btn1 = (GPIOA->IDR & GPIO_IDR_1) == FALSE;
+    int btn2 = (GPIOA->IDR & GPIO_IDR_2) == FALSE;
 
-    // if (btn0)
-    // {
-    //     g_start_flag = TRUE;
-    //     g_first_flag = FALSE;
-    //     g_second_flag = FALSE;
-    //     g_third_flag = FALSE;
-    // }
-    // else if (btn1)
-    // {
-    //     g_start_flag = FALSE;
-    //     g_first_flag = TRUE;
-    //     g_second_flag = FALSE;
-    //     g_third_flag = FALSE;
-    // }
-    // else if (btn2)
-    // {
-    //     g_start_flag = FALSE;
-    //     g_first_flag = FALSE;
-    //     g_second_flag = TRUE;
-    //     g_third_flag = FALSE;
-    // }
-    // else if (btn3)
-    // {
-    //     g_start_flag = FALSE;
-    //     g_first_flag = FALSE;
-    //     g_second_flag = FALSE;
-    //     g_third_flag = TRUE;
-    // }
+    if (btn0)
+    {
+        g_start_flag = TRUE;
+        g_up_flag = FALSE;
+        g_down_flag = FALSE;
+
+        // Clear the LCD once here to prevent flickering display
+        lcd_command(CLEAR);
+    }
+    else if (btn1 && g_start_flag) // Prevent switching modes unless start was pressed first
+    {
+        g_start_flag = TRUE;
+        g_up_flag = TRUE;
+        g_down_flag = FALSE;
+
+        lcd_command(CLEAR);
+    }
+    else if (btn2 && g_start_flag) // Prevent switching modes unless start was pressed first
+    {
+        g_start_flag = TRUE;
+        g_up_flag = FALSE;
+        g_down_flag = TRUE;
+
+        lcd_command(CLEAR);
+    }
+}
+
+void display(void)
+{
+    if (g_start_flag && !(g_up_flag || g_down_flag))
+    {
+        lcd_putstring("Binary Counter");
+        lcd_command(LINE_TWO);
+        lcd_putstring("SW1:Up SW2:Down");
+        lcd_command(CURSOR_HOME);
+
+        write_leds(GPIO_BSRR_BS_0 | GPIO_BSRR_BS_7);
+        return;
+    }
+
+    if (g_up_flag)
+    {
+        lcd_putstring("Counter [U]:");
+        lcd_command(LINE_TWO);
+        lcd_putstring("count = 000");
+        lcd_command(CURSOR_HOME);
+
+        write_leds(0);
+    }
+    else if (g_down_flag)
+    {
+        lcd_putstring("Counter [D]:");
+        lcd_command(LINE_TWO);
+        lcd_putstring("count = 255");
+        lcd_command(CURSOR_HOME);
+
+        write_leds(0);
+    }
 }
