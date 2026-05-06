@@ -131,14 +131,29 @@ void init_timer(void)
     // Enable clock for TIM14
     RCC->APB1ENR |= RCC_APB1ENR_TIM14EN;
 
-    // TODO: Calculate PSC and ARR values correctly to simulate a 1s period.
-    TIM14->PSC = 4999;  // Prescaler
-    TIM14->ARR = 199; // Auto-reload register
+    // 1 second period
+    TIM14->PSC = 7999;
+    TIM14->ARR = 999;
     TIM14->CNT = 0;
-    TIM14->DIER |= TIM_DIER_UIE; // Enable interrupts
+
+    // Enable interrupts
+    TIM14->DIER |= TIM_DIER_UIE;
+    NVIC_EnableIRQ(TIM14_IRQn);
 
     // Start the timer
     TIM14->CR1 |= TIM_CR1_CEN;
+}
+
+void TIM14_IRQHandler()
+{
+    if (TIM14->SR & TIM_SR_UIF)
+    {
+        TIM14->SR &= ~TIM_SR_UIF; // Clear flag
+
+
+        // task code goes here
+        // e.g. increment or decrement counter, refresh LCD
+    }
 }
 
 void write_leds(uint8_t pattern)
