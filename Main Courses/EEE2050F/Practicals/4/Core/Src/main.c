@@ -15,6 +15,8 @@ flag_t g_start_flag = FALSE;
 flag_t g_up_flag = FALSE;
 flag_t g_down_flag = FALSE;
 
+uint8_t g_count = 0;
+
 void init_clock(void);
 void init_gpio(void);
 void init_timer(void);
@@ -22,10 +24,13 @@ void init_timer(void);
 void write_leds(uint8_t pattern);
 void check_pb(void);
 void display(void);
+void counter_step(void);
+
+void b2ascii(uint8_t countValue, char *resultPtr);
 
 int main(void)
 {
-    // Do not delete: Initializes system clock to correct configuration
+    // Initializes system clock to correct configuration
     init_clock();
 
     // Initialize all buttons and LEDs
@@ -37,9 +42,9 @@ int main(void)
     // Splash screen
     init_LCD();
     lcd_command(CLEAR | TWOLINE_MODE);
-    lcd_putstring("EEE2046 Prac 4");
+    lcd_putstring("EEE2046 (2026)");
     lcd_command(LINE_TWO);
-    lcd_putstring("~ By Adam");
+    lcd_putstring("FFLADA001");
 
     while (TRUE)
     {
@@ -131,8 +136,8 @@ void init_timer(void)
     // Enable clock for TIM14
     RCC->APB1ENR |= RCC_APB1ENR_TIM14EN;
 
-    // 1 second period
-    TIM14->PSC = 7999;
+    // 1 second period at 48 MHz
+    TIM14->PSC = 47999;
     TIM14->ARR = 999;
     TIM14->CNT = 0;
 
@@ -149,10 +154,10 @@ void TIM14_IRQHandler()
     if (TIM14->SR & TIM_SR_UIF)
     {
         TIM14->SR &= ~TIM_SR_UIF; // Clear flag
+        if (!(g_up_flag || g_down_flag))
+            return;
 
-
-        // task code goes here
-        // e.g. increment or decrement counter, refresh LCD
+        counter_step();
     }
 }
 
@@ -186,6 +191,7 @@ void check_pb(void)
         g_down_flag = FALSE;
 
         lcd_command(CLEAR);
+        g_count = 0;
     }
     else if (btn2 && g_start_flag) // Prevent switching modes unless start was pressed first
     {
@@ -194,6 +200,7 @@ void check_pb(void)
         g_down_flag = TRUE;
 
         lcd_command(CLEAR);
+        g_count = UINT8_MAX;
     }
 }
 
@@ -214,18 +221,45 @@ void display(void)
     {
         lcd_putstring("Counter [U]:");
         lcd_command(LINE_TWO);
-        lcd_putstring("count = 000");
+        lcd_putstring("count = ");
+
+        char count[4] = {};
+        b2ascii(g_count, count);
+        lcd_putstring(count);
         lcd_command(CURSOR_HOME);
 
-        write_leds(0);
+        write_leds(g_count);
     }
     else if (g_down_flag)
     {
         lcd_putstring("Counter [D]:");
         lcd_command(LINE_TWO);
-        lcd_putstring("count = 255");
+        lcd_putstring("count = ");
+
+        char count[4] = {};
+        b2ascii(g_count, count);
+        lcd_putstring(count);
         lcd_command(CURSOR_HOME);
 
-        write_leds(0);
+        write_leds(g_count);
     }
+}
+
+void counter_step(void)
+{
+    if (g_up_flag)
+        g_count++;
+    else
+        g_count--;
+}
+
+void b2ascii(uint8_t num, char* out_res)
+{
+    if (!out_res)
+        return;
+
+    out_res[0] = '0' + (num / 100);       // Hundreds
+    out_res[1] = '0' + ((num / 10) % 10); // Tens
+    out_res[2] = '0' + (num % 10);        // Units
+    out_res[3] = '\0';                    // Null-termination char
 }
