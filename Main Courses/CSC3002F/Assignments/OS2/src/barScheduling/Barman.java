@@ -12,6 +12,8 @@
 
 package barScheduling;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,6 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
 
 public class Barman extends Thread {
 
@@ -47,9 +50,7 @@ public class Barman extends Thread {
 
     private final String schedulerName;
 
-
-
- //=NO CHANGE AREA BEINGS=========================================================
+//region NO CHANGE AREA BEINGS=========================================================
     Barman(CountDownLatch startSignal, int sAlg, int sTime) {
         this.startSignal = startSignal;
         this.schedAlg = sAlg;
@@ -243,7 +244,6 @@ public class Barman extends Thread {
         }
     }
 
-
     @Override
     public void run() {
         try {
@@ -313,8 +313,6 @@ public class Barman extends Thread {
         }
     }
 
-
-
     private void processOrder(DrinkOrder currentOrder, String startMessage)
             throws InterruptedException, IOException {
 
@@ -331,12 +329,59 @@ public class Barman extends Thread {
         sleep(switchTime);
     }
 
-//=NO CHANGE AREA ENDS=========================================================
+//endregion NO CHANGE AREA ENDS=========================================================
 
+    private synchronized void recordCompletedOrder(DrinkOrder order) throws IOException
+    {
+        final File RESULTS_DIR = new File("results");
+        if (!RESULTS_DIR.exists())
+            RESULTS_DIR.mkdirs();
 
+        // TODO: We should optimize this by scoping the filewriter to the class... Perhaps?
 
-    private void recordCompletedOrder(DrinkOrder order) throws IOException {
-    	// THIS IS THE ONLY FUNCTION YOU MAY CHANGE
+        String fileName = String.format("%s/%s.csv", RESULTS_DIR, schedulerName);
+        try (FileWriter writer = new FileWriter(fileName, true))
+        {
+            // Write CSV header if the file is empty
+            File file = new File(fileName);
+
+            if (file.length() == 0)
+            {
+                writer.write(
+                    "Scheduler," +
+                    "PatronID," +
+                    "Drink," +
+                    "ArrivalTime," +
+                    "StartTime," +
+                    "CompletionTime," +
+                    "ExecutionTime," +
+                    "WaitingTime," +
+                    "ResponseTime," +
+                    "TurnaroundTime," +
+                    "QueueLevel," +
+                    "Priority\n"
+                );
+            }
+
+            writer.write(
+                schedulerName + "," +
+                order.getOrderer() + "," +
+                order.getDrinkName() + "," +
+                order.getArrivalTime() + "," +
+                order.getServiceStartTime() + "," +
+                order.getCompletionTime() + "," +
+                order.getExecutionTime() + "," +
+                order.getWaitingTime() + "," +
+                order.getResponseTime() + "," +
+                order.getTurnaroundTime() + "," +
+                order.getQueueLevel() + "," +
+                order.getPriority() +
+                "\n"
+            );
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
-
 }
