@@ -47,9 +47,9 @@ public class Barman extends Thread {
 
     private final String schedulerName;
 
- 
 
- //=NO CHANGE AREA BEINGS=========================================================   
+
+ //=NO CHANGE AREA BEINGS=========================================================
     Barman(CountDownLatch startSignal, int sAlg, int sTime) {
         this.startSignal = startSignal;
         this.schedAlg = sAlg;
@@ -243,7 +243,7 @@ public class Barman extends Thread {
         }
     }
 
- 
+
     @Override
     public void run() {
         try {
@@ -313,7 +313,7 @@ public class Barman extends Thread {
         }
     }
 
-  
+
 
     private void processOrder(DrinkOrder currentOrder, String startMessage)
             throws InterruptedException, IOException {
@@ -330,11 +330,11 @@ public class Barman extends Thread {
 
         sleep(switchTime);
     }
-    
-//=NO CHANGE AREA ENDS=========================================================   
-      
-    
-    
+
+//=NO CHANGE AREA ENDS=========================================================
+
+
+
     private void recordCompletedOrder(DrinkOrder order) throws IOException {
     	// THIS IS THE ONLY FUNCTION YOU MAY CHANGE
     }

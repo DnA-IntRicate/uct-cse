@@ -31,7 +31,7 @@ public class SchedulingSimulation {
     static int[] arrivalTimes;
     static int[] drinksPerPatron;
 
- 
+
     private static void validateScheduler(int sched) {
         if (sched < 0 || sched > 3) {
             throw new IllegalArgumentException(
@@ -85,7 +85,7 @@ public class SchedulingSimulation {
         return drinks;
     }
 
- 
+
     public static void main(String[] args) throws InterruptedException, IOException {
         if (args.length >= 1) noPatrons = Integer.parseInt(args[0]);
         if (args.length >= 2) sched = Integer.parseInt(args[1]);
