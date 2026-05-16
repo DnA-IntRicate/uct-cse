@@ -348,7 +348,6 @@ public class Barman extends Thread {
             if (file.length() == 0)
             {
                 writer.write(
-                    "Scheduler," +
                     "PatronID," +
                     "Drink," +
                     "ArrivalTime," +
@@ -364,7 +363,6 @@ public class Barman extends Thread {
             }
 
             writer.write(
-                schedulerName + "," +
                 order.getOrderer() + "," +
                 order.getDrinkName() + "," +
                 order.getArrivalTime() + "," +
