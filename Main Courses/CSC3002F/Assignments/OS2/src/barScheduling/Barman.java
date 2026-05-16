@@ -337,14 +337,11 @@ public class Barman extends Thread {
         if (!RESULTS_DIR.exists())
             RESULTS_DIR.mkdirs();
 
-        // TODO: We should optimize this by scoping the filewriter to the class... Perhaps?
-
-        String fileName = String.format("%s/%s.csv", RESULTS_DIR, schedulerName);
+        String fileName = String.format("%s/%s_ST%d.csv", RESULTS_DIR, schedulerName, switchTime);
         try (FileWriter writer = new FileWriter(fileName, true))
         {
             // Write CSV header if the file is empty
             File file = new File(fileName);
-
             if (file.length() == 0)
             {
                 writer.write(
