@@ -5,6 +5,8 @@
 # Arg[3] = Context switch Time
 # Arg[4] = Seed (Leave this at 42 for all tests to keep results consistent and deterministic)
 
+readonly SEED=42
+
 for sched in 0 1 2 3
 do
     for patrons in 10 50 100
