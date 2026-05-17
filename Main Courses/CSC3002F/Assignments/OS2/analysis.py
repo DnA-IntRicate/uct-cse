@@ -38,13 +38,13 @@ warnings.filterwarnings("ignore")
 # ─────────────────────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────────────────────
-SCHEDULER_ORDER = ["FCFS", "SJF", "Priority", "MLFQ"]
+SCHEDULER_ORDER = ["FCFS", "SJF", "PRIORITY", "MLFQ"]
 
 PALETTE = {
-    "FCFS":     "#4C72B0",
+    "FCFS":     "#46D5EB",
     "SJF":      "#55A868",
-    "Priority": "#C44E52",
-    "MLFQ":     "#8172B2",
+    "PRIORITY": "#C44E52",
+    "MLFQ":     "#F08913",
 }
 
 METRICS = {
