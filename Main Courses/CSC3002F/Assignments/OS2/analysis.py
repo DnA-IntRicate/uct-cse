@@ -32,23 +32,23 @@ import pandas as pd
 import seaborn as sns
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 # CONFIG
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 SCHEDULER_ORDER = ["FCFS", "SJF", "PRIORITY", "MLFQ"]
 
 PALETTE = {
     "FCFS":     "#46D5EB",
     "SJF":      "#55A868",
     "PRIORITY": "#C44E52",
-    "MLFQ":     "#F08913",
+    "MLFQ":     "#F08913"
 }
 
 METRICS = {
     "WaitingTime":    "Waiting Time (ms)",
     "TurnaroundTime": "Turnaround Time (ms)",
     "ResponseTime":   "Response Time (ms)",
-    "ExecutionTime":  "Execution Time (ms)",
+    "ExecutionTime":  "Execution Time (ms)"
 }
 
 SWITCH_TIMES = [0, 5, 20]
@@ -61,20 +61,20 @@ matplotlib.rcParams.update({
     "axes.spines.right": False,
     "axes.grid":         True,
     "grid.alpha":        0.3,
-    "grid.linestyle":    "--",
+    "grid.linestyle":    "--"
 })
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 # DATA LOADING
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 def load_all_data(results_dir: str) -> pd.DataFrame:
     """Load all CSVs from results_dir into a single DataFrame with metadata columns."""
     pattern = os.path.join(results_dir, "*.csv")
     files = sorted(glob.glob(pattern))
     if not files:
-        sys.exit(f"[ERROR] No CSV files found in '{results_dir}'. "
-                 f"Run your simulation first, then re-run this script.")
+        sys.exit(f"[ERROR] No CSV files found in '{results_dir}'! "
+                 f"Run the simulation first, then re-run this script.")
 
     frames = []
     for path in files:
@@ -83,6 +83,7 @@ def load_all_data(results_dir: str) -> pd.DataFrame:
         if len(parts) != 2:
             print(f"[WARN] Skipping unexpected filename: {basename}")
             continue
+
         scheduler_name, switch_time_str = parts[0], parts[1]
         try:
             switch_time = int(switch_time_str)
@@ -103,8 +104,8 @@ def load_all_data(results_dir: str) -> pd.DataFrame:
     if not frames:
         sys.exit("[ERROR] No valid CSV files could be loaded.")
 
-    combined = pd.concat(frames, ignore_index=True)
     # Ensure numeric types
+    combined = pd.concat(frames, ignore_index=True)
     for col in list(METRICS.keys()):
         if col in combined.columns:
             combined[col] = pd.to_numeric(combined[col], errors="coerce")
@@ -112,12 +113,13 @@ def load_all_data(results_dir: str) -> pd.DataFrame:
     print(f"[INFO] Loaded {len(combined):,} rows from {len(frames)} files.")
     print(f"       Schedulers: {sorted(combined['Scheduler'].unique())}")
     print(f"       Switch times: {sorted(combined['SwitchTime'].unique())}")
+
     return combined
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# HELPER UTILITIES
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
+# UTILITIES
+# =============================================================================
 def sched_color(name: str) -> str:
     return PALETTE.get(name, "#888888")
 
@@ -135,9 +137,9 @@ def save(fig, output_dir: str, name: str):
     print(f"[SAVED] {path}")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 # FIGURE 1 – Summary Statistics Table (mean, median, std, min, max)
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 def fig_summary_table(data: pd.DataFrame, output_dir: str):
     schedulers = ordered_schedulers(data)
     metric_cols = [m for m in METRICS if m in data.columns]
@@ -197,9 +199,9 @@ def fig_summary_table(data: pd.DataFrame, output_dir: str):
     save(fig, output_dir, "01_summary_table")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 # FIGURE 2 – Grouped Bar Chart: Mean & Median per Metric
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 def fig_mean_median_bars(data: pd.DataFrame, output_dir: str):
     schedulers = ordered_schedulers(data)
     metric_cols = [m for m in METRICS if m in data.columns]
@@ -238,9 +240,9 @@ def fig_mean_median_bars(data: pd.DataFrame, output_dir: str):
     save(fig, output_dir, "02_mean_median_bars")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 # FIGURE 3 – Box Plots: Distribution per Metric
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 def fig_boxplots(data: pd.DataFrame, output_dir: str):
     metric_cols = [m for m in METRICS if m in data.columns]
     schedulers = ordered_schedulers(data)
@@ -271,9 +273,9 @@ def fig_boxplots(data: pd.DataFrame, output_dir: str):
     save(fig, output_dir, "03_boxplots")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIGURE 5 – Effect of Context Switch Time on Each Metric
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
+# FIGURE 4 – Effect of Context Switch Time on Each Metric
+# =============================================================================
 def fig_switch_time_effect(data: pd.DataFrame, output_dir: str):
     metric_cols = [m for m in METRICS if m in data.columns]
     schedulers = ordered_schedulers(data)
@@ -304,17 +306,17 @@ def fig_switch_time_effect(data: pd.DataFrame, output_dir: str):
         ax.legend(fontsize=8)
 
     plt.tight_layout()
-    save(fig, output_dir, "05_switch_time_effect")
+    save(fig, output_dir, "04_switch_time_effect")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIGURE 6 – Waiting Time CDF (Starvation / Fairness Check)
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
+# FIGURE 5 – Waiting Time CDF (Starvation / Fairness Check)
+# =============================================================================
 def fig_cdf_waiting(data: pd.DataFrame, output_dir: str):
     schedulers = ordered_schedulers(data)
     fig, ax = plt.subplots(figsize=(8, 5))
     fig.suptitle("CDF of Waiting Time per Scheduler\n"
-                 "(Long tails → starvation risk; steep rise → fairness)",
+                 "(Long tails -> starvation risk; steep rise -> fairness)",
                  fontsize=12, fontweight="bold")
 
     for sched in schedulers:
@@ -330,12 +332,12 @@ def fig_cdf_waiting(data: pd.DataFrame, output_dir: str):
     ax.text(ax.get_xlim()[1] * 0.01, 0.96, "95th percentile line",
             fontsize=7.5, color="gray")
     plt.tight_layout()
-    save(fig, output_dir, "06_cdf_waiting_time")
+    save(fig, output_dir, "05_cdf_waiting_time")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIGURE 8 – Throughput (Orders Completed per Unit Time)
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
+# FIGURE 6 – Throughput (Orders Completed per Unit Time)
+# =============================================================================
 def fig_throughput(data: pd.DataFrame, output_dir: str):
     schedulers = ordered_schedulers(data)
     switch_times = sorted(data["SwitchTime"].unique())
@@ -369,12 +371,12 @@ def fig_throughput(data: pd.DataFrame, output_dir: str):
         ax.set_xticklabels(schedulers, fontsize=9)
 
     plt.tight_layout()
-    save(fig, output_dir, "08_throughput")
+    save(fig, output_dir, "06_throughput")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIGURE 9 – Heatmap: Mean Waiting Time [Scheduler × Switch Time]
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
+# FIGURE 7 – Heatmap: Mean Waiting Time [Scheduler × Switch Time]
+# =============================================================================
 def fig_heatmap(data: pd.DataFrame, output_dir: str):
     metric_cols = [m for m in METRICS if m in data.columns]
     schedulers  = ordered_schedulers(data)
@@ -382,7 +384,7 @@ def fig_heatmap(data: pd.DataFrame, output_dir: str):
     n = len(metric_cols)
 
     fig, axes = plt.subplots(1, n, figsize=(4.5 * n, 4))
-    fig.suptitle("Mean Metric Values — Heatmap [Scheduler × Switch Time]\n"
+    fig.suptitle("Mean Metric Values — Heatmap [Scheduler x Switch Time]\n"
                  "(Darker = worse)",
                  fontsize=12, fontweight="bold")
 
@@ -400,12 +402,12 @@ def fig_heatmap(data: pd.DataFrame, output_dir: str):
         ax.set_yticklabels(ax.get_yticklabels(), rotation=0, fontsize=9)
 
     plt.tight_layout()
-    save(fig, output_dir, "09_heatmap")
+    save(fig, output_dir, "07_heatmap")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
-# FIGURE 11 – Radar / Spider Chart: Normalised Metric Comparison
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
+# FIGURE 8 – Radar / Spider Chart: Normalized Metric Comparison
+# =============================================================================
 def fig_radar(data: pd.DataFrame, output_dir: str):
     metric_cols = [m for m in METRICS if m in data.columns]
     schedulers  = ordered_schedulers(data)
@@ -417,11 +419,11 @@ def fig_radar(data: pd.DataFrame, output_dir: str):
     fig = plt.figure(figsize=(7, 7))
     ax = fig.add_subplot(111, polar=True)
     polar_ax = cast(PolarAxes, ax)
-    fig.suptitle("Normalised Performance Radar\n"
-                 "(Smaller area = better overall; normalised 0-1 vs worst)",
+    fig.suptitle("Normalized Performance Radar\n"
+                 "(Smaller area = better overall; normalized 0-1 vs worst)",
                  fontsize=12, fontweight="bold", y=1.01)
 
-    # Compute per-metric max for normalisation (higher val = worse)
+    # Compute per-metric max for normalization (higher values are worse)
     maxima = {m: data[m].max() for m in metric_cols}
 
     for sched in schedulers:
@@ -437,12 +439,12 @@ def fig_radar(data: pd.DataFrame, output_dir: str):
     polar_ax.set_yticklabels(["20%", "40%", "60%", "80%", "100%"], fontsize=7)
     polar_ax.legend(loc="upper right", bbox_to_anchor=(1.35, 1.1), fontsize=9)
     plt.tight_layout()
-    save(fig, output_dir, "11_radar_chart")
+    save(fig, output_dir, "08_radar_chart")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 # MAIN
-# ─────────────────────────────────────────────────────────────────────────────
+# =============================================================================
 def main():
     RESULTS_DIR: str = "./results"
     OUTPUT_DIR: str = "./plots"
@@ -456,11 +458,11 @@ def main():
     fig_summary_table(data,       OUTPUT_DIR)   # 01
     fig_mean_median_bars(data,    OUTPUT_DIR)   # 02
     fig_boxplots(data,            OUTPUT_DIR)   # 03
-    fig_switch_time_effect(data,  OUTPUT_DIR)   # 05
-    fig_cdf_waiting(data,         OUTPUT_DIR)   # 06
-    fig_throughput(data,          OUTPUT_DIR)   # 08
-    fig_heatmap(data,             OUTPUT_DIR)   # 09
-    fig_radar(data,               OUTPUT_DIR)   # 11
+    fig_switch_time_effect(data,  OUTPUT_DIR)   # 04
+    fig_cdf_waiting(data,         OUTPUT_DIR)   # 05
+    fig_throughput(data,          OUTPUT_DIR)   # 06
+    fig_heatmap(data,             OUTPUT_DIR)   # 07
+    fig_radar(data,               OUTPUT_DIR)   # 08
 
     print(f"\n All figures saved to '{OUTPUT_DIR}/'")
     print("=" * 60)
