@@ -152,3 +152,5 @@ With respect to the **95th percentile line**, it can be seen that:
 > Winner: **SJF**.
 
 ## Conclusions
+
+After collecting all the data, performing the analysis, and comparing all results as outlined above, it is clear that the **optimal** scheduling algorithm to use is **Shortest Job First (SJF)**, since it performs the best across most of the plots. While **SJF** is not the single best algorithm, and doesn't perform the best everywhere, it performs the most optimally compared to all the other algorithms in this scenario.
