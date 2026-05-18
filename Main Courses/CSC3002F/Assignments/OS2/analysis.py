@@ -20,11 +20,8 @@ import sys
 import warnings
 warnings.filterwarnings("ignore")
 
-from typing import cast
-
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.projections.polar import PolarAxes
 from matplotlib.ticker import MaxNLocator
 
 import numpy as np
