@@ -37,7 +37,12 @@ The metrics recorded in each CSV file are:
 
 > **Important:** The `recordCompletedOrder` function must be marked as `synchronized` since it performs **I/O** operations and can be called from multiple threads.
 
+<br>
+<br>
+<br>
+
 To actually record the data, the simulation was run multiple times on a range of different inputs using the shell script [tests.sh](tests.sh):
+
 
 ``` bash
 readonly SEED=42
@@ -72,7 +77,7 @@ The data generated was validated by running the simulation on two separate machi
 
 ### Reporting
 
-To properly represent and report the recorded data, the Python script [analysis.py](analysis.py) was written, which uses `matplotlib`, `numpy`, `pandas` and `seaborn` to represent the data in a series of plots.
+To properly represent and report the recorded data, the Python script [analysis.py](analysis.py) was written, which uses `Matplotlib`, `NumPy`, `Pandas` and `Seaborn` to represent the data in a series of plots.
 
 The different plots generated are:
 
@@ -83,9 +88,10 @@ The different plots generated are:
 - **Plot 5**: Waiting time CDF (starvation & fairness check)
 - **Plot 6**: Throughput (orders completed per unit time)
 - **Plot 7**: Heatmap (mean waiting time)
-- **Plot 8**: Radar chart (normalized metric comparison)
 
 ---
+
+<br>
 
 ## Results
 
@@ -147,7 +153,7 @@ With respect to the **95th percentile line**, it can be seen that:
 
 ![07_heatmap]( plots/07_heatmap.png)
 
-`Plot 7` depicts a heatmap of the mean metric values, where darker-coloured cells indicate worse performance. It can be seen that **SJF** is consistently the lightest colour at every switch time, with **Priority** being close behind it. **FCFS** and **MLFQ** are perfroming the worst.
+`Plot 7` depicts a heatmap of the mean metric values, where darker-coloured cells indicate worse performance. It can be seen that **SJF** is consistently the lightest colour at every switch time, with **Priority** being close behind it. **FCFS** and **MLFQ** are performing the worst.
 
 > Winner: **SJF**.
 
