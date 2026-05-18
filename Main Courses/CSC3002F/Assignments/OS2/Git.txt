@@ -1,0 +1,143 @@
+commit b78c6944b9a1d2d5b2d2231934cadbd8c5aa87ac
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:45:26 2026 +0200
+
+    Generate final report from README.md
+
+commit 076ef391c1eb2b57ae4c8ff08bf9c763c79b04b5
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:44:39 2026 +0200
+
+    README.md: Formatting and proofing
+
+commit 754e1c79c2c4cdd2b4bab2b82cc674cd342cc52a
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:29:13 2026 +0200
+
+    README.md: Complete AI usage section
+
+commit 4a023767d5793bb0db9b5405ad7b62b555cc8550
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:25:09 2026 +0200
+
+    analysis.py: Remove unused imports
+
+commit a9d54184a16b4fb2d78f069e8bb74e8b00bc3770
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:14:40 2026 +0200
+
+    README.md Complete conclusions section
+
+commit 3a6cac810f388086cb7a93dbdd99acf0c9138bd3
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:06:01 2026 +0200
+
+    README.md: Complete results section
+
+commit f794829208e45000084fb1af2be36320555808fe
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 11:00:23 2026 +0200
+
+    Remove radar chart plot
+
+commit b150da3f73f14935e31c061e32fb9a52aa96de69
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 18 09:52:24 2026 +0200
+
+    README.md: Complete preamble and methods sections
+
+commit f410fc82f01c8de4e2f4f7f48263840548058d82
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 15:57:20 2026 +0200
+
+    Begin writing README.md
+
+commit 5d50c6dd191b71c11d95a34e89bfd0885cba5f8f
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 15:33:31 2026 +0200
+
+    Reorder plot figure numbers
+
+commit bb6e3a0e27188fc0ff3933dc3c7f595d1b1b666f
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 15:21:10 2026 +0200
+
+    Remove code generating unused plots
+
+commit 1a20b33fce267b5e625a18402b03dbeb7c584242
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 12:24:23 2026 +0200
+
+    Add throughput and heatmap plots
+
+commit 83f2531fa9dd7469d48cc682d3164fcac9f17e37
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 12:19:51 2026 +0200
+
+    Generate plots
+
+commit 042bb40937d1a73b3f76b67dc60b4796c1a8b755
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 12:19:34 2026 +0200
+
+    Fix color palette in analysis.py
+
+commit 99fe186d78be67e440c1e01b455ced370a29ee74
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sun May 17 11:59:33 2026 +0200
+
+    Write analysis.py
+
+commit 44dd32b4bc00ba786538e2416c8cd6c8dd133704
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 23:45:20 2026 +0200
+
+    Re-run tests following d521562
+
+commit d521562a20713549c236108f5474d25599f32f94
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 23:30:11 2026 +0200
+
+    Fix: tests.sh missing value for SEED
+
+commit 2cda08a3255baf599b01d093797162c1513fbae9
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 21:25:48 2026 +0200
+
+    Run tests
+
+commit 0eead64b2fc20035c55be9a011faa90ee47e35df
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 19:53:12 2026 +0200
+
+    Write tests.sh
+
+commit e92e4d971ca15015993060360901c783bcafd585
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 19:32:10 2026 +0200
+
+    Append switchTime to csv file names
+
+commit f4a967f32ac423d1cd739334a711a8e11ea345e7
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 19:13:16 2026 +0200
+
+    Remove unnecessary schedulerName field from recordCompletedOrder()
+
+commit f29e998c59ffeeb661106f3b1a23301337a17bb0
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 19:11:00 2026 +0200
+
+    Implement recordCompletedOrder()
+
+commit 730a79144f76b4690cc31fcfcc30ff3940849ec7
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Sat May 16 18:42:27 2026 +0200
+
+    Apply .editorconfig style
+
+commit 54b8067600ec7b730f376a0e972d542373cc20c0
+Author: Adam Foflonker <87928802+DnA-IntRicate@users.noreply.github.com>
+Date:   Mon May 4 18:03:40 2026 +0200
+
+    Add project files
