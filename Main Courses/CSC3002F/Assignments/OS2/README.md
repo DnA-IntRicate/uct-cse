@@ -89,9 +89,66 @@ The different plots generated are:
 
 ## Results
 
+### **Plot 1**
 
+![01_summary_table](plots/01_summary_table.png)
 
+In `plot 1`, it is evident that **SJF** has the lowest mean, median and standard deviation across the board.
 
+> Winner: **SJF**.
 
+### **Plot 2**
+
+![02_mean_median_bars](plots/02_mean_median_bars.png)
+
+`Plot 2` depicts a more visual representation of the data seen in `plot 1`. This plot indicates that **SJF** has the lowest average *waiting*, *turnaround* and *response* times.
+
+> Winner: **SJF**.
+
+### **Plot 3**
+
+![03_boxplots]( plots/03_boxplots.png)
+
+`Plot 3` shows the distribution of each metric. It can be seen that under **SJF**, waiting time was very low - and it was almost non-existent under **Priority**. This likely means that low-priority orders are experiencing starvation under the **Priority** scheduler. **FCFS** and **MLFQ** have the most variance.
+
+> Winner: **Priority**.
+
+### **Plot 4**
+
+![04_switch_time_effect]( plots/04_switch_time_effect.png)
+
+`Plot 4` depicts the effect of **context switch time** on performance metrics. Evidently, **context switch time** seems to have very little effect on the performance of the schedulers.
+
+> Winner: None
+
+### **Plot 5**
+
+![05_cdf_waiting_time]( plots/05_cdf_waiting_time.png)
+
+`Plot 5` shows a cumulative distribution function of the waiting time per scheduler.
+
+With respect to the **95th percentile line**, it can be seen that:
+
+- **FCFS** starts slow but finishes relatively early - reflecting the *convoy effect*.
+- **SJF** and **Priority** crawl almost flat, indicating *starvation*.
+- **MLFQ** performed the best, no apparent *starvation* and high *fairness*.
+
+> Winner: **MLFQ**.
+
+### **Plot 6**
+
+![06_throughput]( plots/06_throughput.png)
+
+`Plot 6` shows the number of completed orders over the total elapsed time for each different **context switch time** tested. All the schedulers performed relatively the same, with **SJF** having the highest throughput overall - but not that much higher than the rest.
+
+> Winner: **SJF**.
+
+### **Plot 7**
+
+![07_heatmap]( plots/07_heatmap.png)
+
+`Plot 7` depicts a heatmap of the mean metric values, where darker-coloured cells indicate worse performance. It can be seen that **SJF** is consistently the lightest colour at every switch time, with **Priority** being close behind it. **FCFS** and **MLFQ** are perfroming the worst.
+
+> Winner: **SJF**.
 
 ## Conclusions
