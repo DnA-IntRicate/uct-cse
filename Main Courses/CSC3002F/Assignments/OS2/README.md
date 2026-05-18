@@ -151,6 +151,14 @@ With respect to the **95th percentile line**, it can be seen that:
 
 > Winner: **SJF**.
 
-## Conclusions
+---
+
+## Conclusion
 
 After collecting all the data, performing the analysis, and comparing all results as outlined above, it is clear that the **optimal** scheduling algorithm to use is **Shortest Job First (SJF)**, since it performs the best across most of the plots. While **SJF** is not the single best algorithm, and doesn't perform the best everywhere, it performs the most optimally compared to all the other algorithms in this scenario.
+
+---
+
+## Statement on AI Usage
+
+Claude Sonnet 4.6 was used for coding assistance in writing [analysis.py](analysis.py), specifically for help in using the `NumPy`, `Pandas` and `Matplotlib` libraries.
