@@ -406,43 +406,6 @@ def fig_heatmap(data: pd.DataFrame, output_dir: str):
 
 
 # =============================================================================
-# FIGURE 8 – Radar / Spider Chart: Normalized Metric Comparison
-# =============================================================================
-def fig_radar(data: pd.DataFrame, output_dir: str):
-    metric_cols = [m for m in METRICS if m in data.columns]
-    schedulers  = ordered_schedulers(data)
-    labels = [METRICS[m].replace(" (ms)", "") for m in metric_cols]
-    N = len(labels)
-    angles = np.linspace(0, 2 * np.pi, N, endpoint=False).tolist()
-    angles += angles[:1]
-
-    fig = plt.figure(figsize=(7, 7))
-    ax = fig.add_subplot(111, polar=True)
-    polar_ax = cast(PolarAxes, ax)
-    fig.suptitle("Normalized Performance Radar\n"
-                 "(Smaller area = better overall; normalized 0-1 vs worst)",
-                 fontsize=12, fontweight="bold", y=1.01)
-
-    # Compute per-metric max for normalization (higher values are worse)
-    maxima = {m: data[m].max() for m in metric_cols}
-
-    for sched in schedulers:
-        sub = data[data["Scheduler"] == sched]
-        vals = [sub[m].mean() / maxima[m] for m in metric_cols]
-        vals += vals[:1]
-        polar_ax.plot(angles, vals, color=sched_color(sched), linewidth=2, label=sched)
-        polar_ax.fill(angles, vals, color=sched_color(sched), alpha=0.12)
-
-    polar_ax.set_thetagrids(np.degrees(angles[:-1]), labels, fontsize=9)
-    polar_ax.set_ylim(0, 1)
-    polar_ax.set_yticks([0.2, 0.4, 0.6, 0.8, 1.0])
-    polar_ax.set_yticklabels(["20%", "40%", "60%", "80%", "100%"], fontsize=7)
-    polar_ax.legend(loc="upper right", bbox_to_anchor=(1.35, 1.1), fontsize=9)
-    plt.tight_layout()
-    save(fig, output_dir, "08_radar_chart")
-
-
-# =============================================================================
 # MAIN
 # =============================================================================
 def main():
@@ -462,7 +425,6 @@ def main():
     fig_cdf_waiting(data,         OUTPUT_DIR)   # 05
     fig_throughput(data,          OUTPUT_DIR)   # 06
     fig_heatmap(data,             OUTPUT_DIR)   # 07
-    fig_radar(data,               OUTPUT_DIR)   # 08
 
     print(f"\n All figures saved to '{OUTPUT_DIR}/'")
     print("=" * 60)
