@@ -14,13 +14,14 @@
 #define DELAY2 1000
 
 typedef uint8_t flag_t;
-flag_t startFlag = FALSE;
-flag_t resetState = TRUE;
-uint8_t count = 1;
+flag_t g_start_flag = FALSE;
+flag_t g_reset_state = TRUE;
 
-void initGPIO(void);
+uint8_t g_count = 1;
+
+void init_gpio(void);
 void delay_1s(void);
-void checkPB(void);
+void check_pb(void);
 void counter(void);
 void display(void);
 
@@ -29,9 +30,6 @@ void write_leds(uint8_t pattern);
 
 int main(void)
 {
-    // Initializes system clock to correct configuration
-    // init_clock();
-
     // Splash screen
     init_LCD();
     lcd_command(TWOLINE_MODE | CLEAR);
@@ -40,30 +38,30 @@ int main(void)
     lcd_putstring("Foflonker");
 
     // Init GPIO
-    initGPIO();
+    init_gpio();
 
     while (TRUE)
     {
-        checkPB();
+        check_pb();
         display();
 
         // Q6: Testing delay_1s()
         // GPIOB->ODR ^= UINT8_MAX;
         // delay_1s();
 
-        // Q7: Testing checkPB()
-        // if (startFlag)
+        // Q7: Testing check_pb()
+        // if (g_start_flag)
         //     write_leds(0);
         // else
         //     write_leds(UINT8_MAX);
 
         // Q8: Testing counter()
         // counter();
-        // write_leds(count);
+        // write_leds(g_count);
     }
 }
 
-void initGPIO(void)
+void init_gpio(void)
 {
     RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN;
 
@@ -80,8 +78,8 @@ void initGPIO(void)
     // Test all LEDs
     // GPIOB->BSRR = UINT8_MAX;
 
-    // Display initial count
-    write_leds(count);
+    // Display initial g_count
+    write_leds(g_count);
 }
 
 void delay_1s(void)
@@ -91,27 +89,27 @@ void delay_1s(void)
     {
         for (; j < DELAY2; ++j)
         {
-            checkPB();
+            check_pb();
             __asm__ ("nop");
         }
     }
 }
 
-void checkPB(void)
+void check_pb(void)
 {
     int btn0 = (GPIOA->IDR & GPIO_IDR_0) == 0;
     int btn1 = (GPIOA->IDR & GPIO_IDR_1) == 0;
 
     if (btn0)
     {
-        startFlag = TRUE;
-        resetState = FALSE;
+        g_start_flag = TRUE;
+        g_reset_state = FALSE;
         lcd_command(CLEAR);
     }
     else if (btn1)
     {
-        startFlag = FALSE;
-        resetState = FALSE;
+        g_start_flag = FALSE;
+        g_reset_state = FALSE;
         lcd_command(CLEAR);
     }
 }
@@ -119,15 +117,15 @@ void checkPB(void)
 void counter(void)
 {
     delay_1s();
-    count += 2;
+    g_count += 2;
 }
 
 void display(void)
 {
-    if (resetState)
+    if (g_reset_state)
         return;
 
-    if (startFlag)
+    if (g_start_flag)
     {
         lcd_putstring("Counter");
         lcd_command(LINE_TWO);
@@ -135,7 +133,7 @@ void display(void)
         lcd_command(CURSOR_HOME);
 
         counter();
-        write_leds(count);
+        write_leds(g_count);
     }
     else
     {
