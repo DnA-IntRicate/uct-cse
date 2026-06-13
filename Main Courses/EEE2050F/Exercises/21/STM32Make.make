@@ -6,7 +6,7 @@
 # Generic Makefile (based on gcc)
 #
 # ChangeLog :
-#   2024-04-27 - Added env file inclusion.
+#   2024-04-27 - Added env file inclusion. 
 #                Added way to overide: build directory, target name and optimisation.
 #                Added GCC_PATH by env file to not make the makefile machine dependent.
 #                Currently folder structure in build directory is preserved
@@ -147,17 +147,17 @@ OPENOCD ?= openocd
 CPU = -mcpu=cortex-m0
 
 # fpu
-FPU =
+FPU = 
 
 # float-abi
-FLOAT-ABI =
+FLOAT-ABI = 
 
 # mcu
 MCU = $(CPU) -mthumb $(FPU) $(FLOAT-ABI)
 
 # macros for gcc
 # AS defines
-AS_DEFS =
+AS_DEFS = 
 
 # C defines
 C_DEFS =  \
@@ -204,16 +204,16 @@ C_INCLUDES =  \
 
 
 # compile gcc flags
-ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(C_INCLUDES) $(C_DEFS) $(OPTIMIZATION_FLAGS)
+ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(C_INCLUDES) $(C_DEFS) $(OPTIMIZATION_FLAGS) 
 
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPTIMIZATION_FLAGS)
 
 CXXFLAGS = $(MCU) $(CXX_DEFS) $(C_INCLUDES) $(OPTIMIZATION_FLAGS)
 
 # Add additional flags
-CFLAGS += -Wall -fdata-sections -ffunction-sections
-ASFLAGS += -Wall -fdata-sections -ffunction-sections
-CXXFLAGS +=
+CFLAGS += -Wall -fdata-sections -ffunction-sections 
+ASFLAGS += -Wall -fdata-sections -ffunction-sections 
+CXXFLAGS += 
 
 # Generate dependency information
 CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
@@ -232,12 +232,12 @@ CXXFLAGS += $(ASSEMBLER_LIST_OUTPUT_FLAG)
 LDSCRIPT = STM32F051C6Tx_FLASH.ld
 
 # libraries
-LIBS = -lc -lm -lnosys
+LIBS = -lc -lm -lnosys 
 LIBDIR = \
 
 
 # Additional LD Flags from config file
-ADDITIONALLDFLAGS = -specs=nano.specs
+ADDITIONALLDFLAGS = -specs=nano.specs 
 
 LDFLAGS = $(MCU) $(ADDITIONALLDFLAGS) -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIRECTORY)/$(TARGET).map,--cref -Wl,--gc-sections
 
@@ -267,14 +267,14 @@ vpath %.S $(sort $(dir $(ASM_SOURCES)))
 #######################################
 # note needs to be located as the first rule to be the default build rule
 # default action: build all
-all: $(RELEASE_DIRECTORY)/$(TARGET).elf $(RELEASE_DIRECTORY)/$(TARGET).hex $(RELEASE_DIRECTORY)/$(TARGET).bin $(RELEASE_DIRECTORY)/$(TARGET).lss
+all: $(RELEASE_DIRECTORY)/$(TARGET).elf $(RELEASE_DIRECTORY)/$(TARGET).hex $(RELEASE_DIRECTORY)/$(TARGET).bin $(RELEASE_DIRECTORY)/$(TARGET).lss 
 
 
 # C build
 $(RELEASE_DIRECTORY)/%.o: %.c STM32Make.make | $(RELEASE_DIRECTORY)
 	$(CC) -c $(CFLAGS) $< -o $@
 
-# C++ build
+# C++ build 
 $(RELEASE_DIRECTORY)/%.o: %.cc STM32Make.make | $(RELEASE_DIRECTORY)
 	$(CXX) -c $(CXXFLAGS) $< -o $@
 
@@ -349,7 +349,7 @@ clean:
 # custom makefile rules
 #######################################
 
-
+	
 #######################################
 # dependencies
 #######################################
