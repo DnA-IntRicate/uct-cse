@@ -3,7 +3,7 @@
         {
             "showDevDebugOutput": "parsed",
             "cwd": "${workspaceRoot}",
-            "executable": "./build/debug/EEE2046Prac.elf",
+            "executable": "./build/debug/EEE2046Ex21.elf",
             "name": "Debug STM32",
             "request": "launch",
             "type": "cortex-debug",
@@ -17,7 +17,7 @@
         {
             "showDevDebugOutput": "parsed",
             "cwd": "${workspaceRoot}",
-            "executable": "./build/debug/EEE2046Prac.elf",
+            "executable": "./build/debug/EEE2046Ex21.elf",
             "name": "Attach STM32",
             "request": "attach",
             "type": "cortex-debug",
