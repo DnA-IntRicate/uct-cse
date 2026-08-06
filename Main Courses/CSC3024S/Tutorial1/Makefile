@@ -1,25 +1,30 @@
-INCLUDE = include
-SRC		= src
-BIN_DIR	= bin
+INC_DIR	:= include
+SRC_DIR	:= src
+BIN_DIR	:= bin
 
-CXX		= g++
-FLAGS	= -std=c++20 -I$(INCLUDE)
+TARGET := $(BIN_DIR)/driver
 
-all: driver
-	$(BIN_DIR)/driver
+CXX         := g++
+CXXFLAGS	:= -std=c++20 -I$(INC_DIR)
 
-driver: factorial.o driver.o | $(BIN_DIR)
-	$(CXX) $(BIN_DIR)/factorial.o $(BIN_DIR)/driver.o -o $(BIN_DIR)/driver $(FLAGS)
+SOURCES := $(wildcard $(SRC_DIR)/*.cpp)
+OBJECTS := $(patsubst $(SRC_DIR)/%.cpp,$(BIN_DIR)/%.o,$(SOURCES))
 
-factorial.o: $(SRC)/factorial.cpp | $(BIN_DIR)
-	$(CXX) -c $(SRC)/factorial.cpp -o $(BIN_DIR)/factorial.o $(FLAGS)
+all: $(TARGET)
 
-driver.o: $(SRC)/driver.cpp | $(BIN_DIR)
-	$(CXX) -c $(SRC)/driver.cpp -o $(BIN_DIR)/driver.o $(FLAGS)
+run: $(TARGET)
+	./$(TARGET)
+
+$(TARGET): $(OBJECTS)
+	$(CXX) $(OBJECTS) -o $@
+
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(BIN_DIR):
-	mkdir $(BIN_DIR)
+	mkdir -p $(BIN_DIR)
 
 clean:
 	rm -rf $(BIN_DIR)
 
+.PHONY: all run clean
