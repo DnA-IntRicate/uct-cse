@@ -1,8 +1,0 @@
-[Bb]in/
-[Bb]uild/
-[Ii]nt/
-
-# C++ intermediate files
-*.o
-*.d
-
