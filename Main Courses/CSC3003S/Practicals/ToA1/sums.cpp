@@ -6,8 +6,7 @@
 #include <tuple>
 #include <utility>
 
-
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     std::string digits;
     std::cin >> digits;
@@ -49,7 +48,6 @@ int main(int argc, char** argv)
 
     for (const auto& i : answers)
         std::cout << i << '\n';
-
 
     return 0;
 }
