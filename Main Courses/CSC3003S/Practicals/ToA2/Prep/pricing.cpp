@@ -1,55 +1,49 @@
 #include <iostream>
 #include <cstdint>
 
+constexpr uint64_t MAX_POSSIBLE_GEMS = 1000000;
 
-constexpr uint64_t MAX_GEMS = 822467118437ULL;
-
-static uint64_t CostOf(uint64_t gems) noexcept
+constexpr uint64_t CostOfGems(uint64_t gemCount) noexcept
 {
-    uint64_t cost = 0;
-    for (uint64_t j = 1; j < gems;)
-    {
-        const uint64_t quotient = gems / j;
+    uint64_t res = 0;
+    for (uint64_t i = 1; i < gemCount; ++i)
+        res += i * (gemCount / i);
 
-        // Largest j for which gems / j == quotient.
-        const uint64_t last = gems / quotient;
-
-        // Sum of j from [j, last]:
-        //
-        //   j + (j+1) + ... + last
-        //
-        const uint64_t count = last - j + 1;
-        const uint64_t sum = (j + last) * count / 2;
-
-        cost += quotient * sum;
-        j = last + 1;
-    }
-
-    return cost;
+    return res;
 }
 
-static uint64_t NumGems(uint64_t budget) noexcept
+// Returns the max number of gems that can be purchased given our budget 'n'.
+constexpr uint64_t MaxGems(uint64_t n, uint64_t left = 1, uint64_t right = MAX_POSSIBLE_GEMS) noexcept
 {
-    uint64_t begin = 0;
-    uint64_t end = MAX_GEMS;
+    if (left > right)
+        return left - 1;
 
-    while (begin < end)
-    {
-        const uint64_t mid = begin + (end - begin + 1) / 2;
-        if (CostOf(mid) <= budget)
-            begin = mid;
-        else
-            end = mid - 1;
-    }
+    const uint64_t mid = left + (right - left) / 2;
+    if (CostOfGems(mid) > n)
+        return MaxGems(n, left, mid - 1);
 
-    return begin;
+    return MaxGems(n, mid + 1, right);
+
+    // Linear iterative approach
+    //
+    // uint64_t res = 0;
+    // for (uint64_t i = 1; i < MAX_POSSIBLE_GEMS; ++i)
+    // {
+    //     if (CostOfGems(i) >= n)
+    //         break;
+    //
+    //     ++res;
+    // }
+    //
+    // return res;
 }
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     uint64_t N;
     std::cin >> N;
 
-    std::cout << NumGems(N) << '\n';
+    std::cout << MaxGems(N) << '\n';
+
     return 0;
 }
