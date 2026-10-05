@@ -29,7 +29,7 @@ namespace std
 
             // I forgot the golden ratio number used in hashing, so here's whatever this is
             // Please don't ask me about this... I pulled it out of my a$$.
-            return h1 ^ (0x97993ce) | (h2 >> 8);
+            return h1 ^ (0x97993ce) | (h2 << 8);
         }
     };
 }
@@ -45,28 +45,14 @@ struct Cost
 };
 
 constexpr int MinCost(
-    const std::vector<Cost>& costs, 
-    std::unordered_map<std::pair<int, Color>, int>& memo, 
-    int i = 0, 
+    const std::vector<Cost>& costs,
+    std::unordered_map<std::pair<int, Color>, int>& memo,
+    int i = 0,
     Color col = Color::None
 ) noexcept
 {
     if (i >= costs.size())
         return 0;
-
-    if (col == Color::None)
-    {
-        // Greedily choose the cheapest colour if there was no previous house painted
-        const auto& [r, g, b] = costs[i];
-        const int cheapest = std::min({ r, g, b });
-
-        if (r == cheapest)
-            col = Color::Red;
-        else if (g == cheapest)
-            col = Color::Green;
-        else
-            col = Color::Blue;
-    }
 
     const auto key = std::make_pair(i, col);
     if (memo.contains(key))
@@ -106,7 +92,13 @@ int main(int argc, char** argv)
         std::cin >> r >> g >> b;
 
     std::unordered_map<std::pair<int, Color>, int> memo;
-    int minCost = MinCost(costs, memo); minCost = (minCost == 21) ? 20 : minCost; // I think something is wrong with this test case (5)...
+    int minCost = std::min(
+        {
+            MinCost(costs, memo, 0, Color::Red),
+            MinCost(costs, memo, 0, Color::Green),
+            MinCost(costs, memo, 0, Color::Blue)
+        }
+    );
 
     std::println("{}", minCost);
     return 0;
