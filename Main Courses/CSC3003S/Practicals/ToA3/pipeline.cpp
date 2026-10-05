@@ -21,35 +21,31 @@ namespace std
 
             // I forgot the golden ratio number used in hashing, so here's whatever this is
             // Please don't ask me about this... I pulled it out of my a$$.
-            return h1 ^ (0x97993ce) | (h2 >> 8);
+            return h1 ^ (0x97993ce) | (h2 << 8);
         }
     };
 }
 
 constexpr int ComputePath(
-    const std::vector<std::vector<int>>& grid, 
-    std::unordered_map<std::pair<int, int>, int>& memo, 
-    int row = 0, 
+    const std::vector<std::vector<int>>& grid,
+    std::unordered_map<std::pair<int, int>, int>& memo,
+    int row = 0,
     int col = 0
 ) noexcept
 {
-    if (row >= grid.size())
-        return *std::ranges::max_element(grid[row - 1]);
+    if ((row == grid.size() - 1) && (col == grid[0].size() - 1))
+        return grid[row][col];
 
-    if (col >= grid[0].size())
-    {
-        // Get the per-row max
-        int max = 0;
-        for (int i = 0; i < grid.size(); ++i)
-            max = std::max(max, grid[i][0]);
+    if (row == grid.size() - 1)
+        return std::max(grid[row][col], ComputePath(grid, memo, row, col + 1));
 
-        return max;
-    }
+    if (col == grid[0].size() - 1)
+        return std::max(grid[row][col], ComputePath(grid, memo, row + 1, col));
 
     const auto key = std::make_pair(row, col);
     if (memo.contains(key))
         return memo.at(key);
-        
+
     int res = std::max(grid[row][col], std::min(ComputePath(grid, memo, row + 1, col), ComputePath(grid, memo, row, col + 1)));
     memo[key] = res;
 
