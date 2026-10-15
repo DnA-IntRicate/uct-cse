@@ -16,7 +16,7 @@
 
 using coordinate = std::pair<int, int>;
 
-struct Maze 
+struct Maze
 {
     std::vector<std::vector<bool>> grid;  // true = wall, false = path
     unsigned width;
@@ -104,20 +104,14 @@ SolveStats solveMaze(const Maze& maze, std::vector<coordinate>& path);
 
 // BFS specialization
 template <>
-SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate>& path) 
+SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate>& path)
 {
-    //   Step 1: Initialize Containers
-    //   TODO: Create a queue to hold cells to explore (queue of pairs: {x, y})
-    //   TODO: Create a set to track visited cells (set of pairs: {x, y})
-    //   TODO: Create a map to store parent pointers (map from cell to cell)
+    // Step 1: Initialize Containers
     std::queue<coordinate> frontier;
     std::set<coordinate> visited;
     std::map<coordinate, coordinate> parentMap;
 
-    //   Step 2: Start the Exploration
-    //   TODO: Add the starting cell to your queue
-    //   TODO: Mark the starting cell as visited
-    //   TODO: In the parent map, set the start cell's parent to itself
+    // Step 2: Start the Exploration
     const coordinate& start = maze.start;
     const coordinate& goal = maze.end;
 
@@ -125,28 +119,16 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
     visited.emplace(start);
     parentMap[start] = start;
 
-    //   Step 3: Main Loop
-    //   TODO: While the queue is not empty:
-    //   TODO:   - Dequeue a cell from the front
-    //   TODO:   - Check if it's the goal cell. If yes, break out of the loop
-    //   TODO:   - Otherwise, proceed to Step 4
+    // Step 3: Main Loop
     while (!frontier.empty())
     {
         const coordinate cell = frontier.front(); frontier.pop();
         if (cell == goal)
             break;
 
-        //   Step 4: Explore Neighbors
-        //   TODO: For each of the 4 neighbors (up, down, left, right):
-        //   TODO:   - Verify the neighbor is within maze bounds
-        //   TODO:   - Verify it's not a wall (grid value is false)
-        //   TODO:   - Verify it hasn't been visited yet
-        //   TODO:   - If all checks pass:
-        //   TODO:     * Mark it as visited
-        //   TODO:     * Record in the map that this neighbor came from the current cell
-        //   TODO:     * Add it to the queue
+        // Step 4: Explore Neighbors
         const auto& [cellX, cellY] = cell;
-        
+
         std::vector<coordinate> neighbors;
         neighbors.emplace_back(cellX, cellY + 1); // Up
         neighbors.emplace_back(cellX, cellY - 1); // Down
@@ -175,10 +157,6 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
     }
 
     // Step 5: Reconstruct the Path
-    // TODO: Starting from the goal cell, follow the parent map backwards to the start
-    // TODO: Collect all cells into a path vector
-    // TODO: Reverse the path (it's currently in the wrong order)
-    // std::reverse(input.begin(), input.end(), output.end());
     coordinate cell = goal;
     while (true)
     {
@@ -192,12 +170,7 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
     // Reverse the path
     std::reverse(path.begin(), path.end());
 
-    //   Step 6: Calculate Statistics
-    //   TODO: Calculate pathLength (size of your path)
-    //   TODO: Calculate cellsExplored (size of your visited set)
-    //   TODO: Calculate efficiency = Manhattan distance / pathLength
-    //   TODO:   (Manhattan distance = abs(start.x - end.x) + abs(start.y - end.y))
-    //   TODO: Return a SolveStats struct with these values
+    // Step 6: Calculate Statistics
     SolveStats result;
     result.pathLength = static_cast<int>(path.size());
     result.cellsExplored = static_cast<int>(visited.size());
@@ -219,12 +192,12 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
 template<>
 SolveStats solveMaze<SearchMethod::DFS>(const Maze& maze, std::vector<coordinate>& path)
 {
-    //   Step 1: Initialize Containers
+    // Step 1: Initialize Containers
     std::stack<coordinate> frontier; // DFS USES A STACK!
     std::set<coordinate> visited;
     std::map<coordinate, coordinate> parentMap;
 
-    //   Step 2: Start the Exploration
+    // Step 2: Start the Exploration
     const coordinate& start = maze.start;
     const coordinate& goal = maze.end;
 
@@ -232,16 +205,16 @@ SolveStats solveMaze<SearchMethod::DFS>(const Maze& maze, std::vector<coordinate
     visited.emplace(start);
     parentMap[start] = start;
 
-    //   Step 3: Main Loop
+    // Step 3: Main Loop
     while (!frontier.empty())
     {
         const coordinate cell = frontier.top(); frontier.pop();
         if (cell == goal)
             break;
 
-        //   Step 4: Explore Neighbors
+        // Step 4: Explore Neighbors
         const auto& [cellX, cellY] = cell;
-        
+
         std::vector<coordinate> neighbors;
         neighbors.emplace_back(cellX, cellY + 1); // Up
         neighbors.emplace_back(cellX, cellY - 1); // Down
@@ -283,7 +256,7 @@ SolveStats solveMaze<SearchMethod::DFS>(const Maze& maze, std::vector<coordinate
     // Reverse the path
     std::reverse(path.begin(), path.end());
 
-    //   Step 6: Calculate Statistics
+    // Step 6: Calculate Statistics
     SolveStats result;
     result.pathLength = static_cast<int>(path.size());
     result.cellsExplored = static_cast<int>(visited.size());
