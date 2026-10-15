@@ -158,14 +158,11 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
 
     // Step 5: Reconstruct the Path
     coordinate cell = goal;
-    while (true)
-    {
+    for (; cell != start; cell = parentMap.at(cell))
         path.push_back(cell);
-        cell = parentMap.at(cell);
 
-        if (cell == start)
-            break;
-    }
+    // Add the start to path
+    path.push_back(start);
 
     // Reverse the path
     std::reverse(path.begin(), path.end());
@@ -183,6 +180,7 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
 
     return result;
 }
+
 // ============================================================================
 // PART 2: DFS SOLVER
 // ============================================================================
@@ -244,14 +242,11 @@ SolveStats solveMaze<SearchMethod::DFS>(const Maze& maze, std::vector<coordinate
 
     // Step 5: Reconstruct the Path
     coordinate cell = goal;
-    while (true)
-    {
+    for (; cell != start; cell = parentMap.at(cell))
         path.push_back(cell);
-        cell = parentMap.at(cell);
 
-        if (cell == start)
-            break;
-    }
+    // Add the start to path
+    path.push_back(start);
 
     // Reverse the path
     std::reverse(path.begin(), path.end());
