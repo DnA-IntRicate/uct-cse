@@ -99,11 +99,11 @@ enum class SearchMethod {
 };
 
 // Template stub
-template <SearchMethod method>
+template<SearchMethod method>
 SolveStats solveMaze(const Maze& maze, std::vector<coordinate>& path);
 
 // BFS specialization
-template <>
+template<>
 SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate>& path)
 {
     // Step 1: Initialize Containers
@@ -186,7 +186,7 @@ SolveStats solveMaze<SearchMethod::BFS>(const Maze& maze, std::vector<coordinate
 // ============================================================================
 
 // DFS specialization
-// I know I know... I copy-pasted and thats very but... Oh well, lol.
+// I know I know... I copy-pasted and thats very bad but... Oh well, lol.
 template<>
 SolveStats solveMaze<SearchMethod::DFS>(const Maze& maze, std::vector<coordinate>& path)
 {
