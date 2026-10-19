@@ -1,14 +1,10 @@
 -- Question 1
 -- Adam Foflonker (FFLADA001)
 -- 19 Oct 2026
-module Main where -- TODO(Adam): The module must be named Q1Ans
-
-import Data.Maybe (catMaybes)
-import Data.Tree (Tree(..), drawTree)
-import Data.List (intercalate)
+module Q1Ans where
 
 -- Q: 1.1
-data Rat = Rat { ratName :: String } deriving (Show, Eq)
+data Rat = Rat { ratName :: String } deriving Show
 
 -- Q: 1.2
 data Dog = Dog { dhp :: Int, ddmg :: Int, rat :: Maybe Rat } deriving Show
@@ -30,32 +26,16 @@ data Room = Room RoomContents (Maybe Room) (Maybe Room) deriving Show
 -- 3. Continue: be able to continue in the dungeon; alive but not free yet.
 data VisitResult = Victory | Death | Continue Dog deriving Show
 
--- We need to be able to compare the results of dogs entering rooms
--- That way, we can say whether going left is a better choice than right or not
--- Once we have that, we can begin to find out the overall best path through the dungeon.
--- We define Ord here such that x <= y, means that x is a worse result than y for our dog.
-instance Ord VisitResult where
-    a <= b
-      | a == b = True      -- matches a <= b IF a == b.
+-- Helper for checking Maybe values
+isJust :: Maybe a -> Bool
+isJust Nothing  = False
+isJust (Just _) = True
+hasRat dog = isJust (rat dog)
 
-      -- Q: 1.5
-      -- If both paths continue, the best one is when the dog has the most health
-      -- Dogs without a rat are less than dogs with a rat if their healths are equal
-        | (Continue dog) <- a, (Continue dog') <- b =
-            if (dhp dog) == (dhp dog') then
-                fmap ratName (rat dog) <= fmap ratName (rat dog')
-            else
-                (dhp dog) < (dhp dog')
-
-      -- Now we've ruled out == from <=, we just need to implement < for the rest
-
-      -- Death is worse than anything else, and anything is better than Death
-      | Death <- a = True  -- matches Death <= any
-      | Death <- b = False -- matches any <= Death
-
-      -- Victory is better than anything else, and anything is worse than Victory
-      | Victory <- b = True  -- matches any <= Victory
-      | Victory <- a = False -- matches Victory <= any
+-- Q: 1.4
+-- Check if the two dogs both have rats. If not, they're unequal.
+instance Eq Dog where
+    a == b = (dhp a == dhp b) && (hasRat a == hasRat b)
 
 -- To implement Ord we also need to implement Eq.
 -- Our ddmg shouldn't ever change, so we only compare HP here
@@ -67,10 +47,26 @@ instance Eq VisitResult where
     (Continue a) == (Continue b) = a == b
     _ == _                       = False
 
--- Q: 1.4
--- Check if the two dogs both have rats. If not, they're unequal.
-instance Eq Dog where
-    a == b = (rat a == rat b) && (dhp a == dhp b)
+-- We need to be able to compare the results of dogs entering rooms
+-- That way, we can say whether going left is a better choice than right or not
+-- Once we have that, we can begin to find out the overall best path through the dungeon.
+-- We define Ord here such that x <= y, means that x is a worse result than y for our dog.
+instance Ord VisitResult where
+    a <= b
+      | a == b = True      -- matches a <= b IF a == b.
+
+      -- Q: 1.5
+      -- If both paths continue, the best one is when the dog has the most health
+      -- Dogs without a rat are less than dogs with a rat if their healths are equal
+      -- Ord for tuple as used here compares the two first elems. If they are equal, it compares the second elems. So here the HP
+      -- takes precedence over the amount of rats
+      | (Continue dog) <- a, (Continue dog') <- b = (dhp dog, hasRat dog) <= (dhp dog', hasRat dog')
+
+      -- Now we've ruled out == from <=, we just need to implement < for the rest
+      | Death <- a = True  -- matches Death <= any
+      | Death <- b = False -- matches any <= Death
+      | Victory <- b = True  -- matches any <= Victory
+      | Victory <- a = False -- matches Victory <= any
 
 -- Find the result of our dog fighting a monster (recursive)
 fight :: Dog -> Monster -> VisitResult
