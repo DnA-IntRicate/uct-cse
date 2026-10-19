@@ -1,0 +1,114 @@
+-- Functional programming practical test
+-- Question 1
+-- Adam Foflonker (FFLADA001)
+-- 19 Oct 2026
+module Q1Ans where
+
+import Data.Maybe (catMaybes)
+
+-- Health type
+data Health = Hp { hpv :: Int } deriving (Show, Eq)
+
+hpVal :: Health -> Int
+hpVal health = hpv health
+
+-- Damage type
+data Damage = Dmg { dmv :: Int } deriving Show
+
+dmgVal :: Damage -> Int
+dmgVal damage = dmv damage
+
+-- Subtract the given damage from the given health
+ouch :: Health -> Damage -> Health
+ouch health damage = Hp { hpv = hpVal health - dmgVal damage }
+
+-- Add the given amount of health to the given amount
+heal :: Health -> Health -> Health
+heal h1 h2 = Hp { hpv = hpVal h1 + hpVal h2 }
+
+-- Augmented Dog
+data Dog = Dog { dhp :: Health, ddmg :: Damage } deriving Show
+
+-- Augmented Monster
+data Monster = Monster { mhp :: Health, mdmg :: Damage } deriving Show
+
+-- A room has contents, and might branch into two more rooms.
+data RoomContents = Fight Monster | Heal Health | Empty | Escape deriving Show
+data Room = Room RoomContents (Maybe Room) (Maybe Room) deriving Show
+
+-- Directly copied from baseGame
+data VisitResult = Victory | Death | Continue Dog deriving Show
+
+-- We need to be able to compare the results of dogs entering rooms.
+instance Ord VisitResult where
+    a <= b
+      | a == b = True -- matches a <= b IF a == b.
+
+      -- If both paths continue, the best one is when the dog has the most health
+      | (Continue dog) <- a, (Continue dog') <- b = hpVal (dhp dog) <= hpVal (dhp dog')
+
+      | Death <- a = True  -- matches Death <= any
+      | Death <- b = False -- matches any <= Death
+      | Victory <- b = True  -- matches any <= Victory
+      | Victory <- a = False -- matches Victory <= any
+
+-- To implement Ord we also need to implement Eq.
+instance Eq VisitResult where
+    Victory      == Victory      = True
+    Death        == Death        = True
+    (Continue a) == (Continue b) = (dhp a) == (dhp b)
+    _ == _                       = False
+
+-- Find the result of our dog fighting a monster
+fight :: Dog -> Monster -> VisitResult
+fight dog mon
+  | hpVal (dhp dog) <= 0 = Death
+  | hpVal (mhp mon) <= 0 = Continue dog
+  | otherwise    = fight dog' mon'
+    where
+  dog' = (dog { dhp = ouch (dhp dog) (mdmg mon) })
+  mon' = (mon) { mhp = ouch (mhp mon) (ddmg dog)}
+
+-- Find the result of our dog visiting a room.
+visitRoom :: Dog -> RoomContents -> VisitResult
+visitRoom dog room = go room
+    where 
+  go (Fight monster) = fight dog monster
+  go (Heal hp)       = Continue dog { dhp = heal (dhp dog) hp }
+  go Escape          = Victory
+  go Empty           = Continue dog
+
+-- Directly copied from baseGame
+crawl :: Dog -> Room -> VisitResult
+crawl dog (Room this left right) = soln
+    where 
+  soln = case (visitRoom dog this) of
+              Continue dog' -> fork dog' left right
+              Victory       -> Victory
+              Death         -> Death
+
+-- Directly copied from baseGame
+fork :: Dog -> Maybe Room -> Maybe Room -> VisitResult
+fork dog leftRoom rightRoom = bestPath
+    where
+  bestPath   = maximum validPaths
+  validPaths = catMaybes [leftFirst, rightFirst, leftOnly, rightOnly, Just $ Continue dog]
+
+  leftFirst  = fmap (uncurry $ crawlBoth dog) (both leftRoom rightRoom)
+  rightFirst = fmap (uncurry $ crawlBoth dog) (both rightRoom leftRoom)
+  leftOnly   = fmap (crawl dog) leftRoom
+  rightOnly  = fmap (crawl dog) rightRoom
+
+-- Directly copied from baseGame
+crawlBoth :: Dog -> Room -> Room -> VisitResult
+crawlBoth dog first second = sequenced
+    where
+  sequenced = case (crawl dog first) of
+                Continue dog' -> crawl dog' second
+                Victory       -> Victory
+                Death         -> Death
+
+-- Directly copied from baseGame
+both :: Maybe a -> Maybe b -> Maybe (a, b)
+both (Just a) (Just b) = Just (a, b)
+both _        _        = Nothing
