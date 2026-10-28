@@ -4,3 +4,6 @@
 [submodule "CSC3003S/Capstone/viewscope"]
 	path = CSC3003S/Capstone/viewscope
 	url = https://github.com/Schmepp/viewscope.git
+[submodule "EEE3095S/Practicals"]
+	path = EEE3095S/Practicals
+	url = https://github.com/DnA-IntRicate/EEE3096S-2026-Pracs.git
