@@ -5,4 +5,8 @@
 # Excludes source code files from being indexed
 # by GitHub Linguist.
 ###############################################################################
-**/Drivers/** linguist-vendored=true
+**/Drivers/**   linguist-vendored=true
+**/Makefile     linguist-vendored=true
+**/makefile     linguist-vendored=true
+**/GNUmakefile  linguist-vendored=true
+**/*.make       linguist-vendored=true
