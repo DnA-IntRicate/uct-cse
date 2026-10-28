@@ -19,6 +19,39 @@ This repository houses all the code projects I've written & worked on towards my
 
 ---
 
+## All the courses I've done (in-order)
+
+### First Year
+
+- **ACC1006F**: Financial Accounting I.
+- **CSC1015F**: Introductory Python Programming.
+- **MAM1004F**: Mathematics for Science Students - Calculus 1 and Differential Equations.
+- **PHY1031F**: General Physics A - Mechanics, Fluid Dynamics and Harmonics.
+- **CSC1016S**: Object-oriented Programming in Java, HCI and UML.
+- **MAM1008S**: Discrete Mathematics.
+- **PHY1032S**: General Physics B - Electrodynamics, Thermodynamics, Optics, Quantum mechanics and Nuclear physics.
+- **STA1000S**: Introductory Applied Statistics.
+
+### Second Year
+
+- **CSC2001F**: Unix, Git, Data Structures & Algorithms, and Databases.
+- **CSC2004Z**: Programming Assessment.
+- **EEE2041F**: Introductory Electrical Engineering.
+- **CSC2002S**: Parallel & Concurrent Programming, Computer Architecture and Theory of Computing.
+- **CSC2042S**: AI: Machine Learning.
+- **EEE2042S**: Analogue & Digital Electronics.
+
+### Third Year
+
+- **CSC3002F**: Networks and Operating Systems.
+- **CSC3041F**: AI: Automated Planning & Control.
+- **EEE2050F**: Embedded Systems I (CS stream).
+- **CSC3003S**: Advanced Software Development, Theory of Algorithms, Functional Programming and Quantum Computing.
+- **CSC3024S**: C++ Programming.
+- **EEE3095S**: Embedded Systems II (CS stream).
+
+---
+
 ## License
 This repository is licensed under the MIT License. See [LICENSE](LICENSE).
 
