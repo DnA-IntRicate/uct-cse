@@ -7,3 +7,6 @@
 [submodule "EEE3095S/Practicals"]
 	path = EEE3095S/Practicals
 	url = https://github.com/DnA-IntRicate/EEE3096S-2026-Pracs.git
+[submodule "EEE3095S/battleship"]
+	path = EEE3095S/battleship
+	url = https://github.com/DnA-IntRicate/battleship.git
