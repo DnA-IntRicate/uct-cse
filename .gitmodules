@@ -1,3 +1,6 @@
 [submodule "CSC3002F/Assignments/Networks1/PeerChat-AAR"]
 	path = CSC3002F/Assignments/Networks1/PeerChat-AAR
 	url = https://github.com/aZaamBie/PeerChat-AAR.git
+[submodule "CSC3003S/Capstone/viewscope"]
+	path = CSC3003S/Capstone/viewscope
+	url = https://github.com/Schmepp/viewscope.git
