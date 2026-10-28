@@ -1,5 +1,5 @@
-[submodule "Main Courses/CSC3002F/Assignments/1"]
-	path = Main Courses/CSC3002F/Assignments/1
+[submodule "CSC3002F/Assignments/Networks1/PeerChat-AAR"]
+	path = CSC3002F/Assignments/Networks1/PeerChat-AAR
 	url = https://github.com/aZaamBie/PeerChat-AAR.git
 [submodule "Main Courses/CSC3003S/Capstone/viewscope"]
 	path = Main Courses/CSC3003S/Capstone/viewscope
