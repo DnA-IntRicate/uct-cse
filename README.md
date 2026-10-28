@@ -1,34 +1,22 @@
 # ComputerScienceUCT
-This repository contains all the projects and code I've written thus far for computer science courses at The University of Cape Town.
 
-## Courses
-- [**CSC1015F:**](Main%20Courses/CSC1015F)
-    -
-    - **Assignments:**
-        - [1B: Orientation](Main%20Courses/CSC1015F/Assignments/1B-%20Orientation)
-        - [1C: T2AB](Main%20Courses/CSC1015F/Assignments/1C-%20T2AB)
-        - [1D: Introduction](Main%20Courses/CSC1015F/Assignments/1D-%20Introduction)
-        - [2A: T2AB](Main%20Courses/CSC1015F/Assignments/2A-%20T2AB)
-        - [2B: IO, Control(IF)](Main%20Courses/CSC1015F/Assignments/2B-%20IO%2C%20Control(IF))
-        - [3A: T2AB](Main%20Courses/CSC1015F/Assignments/3A-%20T2AB)
-        - [3B: Control(IF, FOR)](Main%20Courses/CSC1015F/Assignments/3B-%20Control(IF%2C%20FOR))
-        - [4A: T2AB](Main%20Courses/CSC1015F/Assignments/4A-%20T2AB)
-        - [4B: Control(IF, FOR, WHILE)](Main%20Courses/CSC1015F/Assignments/4B-%20Control(IF%2C%20FOR%2C%20WHILE))
-        - [5: Strings](Main%20Courses/CSC1015F/Assignments/5-%20Strings)
-        - [6A: T2AB](Main%20Courses/CSC1015F/Assignments/6A-%20T2AB)
-        - [6B: Functions](Main%20Courses/CSC1015F/Assignments/6B-%20Functions)
-        - [7A: T2AB](Main%20Courses/CSC1015F/Assignments/7A-%20T2AB)
-        - [7B: Testing](Main%20Courses/CSC1015F/Assignments/7B-%20Testing)
-        - [8A: T2AB](Main%20Courses/CSC1015F/Assignments/8A-%20T2AB)
-        - [8B: Arrays](Main%20Courses/CSC1015F/Assignments/8B-%20Arrays)
-        - [9: Recursion](Main%20Courses/CSC1015F/Assignments/9-%20Recursion)
-        - [10: Files](Main%20Courses/CSC1015F/Assignments/10-%20Files)
-        - [11: Consolidation](Main%20Courses/CSC1015F/Assignments/11-%20Consolidation)
----
+This repository houses all the code projects I've written & worked on towards my undergraduate degree in Computer Science & Computer Engineering at the University of Cape Town.
 
-## Side Projects
-- [Rock Paper Scissors](Side%20Projects/RockPaperScissors)
-- [Student Number Generator](Side%20Projects/StudentNumberGenerator)
+## Courses in this repo
+
+- **CSC1015F**: Introductory Python Programming.
+- **CSC1016S**: Object-oriented Programming in Java, HCI and UML.
+- **CSC2001F**: Unix, Git, Data Structures & Algorithms, and Databases.
+- **CSC2002S**: Parallel & Concurrent Programming, Computer Architecture and Theory of Computing.
+- **CSC2004Z**: Programming Assessment.
+- **CSC2042S**: AI: Machine Learning.
+- **CSC3002F**: Networks and Operating Systems.
+- **CSC3003S**: Advanced Software Development, Theory of Algorithms, Functional Programming and Quantum Computing.
+- **CSC3024S**: C++ Programming.
+- **CSC3041F**: AI: Automated Planning & Control.
+- **EEE2050F**: Embedded Systems I (CS stream).
+- **EEE3095S**: Embedded Systems II (CS stream).
+
 ---
 
 ## License
